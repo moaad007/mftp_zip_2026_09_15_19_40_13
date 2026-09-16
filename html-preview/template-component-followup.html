@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Follow-up · Local Blade preview</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="brand">WABA <span>local preview</span></div><nav aria-label="Preview pages"><a href="dashboard-index.html">Custom message</a><a href="template-index.html">Template messages</a><a href="messenger.html">Messenger</a><a href="trial-confirmed-form.html">Trial confirmation</a><a href="template-component-followup.html">Follow-up</a><a href="template-component-others.html">Other recipients</a><a href="template-component-booking_1person.html">One person booking</a><a href="template-component-booking_confirmation.html">Booking confirmation</a><a href="template-component-placementTest.html">Placement test</a><a href="template-component-teacher_availability.html">Teacher availability</a><a href="template-component-test_teacher_availability.html">Test teacher availability</a></nav></header>
+  <main class="page">
+    <div class="page-intro"><div><p class="eyebrow">Blade template preview</p><h1>Follow-up</h1><p>Standalone copy of the template component with realistic sample choices.</p></div><span class="preview-badge">Demo data</span></div>
+    <section class="card"><div class="card-header"><h2>Follow-up</h2></div><div class="card-body"><form class="preview-form" data-preview-form="followup"><div class="row two"><div class="field "><label>Name <span class="required" aria-hidden="true">*</span><input class="form-control" name="name" type="text" placeholder="Enter a valid name" required></label></div><div class="field "><label>Phone <span class="required" aria-hidden="true">*</span><input class="form-control" name="phone" type="tel" placeholder="Enter a valid phone" required></label></div></div><label class="checkbox"><input type="checkbox" data-group-toggle> Send to a group instead</label><div class="conditional" data-group-field hidden><div class="field "><label>Group <span class="required" aria-hidden="true">*</span><select class="form-select" name="group_id"  required><option value="group-a">Morning group</option><option value="group-b">Afternoon group</option><option value="group-c">Weekend group</option></select></label></div></div><div class="card-footer"><button class="btn btn-blue" type="submit">Send</button></div></form></div></section>
+    <p class="source">Source: template/component/followup.blade.php. Form submissions display locally and do not contact a server.</p>
+  </main>
+  <div id="preview-status" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

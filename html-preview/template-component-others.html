@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Other recipients · Local Blade preview</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="brand">WABA <span>local preview</span></div><nav aria-label="Preview pages"><a href="dashboard-index.html">Custom message</a><a href="template-index.html">Template messages</a><a href="messenger.html">Messenger</a><a href="trial-confirmed-form.html">Trial confirmation</a><a href="template-component-followup.html">Follow-up</a><a href="template-component-others.html">Other recipients</a><a href="template-component-booking_1person.html">One person booking</a><a href="template-component-booking_confirmation.html">Booking confirmation</a><a href="template-component-placementTest.html">Placement test</a><a href="template-component-teacher_availability.html">Teacher availability</a><a href="template-component-test_teacher_availability.html">Test teacher availability</a></nav></header>
+  <main class="page">
+    <div class="page-intro"><div><p class="eyebrow">Blade template preview</p><h1>Other recipients</h1><p>Standalone copy of the template component with realistic sample choices.</p></div><span class="preview-badge">Demo data</span></div>
+    <section class="card"><div class="card-header"><h2>Other recipients</h2></div><div class="card-body"><form class="preview-form" data-preview-form="others"><div class="row"><div class="field "><label>Choose users <span class="required" aria-hidden="true">*</span><select class="form-select" name="send_to" data-audience required><option value="all_students">All students</option><option value="subscribed">Subscribed students</option><option value="not_subscribed">Not subscribed students</option><option value="not_active">Not active students</option><option value="tutors">All tutors</option><option value="active_tutors">Active tutors</option><option value="not_active_tutors">Not active tutors</option><option value="subscriptions">Subscribed to course</option><option value="group">Subscribed to a group</option><option value="custom_users">Custom users</option><option value="outside_users">Outside users</option></select></label></div></div>
+  <div class="conditional" data-audience-section="subscriptions" hidden><div class="field "><label>Courses <span class="required" aria-hidden="true">*</span><select class="form-select" name="subscriptions[]" multiple size="3" required><option value="english">English</option><option value="french">French</option><option value="arabic">Arabic</option></select></label></div></div>
+  <div class="conditional row two" data-audience-section="group" hidden><div class="field "><label>Courses <span class="required" aria-hidden="true">*</span><select class="form-select" name="coursesHasGroups" data-course required><option value="english">English</option><option value="french">French</option><option value="arabic">Arabic</option></select></label></div><div class="field "><label>Group <span class="required" aria-hidden="true">*</span><select class="form-select" name="group"  required><option value="group-a">Morning group</option><option value="group-b">Afternoon group</option><option value="group-c">Weekend group</option></select></label></div></div>
+  <div class="conditional" data-audience-section="phones" hidden><div class="field "><label>Phone <span class="required" aria-hidden="true">*</span><select class="form-select" name="phones[]" multiple size="3" required><option value="trial-1">Amina El Idrissi · +212 612 345 678</option><option value="trial-2">Youssef Amrani · +212 633 234 567</option><option value="trial-3">Sara Benali · +212 655 456 789</option></select></label></div><p class="field-note">Choose demo contacts for custom users, or enter a number for outside users.</p><div class="field "><label>Outside phone <span class="required" aria-hidden="true">*</span><input class="form-control" name="outside_phone" type="tel" placeholder="+212 600 000 000" required></label></div></div><div class="card-footer"><button class="btn btn-blue" type="submit">Send</button></div></form></div></section>
+    <p class="source">Source: template/component/others.blade.php. Form submissions display locally and do not contact a server.</p>
+  </main>
+  <div id="preview-status" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

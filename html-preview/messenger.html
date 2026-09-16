@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messenger · Local Blade preview</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="brand">WABA <span>local preview</span></div><nav aria-label="Preview pages"><a href="dashboard-index.html">Custom message</a><a href="template-index.html">Template messages</a><a href="messenger.html">Messenger</a><a href="trial-confirmed-form.html">Trial confirmation</a><a href="template-component-followup.html">Follow-up</a><a href="template-component-others.html">Other recipients</a><a href="template-component-booking_1person.html">One person booking</a><a href="template-component-booking_confirmation.html">Booking confirmation</a><a href="template-component-placementTest.html">Placement test</a><a href="template-component-teacher_availability.html">Teacher availability</a><a href="template-component-test_teacher_availability.html">Test teacher availability</a></nav></header>
+  <main class="page">
+    <div class="page-intro"><div><p class="eyebrow">Blade template preview</p><h1>Messenger</h1><p>A local conversation preview using the source two-column layout.</p></div><span class="preview-badge">Demo data</span></div>
+    <section class="messenger card"><aside class="contacts"><div class="contacts-heading"><h2>Chats</h2><span>3 demo contacts</span></div><button class="contact active" type="button" data-contact="trial-1" data-name="Amina El Idrissi"><span class="avatar">AE</span><span><strong>Amina El Idrissi</strong><small>Can we confirm tomorrow?</small></span></button><button class="contact " type="button" data-contact="trial-2" data-name="Youssef Amrani"><span class="avatar">YA</span><span><strong>Youssef Amrani</strong><small>Thank you for the update.</small></span></button><button class="contact " type="button" data-contact="trial-3" data-name="Sara Benali"><span class="avatar">SB</span><span><strong>Sara Benali</strong><small>I will be online at 3 PM.</small></span></button></aside><div class="chat-panel"><div class="chat-heading"><div class="avatar" id="active-avatar">AE</div><div><h2 id="active-name">Amina El Idrissi</h2><p>Demo conversation</p></div></div><div class="messages" id="messages" aria-live="polite"><div class="bubble received">Hello! Is my trial lesson still scheduled?</div><div class="bubble sent">Yes, your tutor is available tomorrow at 10:00 AM.</div><div class="bubble received">Can we confirm tomorrow?</div></div><form id="chat-form" class="chat-form"><label class="sr-only" for="chat-input">Message</label><input id="chat-input" name="body" type="text" placeholder="Write a message…" autocomplete="off" required><button type="submit" class="btn btn-blue">Send</button></form></div></section>
+    <p class="source">Source: messenger.blade.php. Form submissions display locally and do not contact a server.</p>
+  </main>
+  <div id="preview-status" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

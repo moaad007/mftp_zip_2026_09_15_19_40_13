@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Support Messenger — Local Preview</title>
+  <style>
+    :root{font-family:Manrope,Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#111827;background:#fafaff;--accent:#5b3fea;--accent-soft:#f2eeff;--canvas:#fafaff;--surface:#fff;--text:#111827;--muted:#64748b;--line:#e9eaf2;--chat-in:#fff;--chat-out:#e9e3ff;--shadow:0 14px 40px rgba(15,23,42,.05)}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;height:100%}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #9d8cff;outline-offset:2px}button{border:0}svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}body{overflow:hidden}
+    .app{display:grid;grid-template-columns:72px 342px minmax(0,1fr);width:100%;height:100dvh;min-height:430px;background:var(--canvas)}
+    .rail{display:flex;flex-direction:column;align-items:center;gap:13px;padding:19px 11px;border-right:1px solid var(--line);background:var(--surface)}
+    .brand{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--accent);color:#fff;font-size:20px;font-weight:800;letter-spacing:-.07em;box-shadow:0 9px 22px rgba(91,63,234,.18)}
+    .rail-space{height:12px}.rail-btn{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:transparent;color:#768096}.rail-btn:hover,.rail-btn.active{color:var(--accent);background:var(--accent-soft)}.rail-fill{flex:1}.rail-label{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:.08em;text-align:center}
+    .sidebar{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);background:var(--canvas);padding:24px 15px 0}
+    .sidebar-top{padding:0 10px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}.side-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:19px}.side-heading h1{font-size:25px;letter-spacing:-.055em;line-height:1.1;margin:0;font-weight:800}.count{display:grid;place-items:center;border-radius:50%;height:26px;min-width:26px;padding:0 6px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:800}
+    .search{display:flex;align-items:center;gap:10px;height:46px;padding:0 13px;background:var(--surface);border:1px solid var(--line);border-radius:14px;color:#94a3b8;box-shadow:0 5px 18px rgba(15,23,42,.025)}.search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font-size:13px;font-weight:600}.search input::placeholder{color:#9da7b9}.search svg{width:18px;height:18px}.search:focus-within{border-color:#a69af4;box-shadow:0 0 0 3px #ede9ff}
+    .filters{display:flex;gap:6px;margin:19px 10px 16px;padding:3px;border-radius:12px;background:#f0f0f7}.filter{flex:1;padding:8px 3px;border-radius:9px;color:#778195;background:transparent;font-size:12px;font-weight:800}.filter:hover{color:var(--accent)}.filter.active{color:var(--accent);background:var(--surface);box-shadow:0 2px 7px rgba(15,23,42,.06)}
+    .list-title{padding:0 12px;margin:0 0 8px;font-size:11px;font-weight:800;color:#8a94a7;letter-spacing:.06em;text-transform:uppercase}.conversation-list{overflow:auto;min-height:0;flex:1;padding:0 4px 20px;scrollbar-width:thin;scrollbar-color:#d5d6e3 transparent}.conversation{display:flex;width:100%;min-height:79px;gap:11px;text-align:left;align-items:center;border-radius:14px;background:transparent;padding:10px 9px;color:var(--text)}.conversation:hover{background:#f3f0ff}.conversation.active{background:var(--surface);box-shadow:var(--shadow)}.avatar{display:grid;place-items:center;flex:none;width:47px;height:47px;border-radius:50%;font-size:14px;font-weight:800;letter-spacing:-.03em;position:relative}.avatar.online:after{content:"";position:absolute;right:1px;bottom:0;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid var(--surface)}.conversation-info{min-width:0;flex:1}.conversation-top{display:flex;align-items:center;gap:8px}.conversation-name{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px;font-weight:800}.conversation-time{font-size:10px;color:#98a1b2;white-space:nowrap}.conversation-preview{display:flex;align-items:center;gap:5px;margin-top:4px}.conversation-preview span:first-child{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:12px;color:#7b879a}.unread{display:grid;place-items:center;flex:none;min-width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:800}.type-badge{display:inline-flex;margin-top:5px;padding:2px 6px;border-radius:6px;background:#e7e5f2;color:#71718a;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}.empty-list{padding:28px 14px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}
+    .chat{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-width:0;min-height:0;background:var(--canvas)}.chat-header{display:flex;align-items:center;gap:12px;padding:18px 26px;border-bottom:1px solid var(--line);background:rgba(250,250,255,.96);min-height:81px}.back{display:none}.header-person{display:flex;align-items:center;gap:12px;min-width:0;flex:1}.header-person .avatar{width:46px;height:46px}.header-copy{min-width:0}.header-copy h2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0 0 3px;font-size:18px;letter-spacing:-.03em;line-height:1.2}.header-copy p{margin:0;color:#7b8598;font-size:12px;font-weight:700}.header-actions{display:flex;gap:7px}.icon-btn{display:grid;place-items:center;flex:none;width:39px;height:39px;border-radius:12px;background:transparent;color:#7c8598}.icon-btn:hover{background:var(--accent-soft);color:var(--accent)}
+    .message-area{overflow:auto;padding:24px clamp(18px,5vw,72px);scrollbar-width:thin;scrollbar-color:#d5d6e3 transparent}.thread{max-width:900px;margin:auto}.date-divider{text-align:center;margin:10px 0 22px;color:#99a2b4;font-size:11px;font-weight:800}.date-divider span{display:inline-block;padding:7px 13px;border-radius:20px;background:var(--surface);border:1px solid var(--line)}.message-row{display:flex;align-items:flex-end;gap:9px;margin:0 0 17px}.message-row.mine{justify-content:flex-end}.message-row .avatar{width:29px;height:29px;font-size:9px}.bubble{max-width:min(74%,580px);padding:11px 14px;border-radius:16px 16px 16px 4px;background:var(--chat-in);border:1px solid var(--line);box-shadow:0 5px 16px rgba(15,23,42,.025);font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.mine .bubble{border-color:transparent;background:var(--chat-out);border-radius:16px 16px 4px 16px}.bubble-meta{margin-top:5px;color:#8c96aa;font-size:10px;font-weight:700;text-align:right}.mine .bubble-meta{color:#7769ab}.photo-message{display:block;max-width:min(100%,360px);max-height:260px;border-radius:10px;margin-bottom:6px;object-fit:cover}.thread-empty{display:grid;place-items:center;align-content:center;min-height:100%;text-align:center;color:var(--muted);padding:30px}.thread-empty .empty-icon{display:grid;place-items:center;width:70px;height:70px;margin-bottom:16px;border-radius:20px;background:var(--accent-soft);color:var(--accent)}.thread-empty h2{margin:0 0 8px;color:var(--text);font-size:22px;letter-spacing:-.04em}.thread-empty p{max-width:340px;margin:0;font-size:13px;line-height:1.55}
+    .composer{border-top:1px solid var(--line);padding:16px clamp(18px,5vw,72px) 20px;background:rgba(250,250,255,.96)}.composer-inner{display:flex;align-items:flex-end;gap:10px;max-width:900px;margin:auto}.composer-input{flex:1;display:flex;align-items:flex-end;gap:6px;min-width:0;min-height:48px;padding:4px 5px 4px 13px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 5px 18px rgba(15,23,42,.025)}.composer-input:focus-within{border-color:#a69af4;box-shadow:0 0 0 3px #ede9ff}.composer textarea{flex:1;min-width:0;min-height:36px;max-height:130px;resize:none;border:0;outline:none;background:transparent;color:var(--text);padding:8px 0 6px;font-size:13px;line-height:1.45}.composer textarea::placeholder{color:#9ea8b9}.send{display:grid;place-items:center;width:39px;height:39px;border-radius:13px;background:var(--accent);color:#fff;box-shadow:0 9px 18px rgba(91,63,234,.18)}.send:hover{background:#4f35d8}.send svg{width:18px;height:18px}.attachment-button{display:grid;place-items:center;width:39px;height:39px;border-radius:13px;color:var(--accent);background:var(--accent-soft);flex:none}.attachment-button:hover{background:#e7dfff}.composer-hint{max-width:900px;margin:8px auto 0;color:#9ba3b2;font-size:10px;text-align:right}.file-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.preview-note{position:absolute;bottom:12px;left:11px;z-index:5;padding:4px 7px;border-radius:7px;background:#f1efff;color:#7362bd;font-size:9px;font-weight:800;text-align:center;line-height:1.15}
+    .dark{--canvas:#070b16;--surface:#0e1625;--text:#f8fafc;--muted:#94a3b8;--line:#1b2738;--chat-in:#131d2d;--chat-out:#382c71;--accent-soft:#221d40;--shadow:0 14px 40px rgba(0,0,0,.2);color:var(--text);background:var(--canvas)}.dark .sidebar,.dark .chat-header,.dark .composer{background:var(--canvas)}.dark .filters{background:#12192a}.dark .conversation:hover{background:#1a1731}.dark .conversation.active{background:#141b2b}.dark .search input,.dark .composer textarea{color:var(--text)}.dark .type-badge{background:#272943;color:#afb5cb}.dark .preview-note{background:#221d40;color:#c4b5fd}
+    @media(max-width:900px){.app{grid-template-columns:64px 300px minmax(0,1fr)}.rail{padding-left:8px;padding-right:8px}.sidebar{padding-left:10px;padding-right:10px}.chat-header{padding:15px 17px}.message-area{padding:20px 20px}.composer{padding:13px 17px 16px}}
+    @media(max-width:700px){.app{display:block;position:relative;min-height:0}.rail{display:none}.sidebar{width:100%;height:100%;padding:23px 13px 0;border:0}.chat{display:none;width:100%;height:100%}.app.conversation-open .sidebar{display:none}.app.conversation-open .chat{display:grid}.back{display:grid}.chat-header{min-height:72px}.header-actions .hide-mobile{display:none}.message-area{padding:18px 14px}.composer{padding:11px 12px 17px}.bubble{max-width:82%}.side-heading h1{font-size:24px}.preview-note{display:none}}
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <nav class="rail" aria-label="Preview navigation">
+      <div class="brand" aria-label="Boston English Center">B</div>
+      <div class="rail-space"></div>
+      <button class="rail-btn active" type="button" aria-label="Messenger" title="Messenger"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3H13a8.48 8.48 0 0 1 8 8v.5Z"/></svg></button>
+      <div class="rail-fill"></div>
+      <button class="rail-btn" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Toggle theme"><svg viewBox="0 0 24 24"><path d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5 8.5 8.5 0 1 0 20.5 14.1Z"/></svg></button>
+      <div class="avatar" style="width:37px;height:37px;background:#f2eeff;color:#5b3fea" aria-label="Demo user">DU</div>
+      <span class="rail-label">DEMO</span>
+    </nav>
+    <aside class="sidebar" aria-label="Conversations">
+      <div class="sidebar-top">
+        <p class="eyebrow">Boston English Center</p>
+        <div class="side-heading"><h1>Messenger</h1><span class="count" id="conversationCount" aria-label="Conversations">0</span></div>
+        <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="searchInput" type="search" placeholder="Search conversations" aria-label="Search conversations" autocomplete="off"></label>
+      </div>
+      <div class="filters" role="group" aria-label="Conversation filters">
+        <button class="filter active" type="button" data-filter="all" aria-pressed="true">All chats</button>
+        <button class="filter" type="button" data-filter="unread" aria-pressed="false">Unread</button>
+        <button class="filter" type="button" data-filter="group" aria-pressed="false">Groups</button>
+      </div>
+      <p class="list-title">All messages</p>
+      <div class="conversation-list" id="conversationList" aria-label="Conversation choices"></div>
+    </aside>
+    <section class="chat" aria-label="Conversation">
+      <header class="chat-header">
+        <button class="icon-btn back" id="backButton" type="button" aria-label="Back to conversations"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="header-person" id="headerPerson"></div>
+        <div class="header-actions"><button class="icon-btn hide-mobile" id="themeToggleChat" type="button" aria-label="Switch to dark theme" title="Toggle theme"><svg viewBox="0 0 24 24"><path d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5 8.5 8.5 0 1 0 20.5 14.1Z"/></svg></button></div>
+      </header>
+      <div class="message-area" id="messageArea" tabindex="0" aria-label="Messages"><div class="thread" id="thread" role="log" aria-live="polite"></div></div>
+      <form class="composer" id="composer" autocomplete="off">
+        <div class="composer-inner"><button class="attachment-button" id="attachmentButton" type="button" aria-label="Attach an image" title="Attach an image"><svg viewBox="0 0 24 24"><path d="m21.4 11.6-8.8 8.8a5 5 0 0 1-7.1-7.1l9.2-9.2a3.3 3.3 0 0 1 4.7 4.7l-9.1 9.1a1.6 1.6 0 0 1-2.3-2.3l8.3-8.3"/></svg></button><input class="file-input" id="attachmentInput" type="file" accept="image/*" aria-label="Attach an image" tabindex="-1"><div class="composer-input"><textarea id="messageInput" rows="1" placeholder="Type a message..." aria-label="Type a message"></textarea><button class="send" id="sendButton" type="submit" aria-label="Send message" disabled><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg></button></div></div>
+        <p class="composer-hint">Enter to send · Shift+Enter for a new line · Local preview only</p>
+      </form>
+    </section>
+    <span class="preview-note">LOCAL<br>PREVIEW</span>
+  </main>
+  <script>
+    (() => {
+      const seed = [
+        {id:'sara',name:'Sara Ahmed',kind:'student',online:true,unread:2,color:'#e4dfff',ink:'#5941aa',messages:[{from:'them',text:'Hi! I wanted to ask about my next speaking session.',time:'09:31'},{from:'me',text:'Of course, Sara. Your session is booked for Thursday at 6:00 PM.',time:'09:34'},{from:'them',text:'Perfect, thank you! Will I receive the meeting link here?',time:'09:36'}]},
+        {id:'omar',name:'Omar Bennani',kind:'student',online:false,unread:0,color:'#dff4ed',ink:'#267966',messages:[{from:'them',text:'Could you help me change my lesson time?',time:'Yesterday'},{from:'me',text:'Absolutely. Send me the days that work for you and I will check availability.',time:'Yesterday'}]},
+        {id:'team',name:'Support Team',kind:'group',online:true,unread:1,color:'#e7e9ff',ink:'#5060ab',messages:[{from:'them',text:'Reminder: please confirm all trial lesson requests before 5 PM.',time:'08:55'}]},
+        {id:'lina',name:'Lina El Idrissi',kind:'tutor',online:true,unread:0,color:'#ffe8d5',ink:'#a4622a',messages:[{from:'them',text:'The lesson notes are ready for the student.',time:'Mon 16:20'},{from:'me',text:'Thanks Lina, I will pass them along.',time:'Mon 16:24'}]},
+        {id:'youssef',name:'Youssef Amrani',kind:'student',online:false,unread:0,color:'#f8e6ee',ink:'#ae5479',messages:[{from:'me',text:'Welcome to Boston English Center! Let us know if you need anything.',time:'Sun 11:12'}]}
+      ];
+      const $ = id => document.getElementById(id);
+      const app=$('app'), list=$('conversationList'), thread=$('thread'), area=$('messageArea'), search=$('searchInput'), input=$('messageInput'), form=$('composer');
+      const stored=()=>{try{const data=JSON.parse(localStorage.getItem('bec-support-preview'));return Array.isArray(data)&&data.length?data:null}catch{return null}};
+      let conversations=stored()||seed, selected='sara', filter='all';
+      const save=()=>{try{localStorage.setItem('bec-support-preview',JSON.stringify(conversations))}catch{}};
+      const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const initials=s=>s.split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+      const avatar=(c,small=false)=>`<span class="avatar ${c.online?'online':''}" style="${small?'width:29px;height:29px;font-size:9px;':''}background:${c.color};color:${c.ink}" aria-hidden="true">${escape(initials(c.name))}</span>`;
+      const current=()=>conversations.find(c=>c.id===selected);
+      function renderList(){
+        const q=search.value.trim().toLocaleLowerCase();
+        const shown=conversations.filter(c=>(filter==='all'||(filter==='unread'&&c.unread>0)||(filter==='group'&&c.kind==='group'))&&(c.name.toLocaleLowerCase().includes(q)||c.kind.includes(q)||c.messages.some(m=>m.text.toLocaleLowerCase().includes(q))));
+        $('conversationCount').textContent=conversations.length;
+        list.innerHTML=shown.length?shown.map(c=>{const last=c.messages.at(-1)||{text:'No messages yet',time:''};return `<button class="conversation ${selected===c.id?'active':''}" type="button" data-id="${escape(c.id)}" aria-current="${selected===c.id?'true':'false'}">${avatar(c)}<span class="conversation-info"><span class="conversation-top"><span class="conversation-name">${escape(c.name)}</span><span class="conversation-time">${escape(last.time)}</span></span><span class="conversation-preview"><span>${escape(last.text)}</span>${c.unread?`<span class="unread" aria-label="${c.unread} unread messages">${c.unread}</span>`:''}</span><span class="type-badge">${escape(c.kind)}</span></span></button>`}).join(''):`<div class="empty-list" role="status">No conversations match your search.</div>`;
+      }
+      function renderChat(){
+        const c=current();
+        if(!c){$('headerPerson').innerHTML='<div class="header-copy"><h2>Select a conversation</h2></div>';thread.innerHTML='<div class="thread-empty"><div class="empty-icon">✦</div><h2>Your conversations</h2><p>Choose a chat from the list to see its messages.</p></div>';input.disabled=true;updateSend();return}
+        $('headerPerson').innerHTML=`${avatar(c)}<div class="header-copy"><h2>${escape(c.name)}</h2><p>${c.online?'● Online now':'○ Offline'} · ${escape(c.kind.charAt(0).toUpperCase()+c.kind.slice(1))}</p></div>`;
+        thread.innerHTML=`<div class="date-divider"><span>Conversation preview</span></div>`+c.messages.map(m=>`<div class="message-row ${m.from==='me'?'mine':''}">${m.from==='them'?avatar(c,true):''}<div class="bubble">${m.image?`<img class="photo-message" src="${escape(m.image)}" alt="Attached image">`:''}${escape(m.text)}<div class="bubble-meta">${escape(m.time)}${m.from==='me'?' · Sent':''}</div></div></div>`).join('');
+        input.disabled=false;area.scrollTop=area.scrollHeight;updateSend();
+      }
+      function updateSend(){$('sendButton').disabled=!current()||!input.value.trim()}
+      function select(id){selected=id;const c=current();if(c)c.unread=0;save();app.classList.add('conversation-open');renderList();renderChat();input.focus()}
+      list.addEventListener('click',e=>{const button=e.target.closest('[data-id]');if(button)select(button.dataset.id)});
+      search.addEventListener('input',renderList);
+      document.querySelectorAll('.filter').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;document.querySelectorAll('.filter').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',b===button?'true':'false')});renderList()}));
+      $('backButton').addEventListener('click',()=>{app.classList.remove('conversation-open');search.focus()});
+      input.addEventListener('input',()=>{updateSend();input.style.height='auto';input.style.height=Math.min(input.scrollHeight,130)+'px'});
+      input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+      form.addEventListener('submit',e=>{e.preventDefault();const c=current(),text=input.value.trim();if(!c||!text)return;c.messages.push({from:'me',text,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});input.value='';input.style.height='auto';save();renderList();renderChat();input.focus()});
+      $('attachmentButton').addEventListener('click',()=>$('attachmentInput').click());
+      $('attachmentInput').addEventListener('change',e=>{const file=e.target.files?.[0],c=current();if(!file||!c)return;if(!file.type.startsWith('image/')){alert('This local preview accepts image attachments only.');return}const reader=new FileReader();reader.onload=()=>{c.messages.push({from:'me',text:file.name,image:String(reader.result),time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});save();renderList();renderChat()};reader.readAsDataURL(file);e.target.value=''});
+      function toggleTheme(){document.body.classList.toggle('dark');const dark=document.body.classList.contains('dark');document.querySelectorAll('#themeToggle,#themeToggleChat').forEach(b=>b.setAttribute('aria-label',dark?'Switch to light theme':'Switch to dark theme'));try{localStorage.setItem('bec-support-preview-theme',dark?'dark':'light')}catch{}}
+      $('themeToggle').addEventListener('click',toggleTheme);$('themeToggleChat').addEventListener('click',toggleTheme);
+      try{if(localStorage.getItem('bec-support-preview-theme')==='dark')document.body.classList.add('dark')}catch{}
+      renderList();renderChat();
+    })();
+  </script>
+</body>
+</html>
