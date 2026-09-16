@@ -88,6 +88,13 @@ const quickReplies = [
   { title: "Follow-up", body: "Hi! I’m checking in to see if you still need help with your English course." }
 ];
 
+const channelDefinitions = {
+  "WhatsApp": { key: "whatsapp", icon: "i-chat" },
+  "WhatsApp Student Support": { key: "support", icon: "i-support" },
+  "Email": { key: "email", icon: "i-mail" },
+  "SMS": { key: "sms", icon: "i-sms" }
+};
+
 const emojiCategoryDefinitions = [
   { id: "recent", label: "Recent", icon: "\uD83D\uDD58" },
   { id: "smileys", label: "Smileys & emotion", icon: "\uD83D\uDE00" },
@@ -241,8 +248,13 @@ let isComposing = false;
 let lastDrawerTrigger = null;
 let confirmResolver = null;
 let noteSaveTimer = null;
+let drawerInertRestore = null;
 let activeEmojiCategory = "smileys";
 let emojiCaret = { start: 0, end: 0 };
+let activeMessageActionId = null;
+let activeMessageActionContactId = null;
+let activeMessageActionTrigger = null;
+const selectedMessageIds = new Set();
 const avatarTones = [
   ["#dcebe4", "#24533f"], ["#e3e9f3", "#315273"], ["#f5e5d7", "#7c4c23"],
   ["#eee3f4", "#654477"], ["#f3e2e5", "#824754"], ["#e8ead8", "#566126"]
@@ -819,12 +831,6 @@ function setAvatar(element, contact, index) {
   element.style.color = tone[1];
 }
 
-function channelClass(channel) {
-  const value = (channel || "").toLowerCase();
-  if (value.indexOf("email") >= 0) return "email";
-  if (value.indexOf("sms") >= 0) return "sms";
-  return "whatsapp";
-}
 
 function contactStatus(contact) {
   if (contact.blocked) return "Blocked";
@@ -971,12 +977,7 @@ function renderContacts() {
 
     const meta = document.createElement("span");
     meta.className = "contact-meta";
-    if (latest) {
-      const channel = document.createElement("span");
-      channel.className = "channel-badge " + channelClass(latest.channel);
-      channel.textContent = latest.channel.indexOf("Student") >= 0 ? "Student support" : latest.channel;
-      meta.append(channel);
-    }
+
     if (contact.unanswered) {
       const open = document.createElement("span");
       open.className = "status-label";
@@ -990,7 +991,8 @@ function renderContacts() {
       meta.append(ai);
     }
 
-    body.append(top, previewRow, meta);
+    body.append(top, previewRow);
+    if (meta.childElementCount) body.append(meta);
     option.append(avatarWrap, body);
     option.addEventListener("click", function () { selectContact(contact.id, true); });
     container.append(option);
@@ -1018,14 +1020,348 @@ function appendHighlighted(element, text, query) {
   if (cursor < source.length) element.append(document.createTextNode(source.slice(cursor)));
 }
 
+function messageIdKey(value) {
+  return String(value && typeof value === "object" ? value.id : value);
+}
+
+function messageGenericSummary(message) {
+  const body = String(message && message.body || "").trim();
+  if (body) return body;
+  if (message && message.attachment) return attachmentPreviewLabel(message.attachment);
+  return "Message";
+}
+
+function messageCopyText(message) {
+  const parts = [];
+  const body = String(message && message.body || "").trim();
+  if (body) parts.push(body);
+  if (message && message.attachment) parts.push("[" + attachmentPreviewLabel(message.attachment) + "]");
+  return parts.join("\n") || "Message";
+}
+
+function announceMessageAction(message) {
+  const region = $("messageActionAnnouncement");
+  region.textContent = "";
+  requestAnimationFrame(function () { region.textContent = message; });
+}
+
+async function copyPlainText(value) {
+  if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(value);
+  else fallbackCopyText(value);
+}
+
+function messageActionContext() {
+  const contact = state.contacts.find(function (item) { return item.id === activeMessageActionContactId; });
+  if (!contact) return null;
+  const message = contact.messages.find(function (item) { return messageIdKey(item) === activeMessageActionId; });
+  return message ? { contact: contact, message: message } : null;
+}
+
+function closeMessageActionMenu(restoreFocus) {
+  const menu = $("messageActionMenu");
+  const trigger = activeMessageActionTrigger;
+  if (trigger) trigger.setAttribute("aria-expanded", "false");
+  menu.hidden = true;
+  menu.style.removeProperty("left");
+  menu.style.removeProperty("top");
+  menu.style.removeProperty("visibility");
+  $("messageActionBackdrop").hidden = true;
+  activeMessageActionId = null;
+  activeMessageActionContactId = null;
+  activeMessageActionTrigger = null;
+  if (restoreFocus && trigger && trigger.isConnected && !trigger.disabled) {
+    requestAnimationFrame(function () { trigger.focus(); });
+  }
+}
+
+function positionMessageActionMenu(trigger) {
+  const menu = $("messageActionMenu");
+  menu.style.removeProperty("left");
+  menu.style.removeProperty("top");
+  menu.style.removeProperty("visibility");
+  menu.style.visibility = "hidden";
+  const triggerRect = trigger.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
+  const row = trigger.closest(".message-row");
+  const outgoing = row && row.classList.contains("outgoing");
+  const edge = 8;
+  const gap = 6;
+  let left = outgoing ? triggerRect.right - menuRect.width : triggerRect.left;
+  let top = triggerRect.bottom + gap;
+  if (top + menuRect.height > window.innerHeight - edge) top = triggerRect.top - menuRect.height - gap;
+  left = Math.max(edge, Math.min(left, window.innerWidth - menuRect.width - edge));
+  top = Math.max(edge, Math.min(top, window.innerHeight - menuRect.height - edge));
+  menu.style.left = Math.round(left) + "px";
+  menu.style.top = Math.round(top) + "px";
+  menu.style.visibility = "";
+}
+
+function openMessageActionMenu(message, trigger) {
+  const contact = activeContact();
+  if (!contact || !message || !trigger) return;
+  closeMessageActionMenu(false);
+  closePanels("messageActionMenu");
+  activeMessageActionId = messageIdKey(message);
+  activeMessageActionContactId = contact.id;
+  activeMessageActionTrigger = trigger;
+  trigger.setAttribute("aria-expanded", "true");
+
+  const preview = messageGenericSummary(message).replace(/\s+/g, " ").trim();
+  $("messageActionPreview").textContent = preview.length > 54 ? preview.slice(0, 51) + "…" : preview;
+  const pinButton = $("messageActionMenu").querySelector("[data-message-action='pin']");
+  const selectButton = $("messageActionMenu").querySelector("[data-message-action='select']");
+  pinButton.querySelector("[data-message-action-label]").textContent = message.pinned ? "Unpin message" : "Pin message";
+  pinButton.setAttribute("aria-label", message.pinned ? "Unpin message" : "Pin message");
+  const selected = selectedMessageIds.has(messageIdKey(message));
+  selectButton.querySelector("[data-message-action-label]").textContent = selected ? "Deselect message" : "Select message";
+  selectButton.setAttribute("aria-label", selected ? "Deselect message" : "Select message");
+
+  $("messageActionMenu").hidden = false;
+  $("messageActionBackdrop").hidden = true;
+  positionMessageActionMenu(trigger);
+  requestAnimationFrame(function () {
+    const menu = $("messageActionMenu");
+    if (menu.hidden || activeMessageActionTrigger !== trigger) return;
+    const first = menu.querySelector("[role='menuitem']:not(:disabled)");
+    if (first) first.focus();
+  });
+}
+
+function validSelectedMessages() {
+  const contact = activeContact();
+  if (!contact) return [];
+  return contact.messages.filter(function (message) { return selectedMessageIds.has(messageIdKey(message)); });
+}
+
+function renderMessageSelectionBar() {
+  const messages = validSelectedMessages();
+  const active = messages.length > 0;
+  const bar = $("messageSelectionBar");
+  const composer = $("formSendMessage").querySelector(".composer-inner");
+  bar.hidden = !active;
+  composer.hidden = active;
+  $("formSendMessage").classList.toggle("has-message-selection", active);
+  $("messages-container").classList.toggle("is-selection-mode", active);
+  $("messageSelectionCount").textContent = messages.length + " selected";
+  const allPinned = active && messages.every(function (message) { return Boolean(message.pinned); });
+  const pinButton = $("pinSelectedMessages");
+  pinButton.setAttribute("aria-label", allPinned ? "Unpin selected messages" : "Pin selected messages");
+  pinButton.title = allPinned ? "Unpin selected" : "Pin selected";
+}
+
+function focusRenderedMessageControl(messageId, selector) {
+  const key = messageIdKey(messageId);
+  requestAnimationFrame(function () {
+    const control = Array.from(document.querySelectorAll(selector)).find(function (item) {
+      return item.dataset.messageId === key;
+    });
+    if (control) control.focus();
+  });
+}
+
+function clearMessageSelection(shouldRender, restoreFocus) {
+  const hadSelection = selectedMessageIds.size > 0;
+  selectedMessageIds.clear();
+  if (shouldRender === false) renderMessageSelectionBar();
+  else renderMessages(false);
+  if (restoreFocus && hadSelection) {
+    requestAnimationFrame(function () {
+      const target = $("messageInput").disabled ? $("mobileBack") : $("messageInput");
+      if (target && target.getClientRects().length) target.focus();
+    });
+  }
+}
+
+function toggleMessageSelection(messageId) {
+  const key = messageIdKey(messageId);
+  const enteringSelection = selectedMessageIds.size === 0 && !selectedMessageIds.has(key);
+  if (enteringSelection && voiceSession) cancelVoiceRecording(true);
+  if (selectedMessageIds.has(key)) selectedMessageIds.delete(key);
+  else selectedMessageIds.add(key);
+  renderMessages(false);
+  const selector = selectedMessageIds.size ? ".message-selection-toggle" : ".message-menu-trigger";
+  focusRenderedMessageControl(key, selector);
+}
+
+async function copySelectedMessages() {
+  const contact = activeContact();
+  const messages = validSelectedMessages();
+  if (!contact || !messages.length) return;
+  const text = messages.map(function (message) {
+    const sender = message.from === "outgoing" ? "You" : contact.name;
+    return sender + " · " + messageTime(message.timestamp) + "\n" + messageCopyText(message);
+  }).join("\n\n");
+  try {
+    await copyPlainText(text);
+    announceMessageAction(messages.length + (messages.length === 1 ? " message copied." : " messages copied."));
+  } catch (error) {
+    announceMessageAction("Could not copy the selected messages.");
+  }
+}
+
+function togglePinSelectedMessages() {
+  const messages = validSelectedMessages();
+  if (!messages.length) return;
+  const shouldPin = messages.some(function (message) { return !message.pinned; });
+  messages.forEach(function (message) { message.pinned = shouldPin; });
+  safeSave();
+  renderMessages(false);
+  announceMessageAction(messages.length + (messages.length === 1 ? " message " : " messages ") + (shouldPin ? "pinned." : "unpinned."));
+}
+
+async function removeMessageAttachmentResources(messages) {
+  const storageIds = new Set();
+  const uncachedBlobUrls = new Set();
+  messages.forEach(function (message) {
+    const attachment = message && message.attachment;
+    if (!attachment) return;
+    const storageId = attachmentStorageId(attachment);
+    const url = attachment.url;
+    if (storageId) storageIds.add(storageId);
+    if (url && String(url).indexOf("blob:") === 0 && (!storageId || mediaUrlCache.get(storageId) !== url)) uncachedBlobUrls.add(url);
+  });
+  for (const storageId of storageIds) await deleteMediaBlob(storageId);
+  uncachedBlobUrls.forEach(function (url) {
+    try { URL.revokeObjectURL(url); } catch (error) { console.warn("Could not release attachment URL.", error); }
+  });
+}
+
+async function deleteMessageRecord(contactId, messageId) {
+  const contact = state.contacts.find(function (item) { return item.id === contactId; });
+  if (!contact) return false;
+  const key = messageIdKey(messageId);
+  const index = contact.messages.findIndex(function (message) { return messageIdKey(message) === key; });
+  if (index < 0) return false;
+  const message = contact.messages[index];
+  await removeMessageAttachmentResources([message]);
+  contact.messages.splice(index, 1);
+  selectedMessageIds.delete(key);
+  if (replyTo && messageIdKey(replyTo) === key) {
+    replyTo = null;
+    renderReplyPreview();
+  }
+  safeSave();
+  if (state.activeId === contact.id) {
+    renderContacts();
+    renderHeader();
+    renderMessages(false);
+  }
+  announceMessageAction("Message deleted.");
+  return true;
+}
+
+async function requestDeleteMessage(contactId, messageId) {
+  const confirmed = await askConfirmation({
+    title: "Delete this message?",
+    description: "This removes the message from this local conversation.",
+    accept: "Delete message"
+  });
+  if (!confirmed) {
+    focusRenderedMessageControl(messageId, ".message-menu-trigger");
+    return false;
+  }
+  return deleteMessageRecord(contactId, messageId);
+}
+
+async function deleteSelectedMessages() {
+  const contact = activeContact();
+  const messages = validSelectedMessages();
+  if (!contact || !messages.length) return;
+  const count = messages.length;
+  const confirmed = await askConfirmation({
+    title: "Delete " + count + (count === 1 ? " message?" : " messages?"),
+    description: "This removes the selected " + (count === 1 ? "message" : "messages") + " from this local conversation.",
+    accept: count === 1 ? "Delete message" : "Delete messages"
+  });
+  if (!confirmed) {
+    requestAnimationFrame(function () { $("deleteSelectedMessages").focus(); });
+    return;
+  }
+  const keys = new Set(messages.map(messageIdKey));
+  await removeMessageAttachmentResources(messages);
+  contact.messages = contact.messages.filter(function (message) { return !keys.has(messageIdKey(message)); });
+  if (replyTo && keys.has(messageIdKey(replyTo))) {
+    replyTo = null;
+    renderReplyPreview();
+  }
+  selectedMessageIds.clear();
+  safeSave();
+  renderContacts();
+  renderHeader();
+  renderMessages(false);
+  announceMessageAction(count + (count === 1 ? " message deleted." : " messages deleted."));
+  requestAnimationFrame(function () {
+    if (!$("messageInput").disabled) $("messageInput").focus();
+  });
+}
+
+async function handleMessageAction(action) {
+  const context = messageActionContext();
+  if (!context) {
+    closeMessageActionMenu(false);
+    return;
+  }
+  const contactId = context.contact.id;
+  const message = context.message;
+  const key = messageIdKey(message);
+
+  if (action === "reply") {
+    closeMessageActionMenu(false);
+    setReply(message);
+    announceMessageAction("Reply ready.");
+    requestAnimationFrame(function () { $("messageInput").focus(); });
+    return;
+  }
+  if (action === "copy") {
+    try {
+      await copyPlainText(messageCopyText(message));
+      announceMessageAction("Message copied.");
+    } catch (error) {
+      announceMessageAction("Could not copy this message.");
+    }
+    closeMessageActionMenu(true);
+    return;
+  }
+  if (action === "pin") {
+    const shouldPin = !message.pinned;
+    message.pinned = shouldPin;
+    closeMessageActionMenu(false);
+    safeSave();
+    renderMessages(false);
+    announceMessageAction(shouldPin ? "Message pinned." : "Message unpinned.");
+    focusRenderedMessageControl(key, ".message-menu-trigger");
+    return;
+  }
+  if (action === "select") {
+    closeMessageActionMenu(false);
+    toggleMessageSelection(key);
+    announceMessageAction(selectedMessageIds.has(key) ? "Message selected." : "Message deselected.");
+    return;
+  }
+  if (action === "delete") {
+    closeMessageActionMenu(false);
+    await requestDeleteMessage(contactId, key);
+  }
+}
+
 function renderMessages(forceBottom) {
   const contact = activeContact();
   const container = $("messages-container");
   const scroller = $("boxMessagesScroll");
   const wasNearBottom = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 110;
   const query = $("messageSearchInput").value.trim().toLowerCase();
+  closeMessageActionMenu(false);
+
+  const availableIds = new Set(contact ? contact.messages.map(messageIdKey) : []);
+  Array.from(selectedMessageIds).forEach(function (id) {
+    if (!availableIds.has(id)) selectedMessageIds.delete(id);
+  });
+  renderMessageSelectionBar();
   container.replaceChildren();
+
   if (!contact || !contact.messages.length) {
+    selectedMessageIds.clear();
+    renderMessageSelectionBar();
     const empty = document.createElement("div");
     empty.className = "thread-empty";
     const mark = document.createElement("span");
@@ -1061,6 +1397,7 @@ function renderMessages(forceBottom) {
 
   let currentDate = "";
   visible.forEach(function (message, index) {
+    const key = messageIdKey(message);
     const dateLabel = messageDate(message.timestamp);
     if (dateLabel !== currentDate) {
       const divider = document.createElement("div");
@@ -1074,7 +1411,10 @@ function renderMessages(forceBottom) {
 
     const row = document.createElement("article");
     row.className = "message-row " + message.from;
-    row.dataset.messageId = message.id;
+    row.dataset.messageId = key;
+    row.classList.toggle("is-selected", selectedMessageIds.has(key));
+    row.classList.toggle("is-pinned", Boolean(message.pinned));
+    row.setAttribute("aria-selected", String(selectedMessageIds.has(key)));
     row.setAttribute("aria-label", (message.from === "outgoing" ? "You" : contact.name) + " at " + messageTime(message.timestamp));
 
     if (message.from === "incoming") {
@@ -1097,6 +1437,23 @@ function renderMessages(forceBottom) {
 
     const bubble = document.createElement("div");
     bubble.className = "message-bubble";
+
+    const actionTrigger = document.createElement("button");
+    actionTrigger.type = "button";
+    actionTrigger.className = "message-menu-trigger";
+    actionTrigger.dataset.messageId = key;
+    actionTrigger.setAttribute("aria-label", "Message actions");
+    actionTrigger.setAttribute("aria-haspopup", "menu");
+    actionTrigger.setAttribute("aria-expanded", "false");
+    actionTrigger.setAttribute("aria-controls", "messageActionMenu");
+    actionTrigger.title = "Message actions";
+    actionTrigger.append(makeIcon("i-chevron"));
+    actionTrigger.addEventListener("click", function (event) {
+      event.stopPropagation();
+      openMessageActionMenu(message, actionTrigger);
+    });
+    bubble.append(actionTrigger);
+
     if (message.reply) {
       const reply = document.createElement("div");
       reply.className = "bubble-reply";
@@ -1119,6 +1476,7 @@ function renderMessages(forceBottom) {
         row.classList.add("has-media");
         bubble.append(createVideoAttachmentCard(message.attachment));
       } else {
+        row.classList.add("has-file");
         bubble.append(createFileAttachmentCard(message.attachment));
       }
     }
@@ -1132,6 +1490,14 @@ function renderMessages(forceBottom) {
 
     const meta = document.createElement("div");
     meta.className = "message-meta";
+    if (message.pinned) {
+      const pinned = document.createElement("span");
+      pinned.className = "message-pin-mark";
+      pinned.setAttribute("aria-label", "Pinned");
+      pinned.title = "Pinned";
+      pinned.append(makeIcon("i-pin"), document.createTextNode("Pinned"));
+      meta.append(pinned);
+    }
     const time = document.createElement("time");
     time.dateTime = message.timestamp;
     time.textContent = messageTime(message.timestamp);
@@ -1147,15 +1513,19 @@ function renderMessages(forceBottom) {
     stack.append(bubble);
     row.append(stack);
 
-    const actions = document.createElement("div");
-    actions.className = "message-actions";
-    const replyButton = document.createElement("button");
-    replyButton.type = "button";
-    replyButton.setAttribute("aria-label", "Reply to this message");
-    replyButton.append(makeIcon("i-reply"));
-    replyButton.addEventListener("click", function () { setReply(message); });
-    actions.append(replyButton);
-    row.append(actions);
+    if (selectedMessageIds.size) {
+      const selectionButton = document.createElement("button");
+      const isSelected = selectedMessageIds.has(key);
+      selectionButton.type = "button";
+      selectionButton.className = "message-selection-toggle";
+      selectionButton.dataset.messageId = key;
+      selectionButton.setAttribute("aria-label", isSelected ? "Deselect message" : "Select message");
+      selectionButton.setAttribute("aria-pressed", String(isSelected));
+      selectionButton.append(makeIcon(isSelected ? "i-check" : "i-select"));
+      selectionButton.addEventListener("click", function () { toggleMessageSelection(key); });
+      row.append(selectionButton);
+    }
+
     container.append(row);
   });
 
@@ -1166,7 +1536,6 @@ function renderMessages(forceBottom) {
     }
   });
 }
-
 function renderHeader() {
   const contact = activeContact();
   $("chatEmpty").hidden = Boolean(contact);
@@ -1175,8 +1544,11 @@ function renderHeader() {
   setAvatar($("active-user-avatar"), contact);
   $("active-user-name").textContent = contact.name;
   $("active-user-status").textContent = contactStatus(contact);
-  $("btnMarkAnswered").classList.toggle("is-resolved", !contact.unanswered);
-  $("btnMarkAnswered").querySelector("span").textContent = contact.unanswered ? "Resolve" : "Resolved";
+  const markAnsweredButton = $("btnMarkAnswered");
+  markAnsweredButton.hidden = !contact.unanswered;
+  markAnsweredButton.classList.remove("is-resolved");
+  markAnsweredButton.querySelector("span").textContent = "Mark answered";
+  $("mobileMarkAnsweredBtn").hidden = !contact.unanswered;
   $("blockedBanner").hidden = !contact.blocked;
   $("blockMenuLabel").textContent = contact.blocked ? "Unblock contact" : "Block contact";
   const blockButton = $("btnBlockUser");
@@ -1190,26 +1562,486 @@ function renderHeader() {
   renderDrawer();
 }
 
+const overviewCategoryDefaults = {
+  clients: {
+    eyebrow: "Client overview",
+    sectionLabels: { subscription: "Subscription", attendance: "Trials and appointments", learning: "Interests and materials" },
+    summary: { labels: ["Stage", "Next step", "Last contact"], values: ["New lead", "Follow up", "No activity"] },
+    profile: { level: "Not assessed", dashboardState: "Lead", emailVerified: true },
+    alerts: [],
+    subscriptions: [],
+    attendance: {
+      totals: { hours: 0, present: 0, absent: 0, practice: 0 }, pattern: "",
+      cycle: { label: "No active cycle", note: "A cycle will appear after enrollment.", totals: { hours: 0, present: 0, absent: 0, practice: 0 }, pattern: "" }
+    },
+    scheduleActions: [
+      { title: "Book trial session", detail: "No trial session is scheduled yet.", enabled: false },
+      { title: "Assign a tutor", detail: "Choose a tutor after the level is confirmed.", enabled: false }
+    ],
+    classes: [],
+    learning: { canTakeExam: "Not yet", certificateCount: 0, materials: [], certificates: [], tests: [] }
+  },
+  students: {
+    eyebrow: "Student overview",
+    sectionLabels: { subscription: "Subscription", attendance: "Classes and attendance", learning: "Learning" },
+    summary: { labels: ["Group", "Remaining sessions", "Attendance"], values: ["Not assigned", "0", null] },
+    profile: { level: "Not assessed", dashboardState: "Active", emailVerified: true },
+    alerts: [],
+    subscriptions: [],
+    attendance: {
+      totals: { hours: 0, present: 0, absent: 0, practice: 0 }, pattern: "",
+      cycle: { label: "No payment cycle found", note: "Attendance starts with the first class.", totals: { hours: 0, present: 0, absent: 0, practice: 0 }, pattern: "" }
+    },
+    scheduleActions: [
+      { title: "Postpone upcoming session", detail: "No upcoming assigned session is available.", enabled: false },
+      { title: "Change schedule", detail: "No upcoming assigned group is available.", enabled: false }
+    ],
+    classes: [],
+    learning: { canTakeExam: "No", certificateCount: 0, materials: [], certificates: [], tests: [] }
+  },
+  tutors: {
+    eyebrow: "Tutor overview",
+    sectionLabels: { subscription: "Engagement", attendance: "Classes and attendance", learning: "Teaching and materials" },
+    summary: { labels: ["Active groups", "Upcoming sessions", "Attendance"], values: ["0", "0", null] },
+    profile: { level: "Tutor", dashboardState: "Active", emailVerified: true },
+    alerts: [],
+    subscriptions: [],
+    attendance: {
+      totals: { hours: 0, present: 0, absent: 0, practice: 0 }, pattern: "",
+      cycle: { label: "Current month", note: "No teaching sessions recorded.", totals: { hours: 0, present: 0, absent: 0, practice: 0 }, pattern: "" }
+    },
+    scheduleActions: [
+      { title: "Review upcoming session", detail: "No upcoming session needs attention.", enabled: false },
+      { title: "Update availability", detail: "Availability can be updated from the tutor workspace.", enabled: true }
+    ],
+    classes: [],
+    learning: { canTakeExam: "Up to date", certificateCount: 0, materials: [], certificates: [], tests: [] }
+  }
+};
+
+const overviewContactProfiles = {
+  1: {
+    summary: { values: ["Trial lead", "Thu · 5 PM", "48 min ago"] },
+    profile: { level: "B2 · Upper intermediate", dashboardState: "Trial requested" },
+    alerts: [{ tone: "info", title: "Trial request ready", body: "Amira confirmed Thursday at 5 PM. Send the meeting link when the tutor is assigned." }],
+    attendance: {
+      totals: { hours: 1, present: 1, absent: 0, practice: 0 }, pattern: "p",
+      cycle: { label: "Trial period", note: "One attended discovery session.", totals: { hours: 1, present: 1, absent: 0, practice: 0 }, pattern: "p" }
+    },
+    scheduleActions: [
+      { title: "Confirm trial lesson", detail: "Thursday at 5 PM is available.", enabled: true },
+      { title: "Assign a tutor", detail: "Match Amira with a B2 tutor.", enabled: true }
+    ],
+    classes: [{ name: "B2 trial lesson", meta: "Thursday · 5:00 PM", status: "Awaiting link" }],
+    learning: {
+      canTakeExam: "After trial", certificateCount: 0,
+      materials: [{ name: "B2 course brochure", meta: "Course overview", url: "https://bostonenglish.example/materials/b2-brochure" }],
+      certificates: [], tests: []
+    }
+  },
+  2: {
+    summary: { values: ["Subscribed", "Renew Sep 28", "Yesterday"] },
+    profile: { level: "C1 · Advanced", dashboardState: "Active" },
+    subscriptions: [{ name: "Business English C1", meta: "7 sessions remaining · renews Sep 28", status: "Active" }],
+    attendance: {
+      totals: { hours: 35, present: 33, absent: 2, practice: 4 }, pattern: "ppppppapppppppappp",
+      cycle: { label: "Sep 1 – Sep 30", note: "7 sessions remaining.", totals: { hours: 9, present: 8, absent: 1, practice: 2 }, pattern: "ppppapppp" }
+    },
+    scheduleActions: [
+      { title: "Postpone upcoming session", detail: "Next class is Tuesday at 6 PM.", enabled: true },
+      { title: "Change schedule", detail: "Current schedule: Tue and Thu.", enabled: true }
+    ],
+    classes: [{ name: "Business English C1", meta: "Tuesday & Thursday · 6:00 PM", status: "Active" }],
+    learning: {
+      canTakeExam: "Yes", certificateCount: 1,
+      materials: [{ name: "C1 business vocabulary", meta: "Updated this week", url: "https://bostonenglish.example/materials/c1-business" }],
+      certificates: [{ name: "Business English B2", meta: "Completed", url: "https://bostonenglish.example/certificates/youssef-b2" }],
+      tests: [{ name: "C1 progress test", score: 86 }]
+    }
+  },
+  3: {
+    summary: { values: ["New lead", "Saturday follow-up", "Yesterday"] },
+    profile: { level: "B1 · Intermediate", dashboardState: "Needs reply", emailVerified: false },
+    alerts: [{ tone: "warning", title: "Email verification required", body: "Confirm Leila’s email before sending class links and account notifications." }],
+    scheduleActions: [
+      { title: "Offer Saturday trial", detail: "The contact asked for weekend availability.", enabled: true },
+      { title: "Assign a tutor", detail: "Confirm the trial time first.", enabled: false }
+    ],
+    classes: [],
+    learning: {
+      canTakeExam: "Not yet", certificateCount: 0,
+      materials: [{ name: "B1 weekend course guide", meta: "Share after follow-up", url: "https://bostonenglish.example/materials/b1-weekend" }],
+      certificates: [], tests: []
+    }
+  },
+  4: {
+    summary: { values: ["Speaking Club B2", "8", null] },
+    profile: { level: "B2 · Upper intermediate", dashboardState: "Active" },
+    subscriptions: [{ name: "Speaking Club", meta: "8 sessions remaining · renews Oct 12", status: "Active" }],
+    attendance: {
+      totals: { hours: 25, present: 22, absent: 3, practice: 6 }, pattern: "ppppapppppappppappp",
+      cycle: { label: "Sep 4 – Oct 12", note: "8 sessions remaining.", totals: { hours: 8, present: 7, absent: 1, practice: 2 }, pattern: "pppapppp" }
+    },
+    scheduleActions: [
+      { title: "Postpone upcoming session", detail: "Thursday’s speaking session can be moved.", enabled: true },
+      { title: "Change schedule", detail: "A Saturday group has availability.", enabled: true }
+    ],
+    classes: [{ name: "Speaking Club B2", meta: "Thursday · 7:00 PM", status: "Active" }],
+    learning: {
+      canTakeExam: "Yes", certificateCount: 1,
+      materials: [{ name: "Speaking prompts · Unit 6", meta: "Class material", url: "https://bostonenglish.example/materials/speaking-b2-unit-6" }],
+      certificates: [{ name: "General English B1", meta: "Issued Jun 2026", url: "https://bostonenglish.example/certificates/sara-b1" }],
+      tests: [{ name: "B2 speaking review", score: 88 }]
+    }
+  },
+  5: {
+    summary: { values: ["General English A2", "5", null] },
+    profile: { level: "A2 · Elementary", dashboardState: "Active" },
+    subscriptions: [{ name: "General English A2", meta: "5 sessions remaining · renews Sep 30", status: "Active" }],
+    attendance: {
+      totals: { hours: 34, present: 32, absent: 2, practice: 3 }, pattern: "pppppppapppppppappp",
+      cycle: { label: "Aug 29 – Sep 30", note: "5 sessions remaining.", totals: { hours: 10, present: 9, absent: 1, practice: 1 }, pattern: "pppppapp" }
+    },
+    scheduleActions: [
+      { title: "Postpone upcoming session", detail: "Next lesson is Monday at 7 PM.", enabled: true },
+      { title: "Change schedule", detail: "Current schedule: Monday evening.", enabled: true }
+    ],
+    classes: [{ name: "General English A2", meta: "Monday · 7:00 PM", status: "Active" }],
+    learning: {
+      canTakeExam: "Yes", certificateCount: 0,
+      materials: [{ name: "A2 workbook", meta: "Units 8–10", url: "https://bostonenglish.example/materials/a2-workbook" }],
+      certificates: [], tests: [{ name: "A2 unit review", score: 81 }]
+    }
+  },
+  6: {
+    summary: { values: ["IELTS Evening", "10", null] },
+    profile: { level: "IELTS · Target 7.0", dashboardState: "Active" },
+    subscriptions: [{ name: "IELTS Preparation", meta: "10 sessions remaining · renews Oct 20", status: "Active" }],
+    alerts: [{ tone: "info", title: "Target score: 7.0", body: "Writing practice is the priority for the next learning review." }],
+    attendance: {
+      totals: { hours: 30, present: 27, absent: 3, practice: 8 }, pattern: "ppppappppapppppappp",
+      cycle: { label: "Sep 10 – Oct 20", note: "10 sessions remaining.", totals: { hours: 6, present: 6, absent: 0, practice: 3 }, pattern: "pppppp" }
+    },
+    scheduleActions: [
+      { title: "Postpone upcoming session", detail: "Next class is Wednesday at 8 PM.", enabled: true },
+      { title: "Change schedule", detail: "Evening IELTS groups are available.", enabled: true }
+    ],
+    classes: [{ name: "IELTS Preparation", meta: "Wednesday & Friday · 8:00 PM", status: "Active" }],
+    learning: {
+      canTakeExam: "Yes", certificateCount: 0,
+      materials: [
+        { name: "IELTS writing task 2", meta: "Homework", url: "https://bostonenglish.example/materials/ielts-writing-2" },
+        { name: "Band 7 speaking guide", meta: "Practice material", url: "https://bostonenglish.example/materials/ielts-speaking-7" }
+      ],
+      certificates: [], tests: [{ name: "IELTS diagnostic", score: 74 }, { name: "Writing mock test", score: 78 }]
+    }
+  },
+  7: {
+    summary: { values: ["4", "8", null] },
+    profile: { level: "Tutor · C2", dashboardState: "Available" },
+    subscriptions: [{ name: "Tutor engagement", meta: "4 active groups · afternoon availability", status: "Active" }],
+    attendance: {
+      totals: { hours: 52, present: 50, absent: 2, practice: 5 }, pattern: "ppppppppapppppppapp",
+      cycle: { label: "September 2026", note: "8 upcoming sessions.", totals: { hours: 14, present: 14, absent: 0, practice: 2 }, pattern: "pppppppppppppp" }
+    },
+    scheduleActions: [
+      { title: "Review upcoming session", detail: "Afternoon trial lesson is next.", enabled: true },
+      { title: "Update availability", detail: "Available after 2 PM.", enabled: true }
+    ],
+    classes: [
+      { name: "B2 Afternoon Group", meta: "Mon & Wed · 4:00 PM", status: "Active" },
+      { name: "Trial lessons", meta: "Thursday · 5:00 PM", status: "Assigned" }
+    ],
+    learning: {
+      canTakeExam: "Up to date", certificateCount: 3,
+      materials: [{ name: "Tutor lesson plans · B2", meta: "Teaching material", url: "https://bostonenglish.example/tutors/b2-plans" }],
+      certificates: [{ name: "CELTA", meta: "Verified", url: "https://bostonenglish.example/tutors/nadia/celta" }],
+      tests: [{ name: "Annual teaching review", score: 96 }]
+    }
+  },
+  8: {
+    summary: { values: ["2", "6", null] },
+    profile: { level: "Tutor · C2", dashboardState: "Active" },
+    alerts: [{ tone: "warning", title: "Student level needed", body: "Confirm the assigned student’s level before preparing the next lesson." }],
+    subscriptions: [{ name: "Tutor engagement", meta: "2 active groups · 18 teaching hours this cycle", status: "Active" }],
+    attendance: {
+      totals: { hours: 50, present: 46, absent: 4, practice: 2 }, pattern: "ppppapppppppappppp",
+      cycle: { label: "September 2026", note: "6 upcoming sessions.", totals: { hours: 12, present: 11, absent: 1, practice: 1 }, pattern: "ppppappppppp" }
+    },
+    scheduleActions: [
+      { title: "Review upcoming session", detail: "The student level is still pending.", enabled: true },
+      { title: "Update availability", detail: "Next available slot is tomorrow at 6 PM.", enabled: true }
+    ],
+    classes: [
+      { name: "B1 Evening Group", meta: "Tuesday & Thursday · 7:00 PM", status: "Active" },
+      { name: "Assigned trial", meta: "Waiting for student level", status: "Needs details" }
+    ],
+    learning: {
+      canTakeExam: "Up to date", certificateCount: 2,
+      materials: [
+        { name: "B1 placement checklist", meta: "Use before the trial", url: "https://bostonenglish.example/tutors/b1-checklist" },
+        { name: "Tutor lesson planner", meta: "Teaching material", url: "https://bostonenglish.example/tutors/lesson-planner" }
+      ],
+      certificates: [{ name: "TESOL Certificate", meta: "Verified", url: "https://bostonenglish.example/tutors/rachid/tesol" }],
+      tests: [{ name: "Annual teaching review", score: 92 }]
+    }
+  }
+};
+
+function mergeOverviewData(base, overlay) {
+  if (overlay == null) return clone(base);
+  if (Array.isArray(overlay)) return clone(overlay);
+  if (typeof overlay !== "object") return overlay;
+  const result = base && typeof base === "object" && !Array.isArray(base) ? clone(base) : {};
+  Object.keys(overlay).forEach(function (key) {
+    const value = overlay[key];
+    if (value && typeof value === "object" && !Array.isArray(value)) result[key] = mergeOverviewData(result[key] || {}, value);
+    else result[key] = clone(value);
+  });
+  return result;
+}
+
+function contactOverview(contact) {
+  const category = overviewCategoryDefaults[contact.category] ? contact.category : "clients";
+  let overview = mergeOverviewData(overviewCategoryDefaults[category], overviewContactProfiles[contact.id] || {});
+  if (contact.overview && typeof contact.overview === "object") overview = mergeOverviewData(overview, contact.overview);
+  const courseParts = String(contact.course || "").split("·").map(function (part) { return part.trim(); }).filter(Boolean);
+  if ((!overview.profile.level || overview.profile.level === "Not assessed") && courseParts.length > 1) overview.profile.level = courseParts[courseParts.length - 1];
+  if (contact.blocked) overview.profile.dashboardState = "Blocked";
+  else if (contact.unanswered && category !== "tutors" && overview.profile.dashboardState === "Active") overview.profile.dashboardState = "Needs reply";
+  return overview;
+}
+
+function attendancePercent(totals) {
+  const present = Number(totals && totals.present) || 0;
+  const absent = Number(totals && totals.absent) || 0;
+  const counted = present + absent;
+  return counted ? Math.round((present / counted) * 100) + "%" : "—";
+}
+
+function setDrawerText(id, value) {
+  $(id).textContent = value == null || value === "" ? "—" : String(value);
+}
+
+function makeOverviewEmpty(message) {
+  const empty = document.createElement("p");
+  empty.className = "overview-empty";
+  empty.textContent = message;
+  return empty;
+}
+
+function makeOverviewCopyButton(value, label, accessibleLabel) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "copy-pill compact";
+  button.dataset.copyValue = value || "";
+  button.setAttribute("aria-label", accessibleLabel || label);
+  button.append(makeIcon("i-copy"));
+  const text = document.createElement("span");
+  text.dataset.copyLabel = "";
+  text.textContent = label;
+  button.append(text);
+  button.disabled = !value;
+  return button;
+}
+
+function makeOverviewRow(item, options) {
+  const row = document.createElement("div");
+  row.className = "overview-list-row" + (options && options.tone ? " " + options.tone : "");
+  const copy = document.createElement("div");
+  copy.className = "overview-list-copy";
+  const title = document.createElement("strong");
+  title.textContent = item.name || item.title || "Untitled";
+  copy.append(title);
+  if (item.meta || item.detail) {
+    const meta = document.createElement("span");
+    meta.textContent = item.meta || item.detail;
+    copy.append(meta);
+  }
+  row.append(copy);
+  if (options && options.copyValue) row.append(makeOverviewCopyButton(options.copyValue, options.copyLabel || "Copy link", "Copy link for " + title.textContent));
+  else if (item.status) {
+    const status = document.createElement("span");
+    status.className = "overview-status";
+    status.textContent = item.status;
+    row.append(status);
+  }
+  return row;
+}
+
+function renderOverviewAlerts(items) {
+  const container = $("drawerAlerts");
+  container.replaceChildren();
+  container.hidden = !items.length;
+  items.forEach(function (item) {
+    const alert = document.createElement("div");
+    alert.className = "overview-alert " + (item.tone || "info");
+    alert.setAttribute("role", item.tone === "danger" ? "alert" : "status");
+    const icon = document.createElement("span");
+    icon.className = "overview-alert-icon";
+    icon.append(makeIcon(item.tone === "warning" || item.tone === "danger" ? "i-warning" : "i-info"));
+    const copy = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = item.title;
+    const body = document.createElement("p");
+    body.textContent = item.body;
+    copy.append(title, body);
+    alert.append(icon, copy);
+    container.append(alert);
+  });
+}
+
+function renderOverviewSubscriptions(items) {
+  const container = $("drawerSubscriptions");
+  container.replaceChildren();
+  if (!items.length) {
+    container.append(makeOverviewEmpty("No subscriptions or active engagement records."));
+    return;
+  }
+  items.forEach(function (item) { container.append(makeOverviewRow(item)); });
+}
+
+function renderAttendanceHistory(containerId, pattern, labelPrefix) {
+  const container = $(containerId);
+  container.replaceChildren();
+  const values = String(pattern || "").split("").filter(Boolean);
+  if (!values.length) {
+    container.append(makeOverviewEmpty("No attendance records yet."));
+    return;
+  }
+  const statusByCode = { p: "present", a: "absent", r: "practice" };
+  values.forEach(function (code, index) {
+    const status = statusByCode[code] || "present";
+    const date = new Date(2026, 7, 3 + index * 2, 18, 0);
+    const dateLabel = new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(date);
+    const dot = document.createElement("span");
+    dot.className = "attendance-dot " + status;
+    dot.tabIndex = 0;
+    dot.setAttribute("role", "img");
+    const description = dateLabel + " · " + status.charAt(0).toUpperCase() + status.slice(1) + " · 1 hour";
+    dot.setAttribute("aria-label", (labelPrefix ? labelPrefix + ": " : "") + description);
+    dot.dataset.tooltip = description;
+    container.append(dot);
+  });
+  const legend = document.createElement("div");
+  legend.className = "attendance-legend";
+  ["present", "absent", "practice"].forEach(function (status) {
+    const item = document.createElement("span");
+    const mark = document.createElement("i");
+    mark.className = status;
+    item.append(mark, document.createTextNode(status.charAt(0).toUpperCase() + status.slice(1)));
+    legend.append(item);
+  });
+  container.append(legend);
+}
+
+function renderScheduleActions(items) {
+  const container = $("drawerScheduleActions");
+  container.replaceChildren();
+  items.forEach(function (item) {
+    const card = document.createElement("article");
+    card.className = "schedule-action" + (item.enabled ? "" : " is-disabled");
+    const icon = document.createElement("span");
+    icon.className = "schedule-action-icon";
+    icon.append(makeIcon("i-calendar"));
+    const copy = document.createElement("div");
+    const title = document.createElement("h4");
+    title.textContent = item.title;
+    const detail = document.createElement("p");
+    detail.textContent = item.detail;
+    copy.append(title, detail);
+    const state = document.createElement("span");
+    state.className = "schedule-action-state";
+    state.textContent = item.enabled ? "Available" : "Unavailable";
+    card.append(icon, copy, state);
+    container.append(card);
+  });
+}
+
+function renderClasses(items) {
+  const container = $("drawerClasses");
+  container.replaceChildren();
+  if (!items.length) {
+    container.append(makeOverviewEmpty("No classes assigned."));
+    return;
+  }
+  items.forEach(function (item) { container.append(makeOverviewRow(item)); });
+}
+
+function renderLearningList(containerId, items, emptyMessage, type) {
+  const container = $(containerId);
+  container.replaceChildren();
+  if (!items.length) {
+    container.append(makeOverviewEmpty(emptyMessage));
+    return;
+  }
+  items.forEach(function (item) {
+    if (type === "test") {
+      const row = makeOverviewRow(item);
+      const score = document.createElement("span");
+      score.className = "score-pill";
+      score.textContent = Math.max(0, Math.min(100, Number(item.score) || 0)) + "%";
+      row.append(score);
+      container.append(row);
+    } else {
+      container.append(makeOverviewRow(item, item.url ? { copyValue: item.url, copyLabel: "Copy link" } : null));
+    }
+  });
+}
+
+function configureProfileCopyButton(id, value, label, contactName) {
+  const button = $(id);
+  button.dataset.copyValue = value || "";
+  button.disabled = !value;
+  button.setAttribute("aria-label", value ? label + " for " + contactName : label + " unavailable");
+  button.querySelector("[data-copy-label]").textContent = value ? label : "Unavailable";
+}
+
 function renderDrawer() {
   const contact = activeContact();
   if (!contact) return;
+  const overview = contactOverview(contact);
+  const totals = overview.attendance.totals || {};
+  const cycle = overview.attendance.cycle || {};
+  const cycleTotals = cycle.totals || {};
+  const summaryValues = (overview.summary.values || []).slice(0, 3);
+  while (summaryValues.length < 3) summaryValues.push("—");
+  if (contact.category !== "clients") summaryValues[2] = attendancePercent(totals);
+
   setAvatar($("drawerAvatar"), contact);
+  $("drawerEyebrow").textContent = overview.eyebrow;
   $("drawerTitle").textContent = contact.name;
   $("drawerName").textContent = contact.name;
   $("drawerPresence").textContent = contactStatus(contact);
-  $("drawerPhone").textContent = contact.phone || "—";
-  $("drawerEmail").textContent = contact.email || "—";
   $("drawerCourse").textContent = contact.course || "—";
+  $("drawerLevel").textContent = overview.profile.level || "—";
+  $("drawerDashboardState").textContent = overview.profile.dashboardState || "Active";
+  $("drawerDashboardState").className = "state-pill" + (contact.blocked ? " blocked" : contact.unanswered ? " attention" : "");
+  configureProfileCopyButton("drawerPhone", contact.phone, "Copy phone", contact.name);
+  configureProfileCopyButton("drawerEmail", contact.email, "Copy email", contact.name);
+
   try {
     $("drawerTime").textContent = new Intl.DateTimeFormat("en", { timeZone: contact.timezone || "Africa/Casablanca", hour: "2-digit", minute: "2-digit", timeZoneName: "short" }).format(new Date());
   } catch (error) {
     $("drawerTime").textContent = "Local time unavailable";
   }
+
+  (overview.summary.labels || []).slice(0, 3).forEach(function (label, index) {
+    setDrawerText(["drawerSummaryLabelOne", "drawerSummaryLabelTwo", "drawerSummaryLabelThree"][index], label);
+  });
+  summaryValues.forEach(function (value, index) {
+    setDrawerText(["drawerSummaryOne", "drawerSummaryTwo", "drawerSummaryThree"][index], value);
+  });
+
+  $("subscriptionSectionTitle").textContent = overview.sectionLabels.subscription;
+  $("attendanceSectionTitle").textContent = overview.sectionLabels.attendance;
+  $("learningSectionTitle").textContent = overview.sectionLabels.learning;
   $("contactNotes").value = contact.notes || "";
   $("drawerMessageCount").textContent = contact.messages.length;
   $("drawerChannel").textContent = lastMessage(contact) ? lastMessage(contact).channel.replace("WhatsApp Student Support", "Student support") : "—";
   $("drawerResolveBtn").textContent = contact.unanswered ? "Resolve" : "Reopen";
   $("drawerResolveBtn").prepend(makeIcon("i-check"));
+
   const tags = $("drawerTags");
   tags.replaceChildren();
   (contact.tags || []).forEach(function (tagText) {
@@ -1218,11 +2050,38 @@ function renderDrawer() {
     tag.textContent = tagText;
     tags.append(tag);
   });
-}
 
+  renderOverviewAlerts(overview.alerts || []);
+  renderOverviewSubscriptions(overview.subscriptions || []);
+
+  setDrawerText("drawerHours", totals.hours || 0);
+  setDrawerText("drawerPresent", totals.present || 0);
+  setDrawerText("drawerAbsent", totals.absent || 0);
+  setDrawerText("drawerPractice", totals.practice || 0);
+  renderAttendanceHistory("drawerAttendanceDots", overview.attendance.pattern, "Attendance");
+
+  setDrawerText("drawerCycleLabel", cycle.label || "Current cycle");
+  setDrawerText("drawerCycleHours", cycleTotals.hours || 0);
+  setDrawerText("drawerCyclePresent", cycleTotals.present || 0);
+  setDrawerText("drawerCycleAbsent", cycleTotals.absent || 0);
+  setDrawerText("drawerCyclePractice", cycleTotals.practice || 0);
+  renderAttendanceHistory("drawerCycleDots", cycle.pattern, "Current cycle");
+  $("drawerCycleDots").setAttribute("data-cycle-note", cycle.note || "");
+
+  renderScheduleActions(overview.scheduleActions || []);
+  renderClasses(overview.classes || []);
+
+  setDrawerText("drawerExamEligibility", overview.learning.canTakeExam || "—");
+  setDrawerText("drawerCertificateCount", overview.learning.certificateCount == null ? (overview.learning.certificates || []).length : overview.learning.certificateCount);
+  renderLearningList("drawerMaterials", overview.learning.materials || [], "No course materials assigned.", "material");
+  renderLearningList("drawerCertificates", overview.learning.certificates || [], "No certificates yet.", "certificate");
+  renderLearningList("drawerTests", overview.learning.tests || [], "No tests taken yet.", "test");
+}
 function selectContact(id, navigate) {
   if (sendInProgress) { showToast("Finishing message", "Wait a moment while the audio is saved."); return; }
   if (voiceSession) cancelVoiceRecording(true);
+  clearMessageSelection(false);
+  closeMessageActionMenu(false);
   releasePendingAttachment();
   const previous = activeContact();
   if (previous && $("messageInput") && !previous.blocked) state.drafts[previous.id] = $("messageInput").value;
@@ -1252,7 +2111,7 @@ function selectContact(id, navigate) {
 
 function renderReplyPreview() {
   $("replyPreview").hidden = !replyTo;
-  $("replyText").textContent = replyTo ? (replyTo.body || (replyTo.attachment && replyTo.attachment.name) || "Attachment") : "";
+  $("replyText").textContent = replyTo ? (replyTo.body || (replyTo.attachment && attachmentPreviewLabel(replyTo.attachment)) || "Attachment") : "";
 }
 
 function setReply(message) {
@@ -1305,7 +2164,9 @@ function updateComposer() {
   $("attachmentBtn").disabled = Boolean(contact && contact.blocked) || sendInProgress;
   $("btnEmoji").disabled = Boolean(contact && contact.blocked) || sendInProgress;
   $("quickRepliesBtn").disabled = Boolean(contact && contact.blocked) || sendInProgress;
+  $("sendGreetingBtn").disabled = Boolean(contact && contact.blocked) || sendInProgress;
   $("typeInput").disabled = sendInProgress;
+  $("composerSpeedDialBtn").disabled = Boolean(contact && contact.blocked) || sendInProgress;
   $("mobileBack").disabled = sendInProgress;
   $("leftSideSection").inert = sendInProgress;
   $("draftCount").textContent = value.length + " / 2000";
@@ -1331,13 +2192,43 @@ function insertAtCaret(text) {
   input.focus();
 }
 
+function syncChannelPicker() {
+  const trigger = $("typeInput");
+  const definition = channelDefinitions[trigger.value] || channelDefinitions.WhatsApp;
+  if (!channelDefinitions[trigger.value]) trigger.value = "WhatsApp";
+  trigger.dataset.channel = definition.key;
+  trigger.setAttribute("aria-label", "Message channel: " + trigger.value);
+
+  $("channelTriggerValue").textContent = trigger.value;
+  $("channelTriggerIconUse").setAttribute("href", "#" + definition.icon);
+  document.querySelectorAll("#channelMenu [data-channel-value]").forEach(function (option) {
+    option.setAttribute("aria-checked", String(option.dataset.channelValue === trigger.value));
+  });
+}
+
+function selectMessageChannel(value) {
+  if (!channelDefinitions[value]) return;
+  const trigger = $("typeInput");
+  const changed = trigger.value !== value;
+  trigger.value = value;
+  syncChannelPicker();
+  if (changed) trigger.dispatchEvent(new Event("change", { bubbles: true }));
+  else updateComposer();
+  closePanels();
+  requestAnimationFrame(function () { $("composerSpeedDialBtn").focus(); });
+}
+
 function closePanels(except) {
-  ["conversationMenu", "attachmentMenu", "emojiPanel", "templatePanel", "statusFilterMenu"].forEach(function (id) {
+  if (except !== "messageActionMenu") closeMessageActionMenu(false);
+  ["conversationMenu", "attachmentMenu", "composerSpeedDial", "channelMenu", "emojiPanel", "templatePanel", "statusFilterMenu"].forEach(function (id) {
     if (id === except) return;
     $(id).hidden = true;
   });
   $("conversationMenuBtn").setAttribute("aria-expanded", String(except === "conversationMenu"));
   $("attachmentBtn").setAttribute("aria-expanded", String(except === "attachmentMenu"));
+  $("composerSpeedDialBtn").setAttribute("aria-expanded", String(except === "composerSpeedDial"));
+  $("composerSpeedDialBtn").setAttribute("aria-label", except === "composerSpeedDial" ? "Close message tools" : "Open message tools");
+  $("typeInput").setAttribute("aria-expanded", String(except === "channelMenu"));
   $("btnEmoji").setAttribute("aria-expanded", String(except === "emojiPanel"));
   $("quickRepliesBtn").setAttribute("aria-expanded", String(except === "templatePanel"));
   $("statusFilterBtn").setAttribute("aria-expanded", String(except === "statusFilterMenu"));
@@ -1350,15 +2241,29 @@ function togglePanel(id, trigger) {
   panel.hidden = !willOpen;
   trigger.setAttribute("aria-expanded", String(willOpen));
   if (willOpen) {
-    const first = id === "emojiPanel" ? $("emojiSearchInput") : id === "statusFilterMenu" ? panel.querySelector("[aria-checked='true']") : panel.querySelector("button, input");
+    const first = id === "emojiPanel"
+      ? $("emojiSearchInput")
+      : (id === "statusFilterMenu" || id === "channelMenu")
+        ? panel.querySelector("[aria-checked='true']")
+        : Array.from(panel.querySelectorAll("button:not(:disabled), input:not(:disabled)")).find(function (control) {
+          return !control.hidden && control.getClientRects().length;
+        });
     if (first) requestAnimationFrame(function () { first.focus(); });
   }
 }
 
 function setDrawerBackgroundInert(value) {
-  [document.querySelector(".utility-rail"), $("leftSideSection"), $("rightSideSection")].forEach(function (element) {
-    if (element) element.inert = value;
-  });
+  const elements = [document.querySelector(".utility-rail"), $("leftSideSection"), $("rightSideSection")].filter(Boolean);
+  if (value) {
+    if (!drawerInertRestore) drawerInertRestore = elements.map(function (element) { return element.inert; });
+    elements.forEach(function (element) { element.inert = true; });
+  } else {
+    elements.forEach(function (element, index) {
+      const wasInert = drawerInertRestore ? drawerInertRestore[index] : false;
+      element.inert = Boolean(wasInert || (element.id === "leftSideSection" && sendInProgress));
+    });
+    drawerInertRestore = null;
+  }
   $("contactDrawer").setAttribute("aria-modal", String(value));
 }
 
@@ -1366,10 +2271,12 @@ function openDrawer(trigger) {
   if (!activeContact()) return;
   closePanels();
   lastDrawerTrigger = trigger || document.activeElement;
+  renderDrawer();
+  $("contactDrawer").inert = false;
   $("appShell").classList.add("details-open");
   $("contactDrawer").setAttribute("aria-hidden", "false");
   $("drawerBackdrop").hidden = false;
-  setDrawerBackgroundInert(window.matchMedia("(max-width: 1319px)").matches);
+  setDrawerBackgroundInert(true);
   requestAnimationFrame(function () { $("closeOverview").focus(); });
 }
 
@@ -1377,11 +2284,46 @@ function closeDrawer() {
   if (!$("appShell").classList.contains("details-open")) return;
   $("appShell").classList.remove("details-open");
   $("contactDrawer").setAttribute("aria-hidden", "true");
+  $("contactDrawer").inert = true;
   $("drawerBackdrop").hidden = true;
   setDrawerBackgroundInert(false);
-  if (lastDrawerTrigger && document.contains(lastDrawerTrigger)) lastDrawerTrigger.focus();
+  const focusTarget = lastDrawerTrigger && document.contains(lastDrawerTrigger) && !lastDrawerTrigger.disabled ? lastDrawerTrigger : $("activeContactButton");
+  if (focusTarget) focusTarget.focus();
 }
 
+function fallbackCopyText(value) {
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  textarea.style.pointerEvents = "none";
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("Copy command was rejected.");
+}
+
+async function copyOverviewValue(button) {
+  const value = button.dataset.copyValue;
+  if (!value) return;
+  const label = button.querySelector("[data-copy-label]");
+  const original = label ? label.textContent : "Copy";
+  try {
+    if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(value);
+    else fallbackCopyText(value);
+    if (label) label.textContent = "Copied";
+    button.classList.add("is-copied");
+    showToast("Copied", "The value is ready to paste.");
+    window.setTimeout(function () {
+      if (label && document.contains(label)) label.textContent = original;
+      button.classList.remove("is-copied");
+    }, 1600);
+  } catch (error) {
+    showToast("Could not copy", "Select and copy the value manually.", "error");
+  }
+}
 function showToast(title, message, type, action) {
   const toast = document.createElement("div");
   toast.className = "toast" + (type === "error" ? " error" : "");
@@ -1841,8 +2783,7 @@ function renderVoiceRecorder() {
   $("recordAudioBtn").classList.toggle("is-requesting", session.phase === "requesting");
   const requesting = session.phase === "requesting";
   const stopping = session.phase === "stopping";
-  $("voiceRecorderStatus").textContent = requesting ? "Connecting to microphone" : session.phase === "paused" ? "Recording paused" : stopping ? "Finishing voice note" : "Recording voice note";
-  $("voiceRecorderHint").textContent = requesting ? "Your browser may ask for permission" : session.phase === "paused" ? "Resume when you are ready" : stopping ? "Sending your voice note" : "Speak clearly near your microphone";
+  panel.setAttribute("aria-label", requesting ? "Connecting to microphone" : session.phase === "paused" ? "Voice recording paused" : stopping ? "Sending voice message" : "Voice recording in progress");
   $("voiceRecorderTime").textContent = formatDuration(voiceElapsedSeconds(session));
   $("voiceRecorderTime").dateTime = "PT" + Math.round(voiceElapsedSeconds(session)) + "S";
   $("pauseVoiceBtn").disabled = requesting || stopping;
@@ -1945,7 +2886,7 @@ function cancelVoiceRecording(showNotice) {
   if (session.recorder && session.recorder.state !== "inactive") {
     try { session.recorder.stop(); } catch (error) { resetVoiceSession(session); }
   } else resetVoiceSession(session);
-  if (showNotice) showToast("Recording discarded", "The voice note was not added to the conversation.");
+  if (showNotice) announceVoice("Recording discarded.");
   return true;
 }
 function finalizeVoiceRecording(session) {
@@ -1978,7 +2919,6 @@ function finalizeVoiceRecording(session) {
   sendMessage({ attachment: attachment, contactId: targetContactId, preserveComposer: true }).then(function (sent) {
     if (sent) {
       announceVoice("Voice message sent.");
-      showToast("Voice note sent", "The recording was added to the conversation.");
       requestAnimationFrame(function () { $("messageInput").focus(); });
     } else if (attachment.url && attachment.url.indexOf("blob:") === 0 && !attachmentStorageId(attachment)) {
       URL.revokeObjectURL(attachment.url);
@@ -2131,10 +3071,6 @@ async function readAttachment(file) {
       preserveComposer: true,
       lockHeld: true
     });
-    if (sent) {
-      const label = attachment.kind === "image" ? "Image sent" : attachment.kind === "video" ? "Video sent" : attachment.kind === "audio" ? "Audio sent" : "File sent";
-      showToast(label, attachment.name + " was added to the conversation.");
-    }
   } catch (error) {
     showToast("Attachment not sent", error && error.message ? error.message : "Try another file.", "error");
   } finally {
@@ -2220,7 +3156,7 @@ async function sendMessage(options) {
       channel: $("typeInput").value,
       status: "sending"
     };
-    if (replyTo && !preserveComposer) message.reply = replyTo.body || (replyTo.attachment && replyTo.attachment.name) || "Attachment";
+    if (replyTo && !preserveComposer) message.reply = replyTo.body || (replyTo.attachment && attachmentPreviewLabel(replyTo.attachment)) || "Attachment";
     if (attachmentCopy) message.attachment = attachmentCopy;
     contact.messages.push(message);
     contact.unanswered = false;
@@ -2263,6 +3199,7 @@ async function sendMessage(options) {
   }
 }
 function openConversationSearch() {
+  clearMessageSelection(false);
   closePanels();
   $("conversationSearch").hidden = false;
   requestAnimationFrame(function () { $("messageSearchInput").focus(); });
@@ -2305,6 +3242,10 @@ async function clearConversation() {
     accept: "Clear messages"
   });
   if (!confirmed) return;
+  clearMessageSelection(false);
+  closeMessageActionMenu(false);
+  replyTo = null;
+  renderReplyPreview();
   const mediaIds = contact.messages.map(function (message) { return attachmentStorageId(message.attachment); }).filter(Boolean);
   await Promise.all(Array.from(new Set(mediaIds)).map(function (id) { return deleteMediaBlob(id); }));
   contact.messages = [];
@@ -2319,6 +3260,7 @@ function handleMenuAction(action) {
   closePanels();
   const contact = activeContact();
   if (!contact) return;
+  if (action === "resolve") toggleResolved();
   if (action === "details") openDrawer($("conversationMenuBtn"));
   if (action === "search") openConversationSearch();
   if (action === "unread") {
@@ -2378,6 +3320,8 @@ function applyTheme(theme) {
 }
 
 function setCategory(category) {
+  clearMessageSelection(false);
+  closeMessageActionMenu(false);
   const previous = activeContact();
   state.category = category;
   document.querySelectorAll("[data-category]").forEach(function (button) { button.setAttribute("aria-pressed", String(button.dataset.category === category)); });
@@ -2478,6 +3422,8 @@ $("clearSearchBtn").addEventListener("click", function () {
 $("clearFiltersBtn").addEventListener("click", clearFilters);
 $("mobileBack").addEventListener("click", function () {
   if (voiceSession) cancelVoiceRecording(true);
+  clearMessageSelection(false);
+  closeMessageActionMenu(false);
   $("appShell").classList.remove("conversation-open");
   const option = $("contact-option-" + state.activeId);
   if (option) requestAnimationFrame(function () { option.focus(); });
@@ -2487,6 +3433,31 @@ $("activeContactButton").addEventListener("click", function () { openDrawer($("a
 $("btnGetStudentsDetails").addEventListener("click", function () { openDrawer($("btnGetStudentsDetails")); });
 $("closeOverview").addEventListener("click", closeDrawer);
 $("drawerBackdrop").addEventListener("click", closeDrawer);
+$("contactDrawer").addEventListener("click", function (event) {
+  const button = event.target.closest("[data-copy-value]");
+  if (!button || button.disabled || !$("contactDrawer").contains(button)) return;
+  copyOverviewValue(button);
+});
+$("contactDrawer").addEventListener("keydown", function (event) {
+  if (event.key !== "Tab" || !$("appShell").classList.contains("details-open")) return;
+  const focusable = Array.from($("contactDrawer").querySelectorAll('button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])')).filter(function (element) {
+    return !element.hidden && element.getAttribute("aria-hidden") !== "true" && element.getClientRects().length;
+  });
+  if (!focusable.length) {
+    event.preventDefault();
+    $("closeOverview").focus();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
 $("btnMarkAnswered").addEventListener("click", toggleResolved);
 $("drawerResolveBtn").addEventListener("click", toggleResolved);
 $("btnBlockUser").addEventListener("click", toggleBlocked);
@@ -2503,6 +3474,45 @@ $("conversationMenu").addEventListener("click", function (event) {
 $("conversationSearchBtn").addEventListener("click", openConversationSearch);
 $("closeMessageSearch").addEventListener("click", closeConversationSearch);
 $("messageSearchInput").addEventListener("input", function () { renderMessages(false); });
+
+$("composerSpeedDialBtn").addEventListener("click", function (event) {
+  event.stopPropagation();
+  togglePanel("composerSpeedDial", $("composerSpeedDialBtn"));
+});
+$("composerSpeedDialBtn").addEventListener("keydown", function (event) {
+  if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+  event.preventDefault();
+  const wasHidden = $("composerSpeedDial").hidden;
+  if (wasHidden) togglePanel("composerSpeedDial", $("composerSpeedDialBtn"));
+  const items = Array.from($("composerSpeedDial").querySelectorAll("[role='menuitem']:not(:disabled)"));
+  const target = event.key === "ArrowUp" ? items[items.length - 1] : items[0];
+  if (target) requestAnimationFrame(function () { target.focus(); });
+});
+$("composerSpeedDial").addEventListener("keydown", function (event) {
+  if (event.defaultPrevented) return;
+  const items = Array.from($("composerSpeedDial").querySelectorAll("[role='menuitem']:not(:disabled)"));
+  const current = items.indexOf(document.activeElement);
+  if (event.key === "Escape") {
+    event.preventDefault();
+    event.stopPropagation();
+    closePanels();
+    $("composerSpeedDialBtn").focus();
+    return;
+  }
+  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key) || !items.length) return;
+  event.preventDefault();
+  let next = current < 0 ? 0 : current;
+  if (event.key === "ArrowDown") next = (next + 1) % items.length;
+  if (event.key === "ArrowUp") next = (next - 1 + items.length) % items.length;
+  if (event.key === "Home") next = 0;
+  if (event.key === "End") next = items.length - 1;
+  items[next].focus();
+});
+$("composerSpeedDial").addEventListener("focusout", function () {
+  requestAnimationFrame(function () {
+    if (!$("composerSpeedDial").hidden && !$("composerSpeedDial").contains(document.activeElement) && document.activeElement !== $("composerSpeedDialBtn")) closePanels();
+  });
+});
 
 $("attachmentBtn").addEventListener("click", function (event) {
   event.stopPropagation();
@@ -2525,7 +3535,51 @@ $("recordAudioBtn").addEventListener("click", startVoiceRecording);
 $("pauseVoiceBtn").addEventListener("click", toggleVoicePause);
 $("cancelVoiceBtn").addEventListener("click", function () { cancelVoiceRecording(true); requestAnimationFrame(function () { $("recordAudioBtn").focus(); }); });
 $("stopVoiceBtn").addEventListener("click", finishVoiceRecording);
+$("typeInput").addEventListener("click", function (event) {
+  event.stopPropagation();
+  togglePanel("channelMenu", $("typeInput"));
+});
+$("typeInput").addEventListener("keydown", function (event) {
+  if (event.key !== "ArrowRight") return;
+  event.preventDefault();
+  event.stopPropagation();
+  if ($("channelMenu").hidden) togglePanel("channelMenu", $("typeInput"));
+});
+$("channelMenu").addEventListener("click", function (event) {
+  const option = event.target.closest("[data-channel-value]");
+  if (!option) return;
+  selectMessageChannel(option.dataset.channelValue);
+});
+$("channelMenu").addEventListener("keydown", function (event) {
+  const items = Array.from($("channelMenu").querySelectorAll("[data-channel-value]"));
+  const current = items.indexOf(document.activeElement);
+  if (event.key === "Escape") {
+    event.preventDefault();
+    event.stopPropagation();
+    closePanels();
+    $("composerSpeedDialBtn").focus();
+    return;
+  }
+  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+  event.preventDefault();
+  let next = current < 0 ? 0 : current;
+  if (event.key === "ArrowDown") next = (next + 1) % items.length;
+  if (event.key === "ArrowUp") next = (next - 1 + items.length) % items.length;
+  if (event.key === "Home") next = 0;
+  if (event.key === "End") next = items.length - 1;
+  if (items[next]) items[next].focus();
+});
+$("channelMenu").addEventListener("focusout", function () {
+  requestAnimationFrame(function () {
+    if (!$("channelMenu").hidden && !$("channelMenu").contains(document.activeElement) && document.activeElement !== $("typeInput")) closePanels();
+  });
+});
+$("channelMenuClose").addEventListener("click", function () {
+  closePanels();
+  $("composerSpeedDialBtn").focus();
+});
 $("typeInput").addEventListener("change", function () {
+  syncChannelPicker();
   if (voiceSession && !selectedChannelAllowsVoice()) cancelVoiceRecording(true);
   updateComposer();
 });
@@ -2601,7 +3655,63 @@ $("railTemplatesBtn").addEventListener("click", function () {
 });
 $("templateSearchInput").addEventListener("input", function () { renderTemplates($("templateSearchInput").value); });
 document.querySelectorAll(".popup-close").forEach(function (button) { button.addEventListener("click", function () { if (button.closest("#emojiPanel")) closeEmojiPicker(true); else closePanels(); }); });
-$("sendGreetingBtn").addEventListener("click", function () { insertAtCaret("Hello! Welcome to Boston English Center 👋 "); });
+$("sendGreetingBtn").addEventListener("click", function () {
+  closePanels();
+  insertAtCaret("Hello! Welcome to Boston English Center 👋 ");
+});
+
+$("messageActionBackdrop").addEventListener("click", function () { closeMessageActionMenu(true); });
+$("messageActionClose").addEventListener("click", function () { closeMessageActionMenu(true); });
+$("messageActionMenu").addEventListener("click", function (event) {
+  const item = event.target.closest("[data-message-action]");
+  if (!item || item.disabled) return;
+  handleMessageAction(item.dataset.messageAction);
+});
+$("messageActionMenu").addEventListener("keydown", function (event) {
+  const menu = $("messageActionMenu");
+  const items = Array.from(menu.querySelectorAll("[role='menuitem']:not(:disabled)"));
+  const current = items.indexOf(document.activeElement);
+  if (event.key === "Escape") {
+    event.preventDefault();
+    event.stopPropagation();
+    closeMessageActionMenu(true);
+    return;
+  }
+  if (event.key === "Tab") {
+    const focusable = [$("messageActionClose")].concat(items).filter(function (item) {
+      return !item.hidden && item.getClientRects().length;
+    });
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+    return;
+  }
+  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key) || !items.length) return;
+  event.preventDefault();
+  let next = current < 0 ? 0 : current;
+  if (event.key === "ArrowDown") next = (next + 1) % items.length;
+  if (event.key === "ArrowUp") next = (next - 1 + items.length) % items.length;
+  if (event.key === "Home") next = 0;
+  if (event.key === "End") next = items.length - 1;
+  items[next].focus();
+});
+$("messageActionMenu").addEventListener("focusout", function () {
+  requestAnimationFrame(function () {
+    const menu = $("messageActionMenu");
+    if (!menu.hidden && !menu.contains(document.activeElement) && document.activeElement !== activeMessageActionTrigger) closeMessageActionMenu(false);
+  });
+});
+$("copySelectedMessages").addEventListener("click", copySelectedMessages);
+$("pinSelectedMessages").addEventListener("click", togglePinSelectedMessages);
+$("deleteSelectedMessages").addEventListener("click", deleteSelectedMessages);
+$("clearMessageSelection").addEventListener("click", function () { clearMessageSelection(true, true); });
 
 $("cancelReplyBtn").addEventListener("click", function () { replyTo = null; renderReplyPreview(); });
 $("messageInput").addEventListener("input", autoResizeComposer);
@@ -2616,13 +3726,13 @@ $("messageInput").addEventListener("keydown", function (event) {
 $("message-form").addEventListener("submit", function (event) { event.preventDefault(); sendMessage(); });
 $("boxMessagesScroll").addEventListener("scroll", function () {
   const scroller = $("boxMessagesScroll");
+  if (!$("messageActionMenu").hidden) closeMessageActionMenu(false);
   $("scrollLatestBtn").hidden = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight < 180;
 });
 $("scrollLatestBtn").addEventListener("click", function () {
   $("boxMessagesScroll").scrollTo({ top: $("boxMessagesScroll").scrollHeight, behavior: "smooth" });
 });
 
-$("newConversationBtn").addEventListener("click", openNewConversation);
 $("emptyNewConversationBtn").addEventListener("click", openNewConversation);
 $("newConversationForm").addEventListener("submit", createConversation);
 $("shortcutsBtn").addEventListener("click", function () { $("shortcutsDialog").showModal(); });
@@ -2695,18 +3805,23 @@ document.querySelectorAll(".dialog-close").forEach(function (button) {
 });
 
 document.addEventListener("pointerdown", function (event) {
-  if (event.target.closest(".floating-panel") || event.target.closest("#conversationMenuBtn, #attachmentBtn, #btnEmoji, #quickRepliesBtn, #railTemplatesBtn, #statusFilterBtn")) return;
+  if (event.target.closest(".floating-panel") || event.target.closest("#conversationMenuBtn, #attachmentBtn, #composerSpeedDialBtn, #typeInput, #btnEmoji, #quickRepliesBtn, #railTemplatesBtn, #statusFilterBtn, .message-menu-trigger, #messageActionBackdrop")) return;
   closePanels();
 });
 document.addEventListener("keydown", function (event) {
   const tag = document.activeElement && document.activeElement.tagName;
   const isTyping = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
-  if (event.key === "/" && !isTyping && !$("newConversationDialog").open && !$("confirmDialog").open) {
+  if (event.key === "/" && !isTyping && $("messageActionMenu").hidden && !$("newConversationDialog").open && !$("confirmDialog").open) {
     event.preventDefault();
     $("searchInput").focus();
   }
   if (event.key === "Escape") {
+    if (document.querySelector("dialog[open]")) return;
+    if (!$("messageActionMenu").hidden) { event.preventDefault(); closeMessageActionMenu(true); return; }
+    if (selectedMessageIds.size) { event.preventDefault(); clearMessageSelection(true, true); return; }
     if (voiceSession) { event.preventDefault(); cancelVoiceRecording(true); requestAnimationFrame(function () { $("recordAudioBtn").focus(); }); return; }
+    if (!$("channelMenu").hidden) { event.preventDefault(); closePanels(); $("composerSpeedDialBtn").focus(); return; }
+    if (!$("composerSpeedDial").hidden) { event.preventDefault(); closePanels(); $("composerSpeedDialBtn").focus(); return; }
     if (!$("statusFilterMenu").hidden) { event.preventDefault(); closePanels(); $("statusFilterBtn").focus(); return; }
     if (!$("emojiPanel").hidden) { event.preventDefault(); closeEmojiPicker(true); return; }
     closePanels();
@@ -2715,6 +3830,9 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
+window.addEventListener("resize", function () {
+  if (!$("messageActionMenu").hidden) closeMessageActionMenu(false);
+});
 window.addEventListener("online", function () { updateNetworkState(); showToast("Back online", "Message delivery is available again."); });
 window.addEventListener("offline", function () { updateNetworkState(); showToast("You’re offline", "Changes will stay in this local preview.", "error"); });
 function cleanupMediaResources() {
@@ -2753,6 +3871,7 @@ function initialize() {
   renderEmojiCategories();
   renderEmojiGrid();
   renderTemplates("");
+  syncChannelPicker();
   renderContacts();
   if (!activeContact()) {
     const first = currentContacts()[0] || state.contacts[0];

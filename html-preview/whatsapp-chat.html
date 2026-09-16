@@ -13,6 +13,9 @@
 <body id="clientsDashboard">
   <svg class="svg-sprite" aria-hidden="true">
     <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7 18.5 3.5 21l1.1-4.2A8.5 8.5 0 1 1 7 18.5Z"/><path d="M8 9.5h8M8 13h5"/></symbol>
+    <symbol id="i-support" viewBox="0 0 24 24"><path d="M5 13v-2a7 7 0 0 1 14 0v2"/><path d="M5 12H3.5A1.5 1.5 0 0 0 2 13.5v2A1.5 1.5 0 0 0 3.5 17H6v-5H5ZM19 12h1.5a1.5 1.5 0 0 1 1.5 1.5v2a1.5 1.5 0 0 1-1.5 1.5H18v-5h1ZM18 17c-.8 2-2.6 3-5.5 3"/><circle cx="11" cy="20" r="1"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+    <symbol id="i-sms" viewBox="0 0 24 24"><path d="M5 18.5 2.8 21l.8-3.7A8.5 8.5 0 1 1 5 18.5Z"/><path d="M7.5 9.5h9M7.5 13h6"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M4 14h4l1.5 2h5l1.5-2h4"/></symbol>
@@ -42,6 +45,14 @@
     <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/><circle cx="7" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="12" cy="18" r="1"/></symbol>
     <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="m17 10 4-2v8l-4-2"/></symbol>
     <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></symbol>
+    <symbol id="i-id-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="11" r="2"/><path d="M5.5 16c.6-1.5 1.4-2.2 2.5-2.2s1.9.7 2.5 2.2M13 9h5M13 12h5M13 15h3"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 15h4"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h3M14 14h3M7 17h3"/></symbol>
+    <symbol id="i-books" viewBox="0 0 24 24"><path d="M5 4h4v16H5zM10 4h4v16h-4zM16 5l3.5-1 3 14-3.5 1z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="m9 4 6 0-.8 4.2 3.3 3.3v2H6.5v-2l3.3-3.3L9 4Z"/><path d="M12 13.5V21"/></symbol>
+    <symbol id="i-select" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="m7.5 12 3 3 6-7"/></symbol>
+    <symbol id="i-warning" viewBox="0 0 24 24"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4M12 16.5h.01"/></symbol>
   </svg>
 
   <div class="app-shell" id="appShell">
@@ -59,8 +70,8 @@
     <aside class="conversations-pane" id="leftSideSection" aria-label="Conversations">
       <header class="inbox-header">
         <div class="mobile-brand"><span class="brand-mini">B</span><span>Boston English</span></div>
-        <div class="inbox-title-row"><div><p class="workspace-name">Boston English Center</p><h1>Conversations <span id="conversationCount" class="title-count">0</span></h1></div><button id="newConversationBtn" class="button-icon button-accent" type="button" aria-label="Start a new conversation" data-tooltip="New conversation"><svg class="icon"><use href="#i-plus"/></svg></button></div>
-        <label class="search-field" for="searchInput"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" type="search" placeholder="Search name, phone or message" autocomplete="off"><kbd>/</kbd><button id="clearSearchBtn" type="button" aria-label="Clear search" hidden><svg class="icon"><use href="#i-close"/></svg></button></label>
+        <div class="inbox-title-row"><div><p class="workspace-name">Boston English Center</p><h1>Conversations <span id="conversationCount" class="title-count">0</span></h1></div></div>
+        <label class="search-field" for="searchInput"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" type="text" role="searchbox" inputmode="search" aria-label="Search conversations" placeholder="Search name, phone or message" autocomplete="off"><kbd>/</kbd><button id="clearSearchBtn" type="button" aria-label="Clear search" hidden><svg class="icon"><use href="#i-close"/></svg></button></label>
       </header>
 
       <div class="conversation-control-row">
@@ -106,11 +117,12 @@
           </button>
           <div class="chat-actions">
             <button id="conversationSearchBtn" class="button-icon hide-small" type="button" aria-label="Search this conversation" data-tooltip="Search"><svg class="icon"><use href="#i-search"/></svg></button>
-            <button id="btnMarkAnswered" class="button-resolve" type="button"><svg class="icon"><use href="#i-check"/></svg><span>Resolve</span></button>
+            <button id="btnMarkAnswered" class="button-resolve" type="button" aria-label="Mark answered"><svg class="icon"><use href="#i-check"/></svg><span>Mark answered</span></button>
             <button id="btnGetStudentsDetails" class="button-icon hide-small" type="button" aria-label="Open contact details" data-tooltip="Contact details"><svg class="icon"><use href="#i-info"/></svg></button>
             <button id="conversationMenuBtn" class="button-icon" type="button" aria-label="More conversation actions" aria-expanded="false" aria-controls="conversationMenu"><svg class="icon"><use href="#i-more"/></svg></button>
           </div>
           <div id="conversationMenu" class="floating-panel menu-panel header-menu" role="menu" hidden>
+            <button id="mobileMarkAnsweredBtn" class="mobile-menu-only" type="button" role="menuitem" data-menu-action="resolve" hidden><svg class="icon"><use href="#i-check"/></svg>Mark answered</button>
             <button type="button" role="menuitem" data-menu-action="details"><svg class="icon"><use href="#i-info"/></svg>Contact details</button>
             <button type="button" role="menuitem" data-menu-action="search"><svg class="icon"><use href="#i-search"/></svg>Search messages</button>
             <button type="button" role="menuitem" data-menu-action="unread"><span class="menu-glyph">●</span>Mark as unread</button>
@@ -132,37 +144,58 @@
         </div>
 
         <footer id="formSendMessage" class="composer-shell">
+          <div id="messageSelectionBar" class="message-selection-bar" role="toolbar" aria-label="Selected message actions" hidden>
+            <div class="message-selection-summary"><span class="selection-summary-icon"><svg class="icon"><use href="#i-select"/></svg></span><strong id="messageSelectionCount">0 selected</strong></div>
+            <div class="message-selection-actions">
+              <button id="copySelectedMessages" class="button-icon" type="button" aria-label="Copy selected messages"><svg class="icon"><use href="#i-copy"/></svg></button>
+              <button id="pinSelectedMessages" class="button-icon" type="button" aria-label="Pin selected messages"><svg class="icon"><use href="#i-pin"/></svg></button>
+              <button id="deleteSelectedMessages" class="button-icon danger" type="button" aria-label="Delete selected messages"><svg class="icon"><use href="#i-trash"/></svg></button>
+              <button id="clearMessageSelection" class="button-icon" type="button" aria-label="Cancel message selection"><svg class="icon"><use href="#i-close"/></svg></button>
+            </div>
+          </div>
           <div class="composer-inner">
             <div id="replyPreview" class="reply-preview" hidden><svg class="icon"><use href="#i-reply"/></svg><div><small>Replying to</small><strong id="replyText"></strong></div><button id="cancelReplyBtn" class="button-icon" type="button" aria-label="Cancel reply"><svg class="icon"><use href="#i-close"/></svg></button></div>
             <div id="attachmentPreview" class="attachment-preview" hidden><span id="attachmentPreviewIcon" class="attachment-preview-icon"></span><div class="attachment-preview-copy"><strong id="attachmentName"></strong><small id="attachmentMeta"></small><audio id="attachmentAudioPreview" class="attachment-audio-preview" controls preload="metadata" hidden></audio></div><button id="removeAttachmentBtn" class="button-icon" type="button" aria-label="Remove attachment"><svg class="icon"><use href="#i-close"/></svg></button></div>
-            <div id="voiceRecorder" class="voice-recorder" data-phase="idle" hidden>
-              <div class="recording-identity">
-                <span class="recording-orb" aria-hidden="true"><span class="recording-pulse"></span><svg class="icon"><use href="#i-mic"/></svg></span>
-                <div><strong id="voiceRecorderStatus">Recording voice note</strong><span id="voiceRecorderHint">Speak clearly near your microphone</span></div>
-              </div>
+            <div id="voiceRecorder" class="voice-recorder" data-phase="idle" role="group" aria-label="Voice recorder" hidden>
+              <div class="voice-timer" aria-hidden="true"><span class="recording-live-dot"></span><time id="voiceRecorderTime" datetime="PT0S">0:00</time></div>
               <div class="voice-waveform" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-              <div class="voice-timer" aria-hidden="true"><span class="recording-live-dot"></span><time id="voiceRecorderTime" datetime="PT0S">0:00</time><small>of 2:00</small></div>
               <div class="voice-recorder-actions">
                 <button id="pauseVoiceBtn" class="button-icon" type="button" aria-label="Pause voice recording" aria-pressed="false"><svg class="icon"><use href="#i-pause"/></svg></button>
-                <button id="cancelVoiceBtn" class="button-secondary voice-cancel" type="button">Cancel</button>
-                <button id="stopVoiceBtn" class="button-primary voice-stop" type="button"><svg class="icon"><use href="#i-stop"/></svg>Finish</button>
+                <button id="cancelVoiceBtn" class="button-icon voice-cancel" type="button" aria-label="Cancel voice recording"><svg class="icon"><use href="#i-close"/></svg></button>
+                <button id="stopVoiceBtn" class="button-icon voice-stop" type="button" aria-label="Send voice message"><svg class="icon"><use href="#i-send"/></svg></button>
               </div>
             </div>
             <span id="voiceRecorderAnnouncement" class="sr-only" role="status" aria-live="polite"></span>
-            <div class="composer-tools">
-              <label for="typeInput">Send with</label>
-              <div class="select-wrap"><select id="typeInput" aria-label="Message channel"><option>WhatsApp</option><option>WhatsApp Student Support</option><option>Email</option><option>SMS</option></select><svg class="icon"><use href="#i-chevron"/></svg></div>
-              <button id="quickRepliesBtn" type="button" class="tool-button" aria-expanded="false" aria-controls="templatePanel"><svg class="icon"><use href="#i-template"/></svg><span>Quick replies</span></button>
-              <button id="sendGreetingBtn" type="button" class="tool-button" aria-label="Insert greeting"><span aria-hidden="true">👋</span><span>Greeting</span></button>
+            <div class="composer-entry-row">
+              <div class="composer-speed-dial">
+                <button id="composerSpeedDialBtn" class="speed-dial-trigger" type="button" aria-label="Open message tools" aria-haspopup="menu" aria-expanded="false" aria-controls="composerSpeedDial">
+                  <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+                </button>
+                <div id="composerSpeedDial" class="floating-panel speed-dial-menu" role="menu" aria-label="Message tools" hidden>
+                  <button id="typeInput" class="speed-dial-action channel-trigger" type="button" role="menuitem" value="WhatsApp" data-channel="whatsapp" aria-label="Message channel: WhatsApp" aria-haspopup="menu" aria-expanded="false" aria-controls="channelMenu">
+                    <span class="speed-dial-action-icon"><svg class="icon" aria-hidden="true"><use id="channelTriggerIconUse" href="#i-chat"/></svg></span>
+                    <span class="speed-dial-action-copy"><small>Send with</small><strong id="channelTriggerValue">WhatsApp</strong></span>
+                    <svg class="icon speed-dial-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+                  </button>
+                  <button id="quickRepliesBtn" type="button" class="speed-dial-action" role="menuitem" aria-expanded="false" aria-controls="templatePanel">
+                    <span class="speed-dial-action-icon"><svg class="icon" aria-hidden="true"><use href="#i-template"/></svg></span>
+                    <span class="speed-dial-action-copy"><strong>Quick replies</strong><small>Insert a saved response</small></span>
+                  </button>
+                  <button id="sendGreetingBtn" type="button" class="speed-dial-action" role="menuitem" aria-label="Insert greeting">
+                    <span class="speed-dial-action-icon speed-dial-greeting" aria-hidden="true">👋</span>
+                    <span class="speed-dial-action-copy"><strong>Greeting</strong><small>Add the welcome message</small></span>
+                  </button>
+                </div>
+              </div>
+              <form id="message-form" class="composer-form">
+                <button id="attachmentBtn" class="composer-button" type="button" aria-label="Add attachment" aria-expanded="false" aria-controls="attachmentMenu"><svg class="icon"><use href="#i-paperclip"/></svg></button>
+                <button id="btnEmoji" class="composer-button" type="button" aria-label="Choose emoji" aria-expanded="false" aria-controls="emojiPanel"><svg class="icon"><use href="#i-smile"/></svg></button>
+                <label class="sr-only" for="messageInput">Message</label>
+                <textarea dir="auto" id="messageInput" rows="1" maxlength="2000" placeholder="Write a message" aria-describedby="composerHint"></textarea>
+                <button id="recordAudioBtn" class="composer-button record-button" type="button" aria-label="Record a voice message" aria-pressed="false" aria-controls="voiceRecorder"><svg class="icon"><use href="#i-mic"/></svg></button>
+                <button id="sendMessage" type="submit" class="send-button" aria-label="Send message" disabled><svg class="icon"><use href="#i-send"/></svg></button>
+              </form>
             </div>
-            <form id="message-form" class="composer-form">
-              <button id="attachmentBtn" class="composer-button" type="button" aria-label="Add attachment" aria-expanded="false" aria-controls="attachmentMenu"><svg class="icon"><use href="#i-paperclip"/></svg></button>
-              <button id="btnEmoji" class="composer-button" type="button" aria-label="Choose emoji" aria-expanded="false" aria-controls="emojiPanel"><svg class="icon"><use href="#i-smile"/></svg></button>
-              <label class="sr-only" for="messageInput">Message</label>
-              <textarea dir="auto" id="messageInput" rows="1" maxlength="2000" placeholder="Write a message" aria-describedby="composerHint"></textarea>
-              <button id="recordAudioBtn" class="composer-button record-button" type="button" aria-label="Record a voice message" aria-pressed="false" aria-controls="voiceRecorder"><svg class="icon"><use href="#i-mic"/></svg></button>
-              <button id="sendMessage" type="submit" class="send-button" aria-label="Send message" disabled><svg class="icon"><use href="#i-send"/></svg></button>
-            </form>
             <div class="composer-foot"><span id="composerHint">Enter to send · Shift + Enter for a new line</span><span id="draftCount">0 / 2000</span></div>
           </div>
 
@@ -171,6 +204,23 @@
             <button type="button" role="menuitem" data-attachment="image"><span class="action-icon image"><svg class="icon"><use href="#i-image"/></svg></span><span><strong>Photo or video</strong><small>JPG, PNG, GIF, MP4 · sends instantly</small></span></button>
             <button type="button" role="menuitem" data-attachment="document"><span class="action-icon document"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Document</strong><small>PDF, DOCX, ZIP and more · sends instantly</small></span></button>
             <button type="button" role="menuitem" data-attachment="audio"><span class="action-icon audio"><svg class="icon"><use href="#i-audio"/></svg></span><span><strong>Audio file</strong><small>MP3, M4A, WAV, OGG · sends instantly</small></span></button>
+          </div>
+          <div id="channelMenu" class="floating-panel channel-menu composer-popup" role="menu" aria-labelledby="channelMenuTitle" hidden>
+            <div class="panel-heading channel-menu-heading"><div><strong id="channelMenuTitle">Send with</strong><small>Choose a message channel</small></div><button id="channelMenuClose" class="button-icon" type="button" aria-label="Close message channel menu"><svg class="icon"><use href="#i-close"/></svg></button></div>
+            <div class="channel-options">
+              <button type="button" class="channel-option" role="menuitemradio" aria-checked="true" data-channel-value="WhatsApp" data-channel-key="whatsapp">
+                <span class="channel-option-icon whatsapp"><svg class="icon"><use href="#i-chat"/></svg></span><span class="channel-option-copy"><strong>WhatsApp</strong><small>Direct conversation</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+              </button>
+              <button type="button" class="channel-option" role="menuitemradio" aria-checked="false" data-channel-value="WhatsApp Student Support" data-channel-key="support">
+                <span class="channel-option-icon support"><svg class="icon"><use href="#i-support"/></svg></span><span class="channel-option-copy"><strong>Student Support</strong><small>WhatsApp support line</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+              </button>
+              <button type="button" class="channel-option" role="menuitemradio" aria-checked="false" data-channel-value="Email" data-channel-key="email">
+                <span class="channel-option-icon email"><svg class="icon"><use href="#i-mail"/></svg></span><span class="channel-option-copy"><strong>Email</strong><small>Send as email</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+              </button>
+              <button type="button" class="channel-option" role="menuitemradio" aria-checked="false" data-channel-value="SMS" data-channel-key="sms">
+                <span class="channel-option-icon sms"><svg class="icon"><use href="#i-sms"/></svg></span><span class="channel-option-copy"><strong>SMS</strong><small>Send as text message</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+              </button>
+            </div>
           </div>
           <div id="emojiPanel" class="floating-panel emoji-panel composer-popup" role="dialog" aria-modal="false" aria-labelledby="emojiPanelTitle" hidden>
             <div class="panel-heading"><div><strong id="emojiPanelTitle">Emoji library</strong><small>Unicode Emoji 17.0 &middot; 3,944 RGI sequences</small></div><button class="button-icon popup-close" type="button" aria-label="Close emoji picker"><svg class="icon"><use href="#i-close"/></svg></button></div>
@@ -190,14 +240,107 @@
       </section>
     </main>
 
-    <button id="drawerBackdrop" class="drawer-backdrop" type="button" aria-label="Close contact details" hidden></button>
-    <aside id="contactDrawer" class="contact-drawer" role="dialog" aria-modal="false" aria-labelledby="drawerTitle" aria-hidden="true">
-      <header class="drawer-header"><div><p>Contact</p><h2 id="drawerTitle">Details</h2></div><button id="closeOverview" type="button" class="button-icon" aria-label="Close contact details"><svg class="icon"><use href="#i-close"/></svg></button></header>
+    <button id="messageActionBackdrop" class="message-action-backdrop" type="button" tabindex="-1" aria-label="Close message actions" hidden></button>
+    <div id="messageActionMenu" class="floating-panel message-action-menu" role="menu" aria-labelledby="messageActionTitle" hidden>
+      <div class="message-action-heading">
+        <div><strong id="messageActionTitle">Message actions</strong><small id="messageActionPreview"></small></div>
+        <button id="messageActionClose" class="button-icon" type="button" aria-label="Close message actions"><svg class="icon"><use href="#i-close"/></svg></button>
+      </div>
+      <div class="message-action-list">
+        <button type="button" role="menuitem" data-message-action="reply"><span class="message-action-icon"><svg class="icon"><use href="#i-reply"/></svg></span><span data-message-action-label>Reply</span></button>
+        <button type="button" role="menuitem" data-message-action="copy"><span class="message-action-icon"><svg class="icon"><use href="#i-copy"/></svg></span><span data-message-action-label>Copy</span></button>
+        <button type="button" role="menuitem" data-message-action="pin"><span class="message-action-icon"><svg class="icon"><use href="#i-pin"/></svg></span><span data-message-action-label>Pin message</span></button>
+        <button type="button" role="menuitem" data-message-action="select"><span class="message-action-icon"><svg class="icon"><use href="#i-select"/></svg></span><span data-message-action-label>Select message</span></button>
+        <button type="button" class="danger" role="menuitem" data-message-action="delete"><span class="message-action-icon"><svg class="icon"><use href="#i-trash"/></svg></span><span data-message-action-label>Delete message</span></button>
+      </div>
+    </div>
+    <span id="messageActionAnnouncement" class="sr-only" role="status" aria-live="polite"></span>
+
+    <button id="drawerBackdrop" class="drawer-backdrop" type="button" tabindex="-1" aria-label="Close contact overview" hidden></button>
+    <aside id="contactDrawer" class="contact-drawer" role="dialog" aria-modal="false" aria-labelledby="drawerTitle" aria-describedby="drawerPresence" aria-hidden="true" inert>
+      <header class="drawer-hero">
+        <div class="drawer-heading-row">
+          <div class="drawer-identity">
+            <span id="drawerAvatar" class="avatar avatar-lg" aria-hidden="true"></span>
+            <div class="drawer-heading-copy"><p id="drawerEyebrow">Contact overview</p><h2 id="drawerTitle">Details</h2><span id="drawerPresence"></span></div>
+          </div>
+          <button id="closeOverview" type="button" class="button-icon drawer-close" aria-label="Close contact overview"><svg class="icon"><use href="#i-close"/></svg></button>
+        </div>
+        <div class="drawer-summary" aria-label="Contact summary">
+          <div><strong id="drawerSummaryOne">—</strong><span id="drawerSummaryLabelOne">Group</span></div>
+          <div><strong id="drawerSummaryTwo">0</strong><span id="drawerSummaryLabelTwo">Remaining sessions</span></div>
+          <div><strong id="drawerSummaryThree">—</strong><span id="drawerSummaryLabelThree">Attendance</span></div>
+        </div>
+      </header>
+
       <div class="drawer-body">
-        <div class="drawer-profile"><span id="drawerAvatar" class="avatar avatar-xl"></span><h3 id="drawerName"></h3><p id="drawerPresence"></p><div id="drawerTags" class="tag-list"></div></div>
-        <section class="detail-section"><h3>Contact information</h3><dl><div><dt>Phone</dt><dd id="drawerPhone"></dd></div><div><dt>Email</dt><dd id="drawerEmail"></dd></div><div><dt>Course</dt><dd id="drawerCourse"></dd></div><div><dt>Local time</dt><dd id="drawerTime"></dd></div></dl></section>
-        <section class="detail-section"><div class="section-heading"><h3>Notes</h3><span>Saved locally</span></div><label class="sr-only" for="contactNotes">Contact notes</label><textarea id="contactNotes" rows="4" placeholder="Add context for the next agent…"></textarea></section>
-        <section class="detail-section"><h3>Conversation</h3><div class="metric-row"><div><strong id="drawerMessageCount">0</strong><span>Messages</span></div><div><strong id="drawerChannel">—</strong><span>Last channel</span></div></div></section>
+        <section class="overview-card" aria-labelledby="profileSectionTitle">
+          <div class="overview-card-heading"><span class="overview-card-icon"><svg class="icon"><use href="#i-id-card"/></svg></span><h3 id="profileSectionTitle">Profile</h3></div>
+          <dl class="profile-details">
+            <div><dt>Name</dt><dd id="drawerName"></dd></div>
+            <div><dt>Email</dt><dd><button id="drawerEmail" type="button" class="copy-pill" data-copy-value=""><svg class="icon"><use href="#i-copy"/></svg><span data-copy-label>Copy email</span></button></dd></div>
+            <div><dt>Phone</dt><dd><button id="drawerPhone" type="button" class="copy-pill" data-copy-value=""><svg class="icon"><use href="#i-copy"/></svg><span data-copy-label>Copy phone</span></button></dd></div>
+            <div><dt>Course</dt><dd id="drawerCourse">—</dd></div>
+            <div><dt>Level</dt><dd id="drawerLevel">—</dd></div>
+            <div><dt>Dashboard state</dt><dd><span id="drawerDashboardState" class="state-pill">Active</span></dd></div>
+            <div><dt>Local time</dt><dd id="drawerTime">—</dd></div>
+          </dl>
+          <div id="drawerTags" class="tag-list overview-tags" aria-label="Contact tags"></div>
+        </section>
+
+        <div id="drawerAlerts" class="overview-alert-list" aria-label="Account notices"></div>
+
+        <section class="overview-card" aria-labelledby="subscriptionSectionTitle">
+          <div class="overview-card-heading"><span class="overview-card-icon"><svg class="icon"><use href="#i-card"/></svg></span><h3 id="subscriptionSectionTitle">Subscription</h3></div>
+          <div id="drawerSubscriptions" class="overview-list"></div>
+        </section>
+
+        <section class="overview-card" aria-labelledby="attendanceSectionTitle">
+          <div class="overview-card-heading"><span class="overview-card-icon"><svg class="icon"><use href="#i-calendar"/></svg></span><h3 id="attendanceSectionTitle">Classes and attendance</h3></div>
+          <div class="attendance-metrics" aria-label="Attendance totals">
+            <div><strong id="drawerHours">0</strong><span>Hours</span></div>
+            <div class="positive"><strong id="drawerPresent">0</strong><span>Present</span></div>
+            <div class="negative"><strong id="drawerAbsent">0</strong><span>Absent</span></div>
+            <div class="practice"><strong id="drawerPractice">0</strong><span>Practice</span></div>
+          </div>
+          <div id="drawerAttendanceDots" class="attendance-history" aria-label="Recent attendance history"></div>
+
+          <div class="cycle-card">
+            <div class="cycle-heading"><h4>Current cycle attendance</h4><span id="drawerCycleLabel">Current cycle</span></div>
+            <div class="cycle-metrics">
+              <div><strong id="drawerCycleHours">0</strong><span>Hours</span></div>
+              <div><strong id="drawerCyclePresent">0</strong><span>Present</span></div>
+              <div><strong id="drawerCycleAbsent">0</strong><span>Absent</span></div>
+              <div><strong id="drawerCyclePractice">0</strong><span>Practice</span></div>
+            </div>
+            <div id="drawerCycleDots" class="attendance-history compact" aria-label="Current cycle attendance history"></div>
+          </div>
+
+          <div id="drawerScheduleActions" class="schedule-action-grid"></div>
+          <div class="overview-subsection"><h4>Classes</h4><div id="drawerClasses" class="overview-list"></div></div>
+        </section>
+
+        <section class="overview-card" aria-labelledby="learningSectionTitle">
+          <div class="overview-card-heading"><span class="overview-card-icon"><svg class="icon"><use href="#i-books"/></svg></span><h3 id="learningSectionTitle">Learning</h3></div>
+          <div class="learning-summary">
+            <div class="exam"><strong id="drawerExamEligibility">—</strong><span>Can take exam</span></div>
+            <div class="certificate"><strong id="drawerCertificateCount">0</strong><span>Certificates</span></div>
+          </div>
+          <div class="overview-subsection"><h4>Courses &amp; materials</h4><div id="drawerMaterials" class="overview-list"></div></div>
+          <div class="overview-subsection"><h4>Certificates</h4><div id="drawerCertificates" class="overview-list"></div></div>
+          <div class="overview-subsection"><h4>Tests taken</h4><div id="drawerTests" class="overview-list"></div></div>
+        </section>
+
+        <div class="overview-bottom-grid">
+          <section class="overview-card" aria-labelledby="notesSectionTitle">
+            <div class="overview-card-heading split"><div><span class="overview-card-icon"><svg class="icon"><use href="#i-file"/></svg></span><h3 id="notesSectionTitle">Notes</h3></div><span>Saved locally</span></div>
+            <label class="sr-only" for="contactNotes">Contact notes</label><textarea id="contactNotes" rows="4" placeholder="Add context for the next agent…"></textarea>
+          </section>
+          <section class="overview-card" aria-labelledby="conversationSectionTitle">
+            <div class="overview-card-heading"><span class="overview-card-icon"><svg class="icon"><use href="#i-chat"/></svg></span><h3 id="conversationSectionTitle">Conversation</h3></div>
+            <div class="metric-row"><div><strong id="drawerMessageCount">0</strong><span>Messages</span></div><div><strong id="drawerChannel">—</strong><span>Last channel</span></div></div>
+          </section>
+        </div>
       </div>
       <footer class="drawer-footer"><button id="drawerResolveBtn" type="button" class="button-secondary"><svg class="icon"><use href="#i-check"/></svg>Resolve</button><button id="btnBlockUser" type="button" class="button-danger"><svg class="icon"><use href="#i-lock"/></svg><span>Block contact</span></button></footer>
     </aside>
