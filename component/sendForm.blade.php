@@ -1,153 +1,98 @@
-<div id="formSendMessage" class="p-0 px-5  m-0 right-3 fixed bottom-4 w-[calc(100%-375px)] ">
-    <div class="mb-4 inline-flex items-center gap-2">
-        <select
-            name="type"
-            id="typeInput"
-            class="h-11 min-w-[230px] cursor-pointer rounded-full border border-slate-200 bg-white px-4 pr-10 text-sm font-medium text-slate-700 shadow-sm outline-none transition hover:border-slate-300 focus:border-emerald-400 focus:ring-0 focus:ring-emerald-100"
-        >
-            <option value="whatsapp">WhatsApp</option>
-            <option value="whatsapp student support">WhatsApp Student Support</option>
-            <option value="email">Email</option>
-            <option value="sms">SMS</option>
-        </select>
-
-        <button
-            type="button"
-            id="sendGreetingBtn"
-            aria-label="Send greeting"
-            class="inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 ring-1 ring-white/20 transition hover:bg-emerald-600 focus:outline-none focus:ring-0 focus:ring-emerald-300"
-        >
-            <iconify-icon
-                icon="ph:hand-waving-duotone"
-                width="24"
-                height="24"
-                class="animate-[waveGreeting_1.8s_ease-in-out_infinite]"
-            ></iconify-icon>
-        </button>
+﻿<footer id="formSendMessage" class="composer-shell">
+  <div id="messageSelectionBar" class="message-selection-bar" role="toolbar" aria-label="Selected message actions" hidden>
+    <div class="message-selection-summary"><span class="selection-summary-icon"><svg class="icon"><use href="#i-select"/></svg></span><strong id="messageSelectionCount">0 selected</strong></div>
+    <div class="message-selection-actions">
+      <button id="copySelectedMessages" class="button-icon" type="button" aria-label="Copy selected messages"><svg class="icon"><use href="#i-copy"/></svg></button>
+      <button id="pinSelectedMessages" class="button-icon" type="button" aria-label="Pin selected messages"><svg class="icon"><use href="#i-pin"/></svg></button>
+      <button id="deleteSelectedMessages" class="button-icon danger" type="button" aria-label="Delete selected messages"><svg class="icon"><use href="#i-trash"/></svg></button>
+      <button id="clearMessageSelection" class="button-icon" type="button" aria-label="Cancel message selection"><svg class="icon"><use href="#i-close"/></svg></button>
     </div>
-
-    <style>
-        @keyframes waveGreeting {
-            0%, 100% {
-                transform: translateX(0) rotate(0deg);
-            }
-            25% {
-                transform: translateX(-3px) rotate(-10deg);
-            }
-            50% {
-                transform: translateX(3px) rotate(10deg);
-            }
-            75% {
-                transform: translateX(-2px) rotate(-6deg);
-            }
-        }
-    </style>
-    {{--        <input type="hidden" name="type" value="whatsapp" id="typeInput">--}}
-    <div class="relative w-full">
-        <!--    box  on record     -->
-        <div class="box_recorder flex border items-center justify-center rounded-lg z-20 absolute hidden">
-            <div class="box_start">
-                             <span id="removeRecordBtn">
-                                    <svg class="text-red-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         viewBox="0 0 24 24">
-                                        <path fill="currentColor"
-                                              d="M5 21V6H4V4h5V3h6v1h5v2h-1v15H5Zm2-2h10V6H7v13Zm2-2h2V8H9v9Zm4 0h2V8h-2v9ZM7 6v13V6Z"></path>
-                                    </svg>
-                            </span>
-                <div class="box_start_recorder">
-                    <span class="effect_recorder "></span>
-                    <span class="timer_recorder">
-                                        <span class="minute_recorder">00</span>
-                                        <span>:</span>
-                                        <span class="second_recorder">00</span>
-                                    </span>
-                    <span class="text_recorder">............</span>
-                </div>
-
-                <span id="sendRecordBtn" class="cursor-pointer">
-                                   <svg class="text-blue-500 ms-3" xmlns="http://www.w3.org/2000/svg" width="30"
-                                        height="30" viewBox="0 0 24 24">
-                                      <path fill="currentColor" d="M2.01 21L23 12L2.01 3L2 10l15 2l-15 2z"/>
-                                   </svg>
-                            </span>
-            </div>
-        </div>
-
-        <a id="btnRecordeAudio" type="button"
-           class="absolute z-10 max-w-max ms-auto inset-y-0 text-blue-500 left-auto right-4  cursor-pointer start-0 flex items-center ps-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 36 36">
-                <path fill="currentColor"
-                      d="M18 24c3.9 0 7-3.1 7-7V9c0-3.9-3.1-7-7-7s-7 3.1-7 7v8c0 3.9 3.1 7 7 7"
-                      class="clr-i-solid clr-i-solid-path-1"/>
-                <path fill="currentColor"
-                      d="M30 17h-2c0 5.5-4.5 10-10 10S8 22.5 8 17H6c0 6.3 4.8 11.4 11 11.9V32h-3c-.6 0-1 .4-1 1s.4 1 1 1h8c.6 0 1-.4 1-1s-.4-1-1-1h-3v-3.1c6.2-.5 11-5.6 11-11.9"
-                      class="clr-i-solid clr-i-solid-path-2"/>
-                <path fill="none" d="M0 0h36v36H0z"/>
-            </svg>
-        </a>
-
-
-        <!--                    left btn           -->
-        <label for="fileInput" id="fileInputLabel"
-               class="absolute z-10 max-w-max  py-3  bottom-1 text-gray-600 cursor-pointer start-0 flex items-center ps-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 1024 1024">
-                <path fill="currentColor"
-                      d="M544 864V672h128L512 480L352 672h128v192H320v-1.6c-5.376.32-10.496 1.6-16 1.6A240 240 0 0 1 64 624c0-123.136 93.12-223.488 212.608-237.248A239.808 239.808 0 0 1 512 192a239.872 239.872 0 0 1 235.456 194.752c119.488 13.76 212.48 114.112 212.48 237.248a240 240 0 0 1-240 240c-5.376 0-10.56-1.28-16-1.6v1.6z"/>
-            </svg>
-        </label>
-
-
-        <button id="btnEmoji"
-               class="absolute z-10 max-w-max  py-3  bottom-1 text-gray-600 cursor-pointer  flex items-center ms-12">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10s10-4.486 10-10S17.514 2 12 2m0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8s8 3.589 8 8s-3.589 8-8 8"/><path fill="currentColor" d="M14.829 14.828a4.055 4.055 0 0 1-1.272.858a4.002 4.002 0 0 1-4.875-1.45l-1.658 1.119a6.063 6.063 0 0 0 1.621 1.62a5.963 5.963 0 0 0 2.148.903a6.042 6.042 0 0 0 2.415 0a5.972 5.972 0 0 0 2.148-.903c.313-.212.612-.458.886-.731c.272-.271.52-.571.734-.889l-1.658-1.119a4.017 4.017 0 0 1-.489.592"/><circle cx="8.5" cy="10.5" r="1.5" fill="currentColor"/><circle cx="15.493" cy="10.493" r="1.493" fill="currentColor"/></svg>
-        </button>
-
-
-        <div id="boxFile"
-             class="hidden absolute top-[100%] rounded-lg z-20 h-[300px] w-full bg-gray-100 translate-y-[-95%]">
-
-
-
-            <div class="h-[238px]  flex items-center justify-center">
-                <div class="boxFileUpload rounded-lg border-2  overflow-hidden  w-[300px] h-[220px] ">
-
-                </div>
-            </div>
-
-            <div class="relative px-3">
-
-
-            <span id="closeBoxFile"
-                class="absolute z-10 max-w-max  py-1   bottom-1 text-gray-600 cursor-pointer start-0 flex items-center ps-6">
-           <svg class="bg-white rounded-full" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 20 20"><path fill="rgb(248 113 113)" d="M2.93 17.07A10 10 0 1 1 17.07 2.93A10 10 0 0 1 2.93 17.07M11.4 10l2.83-2.83l-1.41-1.41L10 8.59L7.17 5.76L5.76 7.17L8.59 10l-2.83 2.83l1.41 1.41L10 11.41l2.83 2.83l1.41-1.41L11.41 10z"/></svg>
-            </span>
-
-                <button id="sendMessageFile" type="submit"
-                        class="absolute z-10 max-w-max ms-auto bottom-2 text-blue-500 left-auto right-4 me-3 cursor-pointer start-0 flex items-center ps-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M2.01 21L23 12L2.01 3L2 10l15 2l-15 2z"/>
-                    </svg>
-                </button>
-                <input disabled id="messageFile" type="text" name="message"
-                       class="block w-full p-3  pe-16 text-sm text-gray-900 border-[1px] border-gray-300 outline-none  focus:outline-0 rounded-full bg-gray-100  focus:border-blue-400   "
-                       placeholder="Type  a message"
-                       required=""/>
-            </div>
-
-        </div>
-
-        <input id="fileInput" type="file" name="fileInput" class="hidden"/>
-            <button id="sendMessage" type="button"
-                    class="hidden absolute z-10 bottom-4 h-auto max-w-max ms-auto  text-blue-500 left-auto right-4  cursor-pointer start-0 flex items-center ps-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M2.01 21L23 12L2.01 3L2 10l15 2l-15 2z"/>
-                </svg>
-            </button>
-
-            <textarea dir="auto" id="messageInput" type="text" name="message"
-                   class="block w-full p-3.5  px-16 ps-24 resize-none text-sm text-gray-900 border-[1px] border-gray-300 outline-none  focus:outline-0 rounded-lg bg-gray-100  focus:border-blue-400   "
-                   placeholder="Type  a message"
-                   ></textarea>
-
+  </div>
+  <div class="composer-inner">
+    <div id="replyPreview" class="reply-preview" hidden><svg class="icon"><use href="#i-reply"/></svg><div><small>Replying to</small><strong id="replyText"></strong></div><button id="cancelReplyBtn" class="button-icon" type="button" aria-label="Cancel reply"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <div id="attachmentPreview" class="attachment-preview" hidden><span id="attachmentPreviewIcon" class="attachment-preview-icon"></span><div class="attachment-preview-copy"><strong id="attachmentName"></strong><small id="attachmentMeta"></small><audio id="attachmentAudioPreview" class="attachment-audio-preview" controls preload="metadata" hidden></audio></div><button id="removeAttachmentBtn" class="button-icon" type="button" aria-label="Remove attachment"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <div id="voiceRecorder" class="voice-recorder" data-phase="idle" role="group" aria-label="Voice recorder" hidden>
+      <div class="voice-timer" aria-hidden="true"><span class="recording-live-dot"></span><time id="voiceRecorderTime" datetime="PT0S">0:00</time></div>
+      <div class="voice-waveform" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="voice-recorder-actions">
+        <button id="pauseVoiceBtn" class="button-icon" type="button" aria-label="Pause voice recording" aria-pressed="false"><svg class="icon"><use href="#i-pause"/></svg></button>
+        <button id="cancelVoiceBtn" class="button-icon voice-cancel" type="button" aria-label="Cancel voice recording"><svg class="icon"><use href="#i-close"/></svg></button>
+        <button id="stopVoiceBtn" class="button-icon voice-stop" type="button" aria-label="Send voice message"><svg class="icon"><use href="#i-send"/></svg></button>
+      </div>
     </div>
+    <span id="voiceRecorderAnnouncement" class="sr-only" role="status" aria-live="polite"></span>
+    <div class="composer-entry-row">
+      <div class="composer-speed-dial">
+        <button id="composerSpeedDialBtn" class="speed-dial-trigger" type="button" aria-label="Open message tools" aria-haspopup="menu" aria-expanded="false" aria-controls="composerSpeedDial">
+          <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+        </button>
+        <div id="composerSpeedDial" class="floating-panel speed-dial-menu" role="menu" aria-label="Message tools" hidden>
+          <button id="typeInput" class="speed-dial-action channel-trigger" type="button" role="menuitem" value="WhatsApp" data-channel="whatsapp" aria-label="Message channel: WhatsApp" aria-haspopup="menu" aria-expanded="false" aria-controls="channelMenu">
+            <span class="speed-dial-action-icon"><svg class="icon" aria-hidden="true"><use id="channelTriggerIconUse" href="#i-chat"/></svg></span>
+            <span class="speed-dial-action-copy"><small>Send with</small><strong id="channelTriggerValue">WhatsApp</strong></span>
+            <svg class="icon speed-dial-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+          </button>
+          <button id="quickRepliesBtn" type="button" class="speed-dial-action" role="menuitem" aria-expanded="false" aria-controls="templatePanel">
+            <span class="speed-dial-action-icon"><svg class="icon" aria-hidden="true"><use href="#i-template"/></svg></span>
+            <span class="speed-dial-action-copy"><strong>Quick replies</strong><small>Insert a saved response</small></span>
+          </button>
+          <button id="sendGreetingBtn" type="button" class="speed-dial-action" role="menuitem" aria-label="Insert greeting">
+            <span class="speed-dial-action-icon speed-dial-greeting" aria-hidden="true">&#x1F44B;</span>
+            <span class="speed-dial-action-copy"><strong>Greeting</strong><small>Add the welcome message</small></span>
+          </button>
+        </div>
+      </div>
+      <form id="message-form" class="composer-form">
+        <button id="attachmentBtn" class="composer-button" type="button" aria-label="Add attachment" aria-expanded="false" aria-controls="attachmentMenu"><svg class="icon"><use href="#i-paperclip"/></svg></button>
+        <button id="btnEmoji" class="composer-button" type="button" aria-label="Choose emoji" aria-expanded="false" aria-controls="emojiPanel"><svg class="icon"><use href="#i-smile"/></svg></button>
+        <label class="sr-only" for="messageInput">Message</label>
+        <textarea dir="auto" id="messageInput" rows="1" maxlength="2000" placeholder="Write a message" aria-describedby="composerHint"></textarea>
+        <button id="recordAudioBtn" class="composer-button record-button" type="button" aria-label="Record a voice message" aria-pressed="false" aria-controls="voiceRecorder"><svg class="icon"><use href="#i-mic"/></svg></button>
+        <button id="sendMessage" type="submit" class="send-button" aria-label="Send message" disabled><svg class="icon"><use href="#i-send"/></svg></button>
+      </form>
+    </div>
+    <div class="composer-foot"><span id="composerHint">Enter to send &middot; Shift + Enter for a new line</span><span id="draftCount">0 / 2000</span></div>
+  </div>
+
+  <div id="attachmentMenu" class="floating-panel action-panel composer-popup" role="menu" hidden>
+    <p>Add to message</p>
+    <button type="button" role="menuitem" data-attachment="image"><span class="action-icon image"><svg class="icon"><use href="#i-image"/></svg></span><span><strong>Photo or video</strong><small>JPG, PNG, GIF, MP4 &middot; sends instantly</small></span></button>
+    <button type="button" role="menuitem" data-attachment="document"><span class="action-icon document"><svg class="icon"><use href="#i-file"/></svg></span><span><strong>Document</strong><small>PDF, DOCX, ZIP and more &middot; sends instantly</small></span></button>
+    <button type="button" role="menuitem" data-attachment="audio"><span class="action-icon audio"><svg class="icon"><use href="#i-audio"/></svg></span><span><strong>Audio file</strong><small>MP3, M4A, WAV, OGG &middot; sends instantly</small></span></button>
+  </div>
+  <div id="channelMenu" class="floating-panel channel-menu composer-popup" role="menu" aria-labelledby="channelMenuTitle" hidden>
+    <div class="panel-heading channel-menu-heading"><div><strong id="channelMenuTitle">Send with</strong><small>Choose a message channel</small></div><button id="channelMenuClose" class="button-icon" type="button" aria-label="Close message channel menu"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <div class="channel-options">
+      <button type="button" class="channel-option" role="menuitemradio" aria-checked="true" data-channel-value="WhatsApp" data-channel-key="whatsapp">
+        <span class="channel-option-icon whatsapp"><svg class="icon"><use href="#i-chat"/></svg></span><span class="channel-option-copy"><strong>WhatsApp</strong><small>Direct conversation</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+      </button>
+      <button type="button" class="channel-option" role="menuitemradio" aria-checked="false" data-channel-value="WhatsApp Student Support" data-channel-key="support">
+        <span class="channel-option-icon support"><svg class="icon"><use href="#i-support"/></svg></span><span class="channel-option-copy"><strong>Student Support</strong><small>WhatsApp support line</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+      </button>
+      <button type="button" class="channel-option" role="menuitemradio" aria-checked="false" data-channel-value="Email" data-channel-key="email">
+        <span class="channel-option-icon email"><svg class="icon"><use href="#i-mail"/></svg></span><span class="channel-option-copy"><strong>Email</strong><small>Send as email</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+      </button>
+      <button type="button" class="channel-option" role="menuitemradio" aria-checked="false" data-channel-value="SMS" data-channel-key="sms">
+        <span class="channel-option-icon sms"><svg class="icon"><use href="#i-sms"/></svg></span><span class="channel-option-copy"><strong>SMS</strong><small>Send as text message</small></span><span class="channel-option-check"><svg class="icon"><use href="#i-check"/></svg></span>
+      </button>
+    </div>
+  </div>
+  <div id="emojiPanel" class="floating-panel emoji-panel composer-popup" role="dialog" aria-modal="false" aria-labelledby="emojiPanelTitle" hidden>
+    <div class="panel-heading"><div><strong id="emojiPanelTitle">Emoji library</strong><small>Unicode Emoji 17.0 &middot; 3,944 RGI sequences</small></div><button class="button-icon popup-close" type="button" aria-label="Close emoji picker"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <label class="mini-search emoji-search" for="emojiSearchInput"><svg class="icon"><use href="#i-search"/></svg><input id="emojiSearchInput" type="search" placeholder="Search emoji" autocomplete="off"><button id="clearEmojiSearch" type="button" aria-label="Clear emoji search" hidden><svg class="icon"><use href="#i-close"/></svg></button></label>
+    <div id="emojiTonePicker" class="emoji-tone-picker" aria-label="Skin tone"><span>Skin tone</span></div>
+    <div id="emojiCategories" class="emoji-categories" role="tablist" aria-label="Emoji categories"></div>
+    <div class="emoji-results-bar"><strong id="emojiCategoryLabel">Smileys &amp; emotion</strong><span id="emojiResultCount" role="status" aria-live="polite">0 emoji</span></div>
+    <div id="emojiGrid" class="emoji-grid" role="group" aria-label="Emoji choices"></div>
+    <div id="emojiEmpty" class="emoji-empty" hidden><span>?</span><strong>No emoji found</strong><small>Try another word or category.</small></div>
+  </div>
+  <div id="templatePanel" class="floating-panel template-panel composer-popup" hidden>
+    <div class="panel-heading"><div><strong>Quick replies</strong><small>Insert and edit before sending</small></div><button class="button-icon popup-close" type="button" aria-label="Close quick replies"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <label class="mini-search"><svg class="icon"><use href="#i-search"/></svg><input id="templateSearchInput" type="search" placeholder="Search replies" aria-label="Search quick replies"></label>
+    <div id="templateList" class="template-list"></div>
+  </div>
+</footer>
+
+<div id="fileInput" style="display:none">
+  <input type="file" name="fileInput">
 </div>

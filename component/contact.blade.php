@@ -1,53 +1,50 @@
-    <button class="cursor-pointer  block px-3 border-b-[1px] py-3  contact-item"
-            data-id="{{$user->id}}"
-            data-name="{{$user->name}}"
-            data-phone="+{{$user->phone}}"
-            data-email="{{$user->email}}"
-            data-is-blocked="{{$user->is_blocked}}">
-        <div class="flex gap-2 items-center">
-            @if($user->assistant)
-               <div class="border-r-[2px] pe-2">
-                   <div class="relative border-2 border-green-400 rounded-full">
-                       <img class="w-8 h-8 max-w-max rounded-full shadow-lg"
-                            src="{{$user->assistant->getFirstMediaUrl('avatars','thumb')}}"
-                            alt="{{$user->assistant->name}}"/>
-                   </div>
-               </div>
+﻿<button class="contact-item" data-id="{{ $user->id }}" data-name="{{ $user->name }}" data-phone="+{{ $user->phone }}" data-email="{{ $user->email }}" data-is-blocked="{{ $user->is_blocked }}" type="button" role="option" aria-selected="false">
+    <span class="avatar-wrap">
+        @if($user->assistant)
+            <span class="avatar contact-avatar" aria-hidden="true" style="background-image: url('{{ $user->assistant->getFirstMediaUrl('avatars','thumb') }}'); background-size: cover; background-position: center;"></span>
+        @else
+            <span class="avatar contact-avatar" aria-hidden="true">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
+        @endif
+        <span class="presence-dot {{ !empty($user->active_status) ? 'online' : '' }}" aria-label="{{ !empty($user->active_status) ? 'Online' : 'Offline' }}"></span>
+    </span>
+    <span class="contact-body">
+        <span class="contact-row-top">
+            <span class="contact-name">
+                @if($user->phone)
+                    {{ \Illuminate\Support\Str::limit($user->phone, 6) }}
+                @else
+                    {{ \Illuminate\Support\Str::limit($user->email, 10) }}
+                @endif
+                {{ $user->name }}
+            </span>
+            @if($user->latest_message_created_at)
+                <span class="contact-time">{{ \Carbon\Carbon::parse($user->latest_message_created_at)->diffForHumans() }}</span>
             @endif
-            <div class="w-full">
-                <div class="flex justify-between gap-2 items-center">
-                    <h5 class="mb-1 text-start userName text-sm font-bold text-gray-900  overflow-hidden text-ellipsis whitespace-nowrap w-[165px]">
-                        @if($user->phone)
-                            +{{\Illuminate\Support\Str::limit($user->phone,6)}}
-                        @else
-                            {{\Illuminate\Support\Str::limit($user->email,10)}}
-                        @endif
-                        {{$user->name}}
-                    </h5>
-                    @if($user->unanswered_count)
-                        <div class="ms-auto text-[11px] text-center text-white px-2   rounded-full bg-green-400 unseen_messages">
-                            {{$user->unanswered_count}}
-                        </div>
+        </span>
+        <span class="contact-preview-row">
+            <span class="contact-preview">
+                @if($user->last_message)
+                    @if($user->last_message->body)
+                        {{ \Illuminate\Support\Str::limit($user->last_message->body, 40) }}
+                    @elseif($user->last_message->hasMedia('video'))
+                        Video
+                    @elseif($user->last_message->hasMedia('document'))
+                        Document
+                    @elseif($user->last_message->hasMedia('image'))
+                        Image
+                    @elseif($user->last_message->hasMedia('audio'))
+                        Audio
                     @endif
-                </div>
-                <div class="flex  justify-between gap-4">
-                    <span class="text-start text-sm  inline-block text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap w-[135px]">
-                        @if($user->last_message)
-                            @if($user->last_message->body)
-                                {{$user->last_message->body}}
-                            @elseif($user->last_message->hasMedia('video'))
-                                video
-                            @elseif($user->last_message->hasMedia('document'))
-                                document
-                            @elseif($user->last_message->hasMedia('image'))
-                                image
-                            @elseif($user->last_message->hasMedia('audio'))
-                                audio
-                            @endif
-                        @endif
-                    </span>
-                    <span class="text-sm text-end scale-75 text-gray-500">{{\Carbon\Carbon::parse($user->latest_message_created_at)->diffForHumans()}}</span>
-                </div>
-            </div>
-        </div>
-    </button>
+                @else
+                    No messages yet
+                @endif
+            </span>
+            @if($user->unanswered_count)
+                <span class="unread-badge">{{ $user->unanswered_count }}</span>
+            @endif
+        </span>
+        @if($user->unanswered_count)
+            <span class="contact-meta"><span class="status-label">Needs reply</span></span>
+        @endif
+    </span>
+</button>
