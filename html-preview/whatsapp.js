@@ -215,10 +215,10 @@ const emojiCatalog = buildEmojiCatalog();
 const defaultState = {
   version: 2,
   contacts: seedContacts,
-  activeId: 1,
+  activeId: null,
   category: "clients",
   filter: "newest",
-  theme: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+  theme: "system",
   drafts: {},
   emojiTone: 0,
   emojiRecents: []
@@ -422,7 +422,7 @@ function pauseOtherMedia(current) {
 function createWaveformLayer(className) {
   const layer = document.createElement("span");
   layer.className = "audio-waveform-layer " + className;
-  [9,15,22,13,28,18,11,24,31,17,26,12,21,29,16,25,10,20,27,14,23,18,30,13].forEach(function (height) {
+  [34,62,88,48,94,70,38,78,100,58,86,44,72,96,54,82,36,66,90,50,76,60,92,46].forEach(function (height) {
     const bar = document.createElement("i");
     bar.style.height = height + "%";
     layer.append(bar);
@@ -1096,7 +1096,7 @@ function positionMessageActionMenu(trigger) {
   menu.style.visibility = "";
 }
 
-function openMessageActionMenu(message, trigger) {
+function openMessageActionMenu(message, trigger, anchor) {
   const contact = activeContact();
   if (!contact || !message || !trigger) return;
   closeMessageActionMenu(false);
@@ -1118,12 +1118,83 @@ function openMessageActionMenu(message, trigger) {
 
   $("messageActionMenu").hidden = false;
   $("messageActionBackdrop").hidden = true;
-  positionMessageActionMenu(trigger);
+  positionMessageActionMenu(anchor || trigger);
   requestAnimationFrame(function () {
     const menu = $("messageActionMenu");
     if (menu.hidden || activeMessageActionTrigger !== trigger) return;
     const first = menu.querySelector("[role='menuitem']:not(:disabled)");
     if (first) first.focus();
+  });
+}
+
+function isInteractiveMessagePressTarget(target) {
+  const element = target instanceof Element ? target : target && target.parentElement;
+  return Boolean(element && element.closest("button, a, input, textarea, select, video, audio, [contenteditable='true']"));
+}
+
+function bindMessageLongPress(bubble, message, actionTrigger) {
+  const holdDelay = 520;
+  const moveLimit = 12;
+  let holdTimer = null;
+  let activePointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let suppressClickUntil = 0;
+
+  function clearHold() {
+    if (holdTimer !== null) window.clearTimeout(holdTimer);
+    holdTimer = null;
+    activePointerId = null;
+    bubble.classList.remove("is-long-pressing");
+  }
+
+  bubble.addEventListener("pointerdown", function (event) {
+    if (!phoneBottomNavigationQuery.matches || selectedMessageIds.size || event.isPrimary === false || event.button !== 0 || isInteractiveMessagePressTarget(event.target)) return;
+    clearHold();
+    activePointerId = event.pointerId;
+    startX = event.clientX;
+    startY = event.clientY;
+    bubble.classList.add("is-long-pressing");
+    holdTimer = window.setTimeout(function () {
+      holdTimer = null;
+      bubble.classList.remove("is-long-pressing");
+      if (!bubble.isConnected || !phoneBottomNavigationQuery.matches || selectedMessageIds.size) return;
+      suppressClickUntil = Date.now() + 750;
+      openMessageActionMenu(message, actionTrigger, bubble);
+    }, holdDelay);
+  });
+
+  bubble.addEventListener("pointermove", function (event) {
+    if (event.pointerId !== activePointerId) return;
+    const deltaX = event.clientX - startX;
+    const deltaY = event.clientY - startY;
+    if ((deltaX * deltaX) + (deltaY * deltaY) > moveLimit * moveLimit) clearHold();
+  });
+
+  bubble.addEventListener("pointerup", function (event) {
+    if (event.pointerId !== activePointerId) return;
+    const handled = suppressClickUntil > Date.now();
+    clearHold();
+    if (handled) event.preventDefault();
+  });
+  bubble.addEventListener("pointercancel", clearHold);
+  bubble.addEventListener("lostpointercapture", clearHold);
+
+  bubble.addEventListener("click", function (event) {
+    if (suppressClickUntil <= Date.now()) return;
+    suppressClickUntil = 0;
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
+
+  bubble.addEventListener("contextmenu", function (event) {
+    if (!phoneBottomNavigationQuery.matches || selectedMessageIds.size || isInteractiveMessagePressTarget(event.target)) return;
+    event.preventDefault();
+    clearHold();
+    suppressClickUntil = Date.now() + 750;
+    if ($("messageActionMenu").hidden || activeMessageActionId !== messageIdKey(message)) {
+      openMessageActionMenu(message, actionTrigger, bubble);
+    }
   });
 }
 
@@ -1453,6 +1524,7 @@ function renderMessages(forceBottom) {
       openMessageActionMenu(message, actionTrigger);
     });
     bubble.append(actionTrigger);
+    bindMessageLongPress(bubble, message, actionTrigger);
 
     if (message.reply) {
       const reply = document.createElement("div");
@@ -2109,6 +2181,32 @@ function selectContact(id, navigate) {
   }
 }
 
+function closeConversation() {
+  if (sendInProgress) { showToast("Finishing message", "Wait a moment while the audio is saved."); return; }
+  if (voiceSession) cancelVoiceRecording(true);
+  clearMessageSelection(false);
+  closeMessageActionMenu(false);
+  closePanels();
+  releasePendingAttachment();
+  const previous = activeContact();
+  if (previous && $("messageInput") && !previous.blocked) state.drafts[previous.id] = $("messageInput").value;
+  state.activeId = null;
+  replyTo = null;
+  $("messageInput").value = "";
+  $("messageSearchInput").value = "";
+  $("conversationSearch").hidden = true;
+  closeDrawer();
+  renderContacts();
+  renderHeader();
+  renderAttachmentPreview();
+  renderReplyPreview();
+  safeSave();
+  $("appShell").classList.remove("conversation-open");
+  const firstOption = document.querySelector("#contact-list .contact-item");
+  if (firstOption) requestAnimationFrame(function () { firstOption.focus(); });
+  showToast("Conversation closed", "Pick a conversation to continue chatting.");
+}
+
 function renderReplyPreview() {
   $("replyPreview").hidden = !replyTo;
   $("replyText").textContent = replyTo ? (replyTo.body || (replyTo.attachment && attachmentPreviewLabel(replyTo.attachment)) || "Attachment") : "";
@@ -2717,7 +2815,7 @@ function startVoiceVisualizer(session) {
         bars.forEach(function (bar, index) {
           const sample = levels[Math.min(levels.length - 1, Math.floor(index / bars.length * levels.length))] / 255;
           const ambient = .24 + Math.abs(Math.sin(timestamp / 210 + index * .76)) * .3;
-          const level = Math.min(1.18, Math.max(.18, sample * 1.2 + ambient * (sample < .08 ? .72 : .32)));
+          const level = Math.min(1, Math.max(.18, sample * 1.2 + ambient * (sample < .08 ? .72 : .32)));
           energy += level;
           bar.style.setProperty("--level", level.toFixed(2));
         });
@@ -2815,7 +2913,9 @@ function failVoiceSession(session, error) {
   voiceRequestToken += 1;
   resetVoiceSession(session);
   const copy = voiceErrorCopy(error);
-  showToast(copy.title, copy.body, "error", audioFallbackAction());
+  const permissionDenied = error && (error.name === "NotAllowedError" || error.name === "SecurityError");
+  if (permissionDenied) announceVoice(copy.title + ". " + copy.body);
+  else showToast(copy.title, copy.body, "error", audioFallbackAction());
   requestAnimationFrame(function () { if (!$("recordAudioBtn").disabled) $("recordAudioBtn").focus(); });
 }
 async function startVoiceRecording() {
@@ -3270,6 +3370,7 @@ function handleMenuAction(action) {
     showToast("Marked unread", "The conversation now appears in the Unread filter.");
   }
   if (action === "export") exportTranscript();
+  if (action === "close") closeConversation();
   if (action === "block") toggleBlocked();
   if (action === "clear") clearConversation();
 }
@@ -3311,30 +3412,126 @@ function createConversation(event) {
   showToast("Conversation created", "You can continue with " + name + ".");
 }
 
-function applyTheme(theme) {
-  state.theme = theme;
-  document.body.classList.toggle("dark", theme === "dark");
-  $("themeToggle").setAttribute("aria-pressed", String(theme === "dark"));
-  $("themeToggle").setAttribute("aria-label", theme === "dark" ? "Use light theme" : "Use dark theme");
-  safeSave();
+let mobileNavInertRestore = null;
+const mobileNavigationQuery = window.matchMedia("(max-width: 1179px)");
+const phoneBottomNavigationQuery = window.matchMedia("(max-width: 759px)");
+const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+function setMobileNavigationBackgroundInert(value) {
+  const elements = [$("leftSideSection"), $("rightSideSection")].filter(Boolean);
+  if (value) {
+    if (!mobileNavInertRestore) mobileNavInertRestore = elements.map(function (element) { return element.inert; });
+    elements.forEach(function (element) { element.inert = true; });
+    return;
+  }
+  elements.forEach(function (element, index) {
+    const wasInert = mobileNavInertRestore ? mobileNavInertRestore[index] : false;
+    element.inert = Boolean(wasInert || (element.id === "leftSideSection" && sendInProgress));
+  });
+  mobileNavInertRestore = null;
+}
+
+function openMobileNavigation() {
+  if (!mobileNavigationQuery.matches || phoneBottomNavigationQuery.matches) return;
+  if ($("appShell").classList.contains("details-open")) closeDrawer();
+  closePanels();
+  const navigation = $("appMainNavigation");
+  document.body.classList.add("sidebar-nav-open");
+  navigation.classList.add("is-open");
+  navigation.inert = false;
+  navigation.removeAttribute("aria-hidden");
+  $("mobileNavBackdrop").hidden = false;
+  $("mobileNavToggle").setAttribute("aria-expanded", "true");
+  setMobileNavigationBackgroundInert(true);
+  requestAnimationFrame(function () { $("mobileNavClose").focus(); });
+}
+
+function closeMobileNavigation(restoreFocus) {
+  const navigation = $("appMainNavigation");
+  document.body.classList.remove("sidebar-nav-open");
+  navigation.classList.remove("is-open");
+  $("mobileNavBackdrop").hidden = true;
+  $("mobileNavToggle").setAttribute("aria-expanded", "false");
+  setMobileNavigationBackgroundInert(false);
+  if (mobileNavigationQuery.matches) {
+    navigation.inert = true;
+    navigation.setAttribute("aria-hidden", "true");
+  } else {
+    navigation.inert = false;
+    navigation.removeAttribute("aria-hidden");
+  }
+  if (restoreFocus && mobileNavigationQuery.matches) $("mobileNavToggle").focus();
+}
+
+function syncMobileNavigation() {
+  const navigation = $("appMainNavigation");
+  if (phoneBottomNavigationQuery.matches) {
+    closeMobileNavigation(false);
+    navigation.inert = true;
+    navigation.setAttribute("aria-hidden", "true");
+    return;
+  }
+  if (!mobileNavigationQuery.matches) {
+    closeMobileNavigation(false);
+    navigation.inert = false;
+    navigation.removeAttribute("aria-hidden");
+    return;
+  }
+  if (!document.body.classList.contains("sidebar-nav-open")) {
+    navigation.inert = true;
+    navigation.setAttribute("aria-hidden", "true");
+    $("mobileNavBackdrop").hidden = true;
+    $("mobileNavToggle").setAttribute("aria-expanded", "false");
+  }
+}
+
+function trapMobileNavigationFocus(event) {
+  const navigation = $("appMainNavigation");
+  const controls = Array.from(navigation.querySelectorAll("a[href],button:not([disabled])")).filter(function (element) {
+    return !element.hidden && element.getClientRects().length;
+  });
+  if (!controls.length) return;
+  const first = controls[0];
+  const last = controls[controls.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function applyTheme(theme, persist) {
+  const preference = theme === "light" || theme === "dark" ? theme : "system";
+  const resolvedTheme = preference === "system" ? (systemThemeQuery.matches ? "dark" : "light") : preference;
+  state.theme = preference;
+  document.body.classList.toggle("dark", resolvedTheme === "dark");
+  document.documentElement.dataset.theme = resolvedTheme;
+  document.documentElement.style.colorScheme = resolvedTheme;
+  $("themeToggle").setAttribute("aria-pressed", String(resolvedTheme === "dark"));
+  $("themeToggle").setAttribute("aria-label", resolvedTheme === "dark" ? "Use light theme" : "Use dark theme");
+  if (persist !== false) safeSave();
+}
+
+function syncSystemTheme() {
+  if (state.theme === "system") applyTheme("system", false);
 }
 
 function setCategory(category) {
   clearMessageSelection(false);
   closeMessageActionMenu(false);
-  const previous = activeContact();
   state.category = category;
   document.querySelectorAll("[data-category]").forEach(function (button) { button.setAttribute("aria-pressed", String(button.dataset.category === category)); });
   $("appShell").classList.remove("conversation-open");
-  renderContacts();
-  if (!window.matchMedia("(max-width: 759px)").matches && (!previous || previous.category !== category)) {
-    const first = currentContacts()[0];
-    if (first) selectContact(first.id, false);
-    else {
-      state.activeId = null;
-      renderHeader();
-    }
+  const active = activeContact();
+  if (active && active.category !== category) {
+    state.activeId = null;
+    replyTo = null;
+    $("messageInput").value = "";
   }
+  renderContacts();
+  renderHeader();
   safeSave();
 }
 
@@ -3431,6 +3628,7 @@ $("mobileBack").addEventListener("click", function () {
 
 $("activeContactButton").addEventListener("click", function () { openDrawer($("activeContactButton")); });
 $("btnGetStudentsDetails").addEventListener("click", function () { openDrawer($("btnGetStudentsDetails")); });
+$("btnCloseConversation").addEventListener("click", function () { closeConversation(); });
 $("closeOverview").addEventListener("click", closeDrawer);
 $("drawerBackdrop").addEventListener("click", closeDrawer);
 $("contactDrawer").addEventListener("click", function (event) {
@@ -3733,10 +3931,18 @@ $("scrollLatestBtn").addEventListener("click", function () {
   $("boxMessagesScroll").scrollTo({ top: $("boxMessagesScroll").scrollHeight, behavior: "smooth" });
 });
 
-$("emptyNewConversationBtn").addEventListener("click", openNewConversation);
+
 $("newConversationForm").addEventListener("submit", createConversation);
 $("shortcutsBtn").addEventListener("click", function () { $("shortcutsDialog").showModal(); });
-$("themeToggle").addEventListener("click", function () { applyTheme(state.theme === "dark" ? "light" : "dark"); });
+$("mobileNavToggle").addEventListener("click", openMobileNavigation);
+$("mobileNavClose").addEventListener("click", function () { closeMobileNavigation(true); });
+$("mobileNavBackdrop").addEventListener("click", function () { closeMobileNavigation(true); });
+$("appMainNavigation").addEventListener("click", function (event) {
+  if (mobileNavigationQuery.matches && event.target.closest(".sidebar-brand,.sidebar-nav-item,.sidebar-logout")) closeMobileNavigation(false);
+});
+$("themeToggle").addEventListener("click", function () { applyTheme(document.body.classList.contains("dark") ? "light" : "dark"); });
+if (typeof systemThemeQuery.addEventListener === "function") systemThemeQuery.addEventListener("change", syncSystemTheme);
+else systemThemeQuery.addListener(syncSystemTheme);
 $("contactNotes").addEventListener("input", function () {
   const contact = activeContact();
   if (!contact) return;
@@ -3809,6 +4015,10 @@ document.addEventListener("pointerdown", function (event) {
   closePanels();
 });
 document.addEventListener("keydown", function (event) {
+  if (document.body.classList.contains("sidebar-nav-open") && event.key === "Tab") {
+    trapMobileNavigationFocus(event);
+    return;
+  }
   const tag = document.activeElement && document.activeElement.tagName;
   const isTyping = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
   if (event.key === "/" && !isTyping && $("messageActionMenu").hidden && !$("newConversationDialog").open && !$("confirmDialog").open) {
@@ -3816,6 +4026,7 @@ document.addEventListener("keydown", function (event) {
     $("searchInput").focus();
   }
   if (event.key === "Escape") {
+    if (document.body.classList.contains("sidebar-nav-open")) { event.preventDefault(); closeMobileNavigation(true); return; }
     if (document.querySelector("dialog[open]")) return;
     if (!$("messageActionMenu").hidden) { event.preventDefault(); closeMessageActionMenu(true); return; }
     if (selectedMessageIds.size) { event.preventDefault(); clearMessageSelection(true, true); return; }
@@ -3832,6 +4043,7 @@ document.addEventListener("keydown", function (event) {
 
 window.addEventListener("resize", function () {
   if (!$("messageActionMenu").hidden) closeMessageActionMenu(false);
+  syncMobileNavigation();
 });
 window.addEventListener("online", function () { updateNetworkState(); showToast("Back online", "Message delivery is available again."); });
 window.addEventListener("offline", function () { updateNetworkState(); showToast("You’re offline", "Changes will stay in this local preview.", "error"); });
@@ -3862,7 +4074,8 @@ window.addEventListener("pageshow", function (event) {
 });
 
 function initialize() {
-  applyTheme(state.theme);
+  applyTheme("system", false);
+  syncMobileNavigation();
   document.querySelectorAll("[data-category]").forEach(function (button) { button.setAttribute("aria-pressed", String(button.dataset.category === state.category)); });
   renderStatusFilter();
   state.emojiTone = Math.max(0, Math.min(5, Number(state.emojiTone) || 0));
@@ -3873,10 +4086,6 @@ function initialize() {
   renderTemplates("");
   syncChannelPicker();
   renderContacts();
-  if (!activeContact()) {
-    const first = currentContacts()[0] || state.contacts[0];
-    state.activeId = first ? first.id : null;
-  }
   const contact = activeContact();
   if (contact) {
     $("messageInput").value = state.drafts[contact.id] || "";
@@ -3892,11 +4101,6 @@ function initialize() {
 }
 
 initialize();
-
-
-
-
-
 
 
 

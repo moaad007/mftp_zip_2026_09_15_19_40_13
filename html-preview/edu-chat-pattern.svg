@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="380" viewBox="0 0 560 380" fill="none">
+  <g stroke="#4d7daf" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".18">
+    <g transform="translate(42 42)">
+      <path d="M0 8c18-6 34-4 48 6v48C34 52 18 50 0 56V8Z"/>
+      <path d="M96 8c-18-6-34-4-48 6v48c14-10 30-12 48-6V8Z"/>
+      <path d="M48 14v48M9 20c11-2 21 0 30 5M9 31c11-2 21 0 30 5M87 20c-11-2-21 0-30 5M87 31c-11-2-21 0-30 5"/>
+    </g>
+    <g transform="translate(214 38) rotate(-12 41 12)">
+      <path d="M3 7h66l12 10-12 10H3l-3-10 3-10Z"/>
+      <path d="m69 7-6 20M3 7l8 10-8 10M11 17h52"/>
+    </g>
+    <g transform="translate(367 34)">
+      <path d="M7 1h82a7 7 0 0 1 7 7v45a7 7 0 0 1-7 7H42L25 74l3-14H7a7 7 0 0 1-7-7V8a7 7 0 0 1 7-7Z"/>
+      <path d="M20 20h54M20 31h40M20 42h48"/>
+    </g>
+    <g transform="translate(78 178)">
+      <path d="M6 37V28a28 28 0 0 1 56 0v9"/>
+      <rect x="0" y="34" width="14" height="30" rx="6"/>
+      <rect x="54" y="34" width="14" height="30" rx="6"/>
+      <path d="M14 56c7 11 16 16 27 16h8"/>
+    </g>
+    <g transform="translate(239 164)">
+      <circle cx="42" cy="42" r="38"/>
+      <path d="M4 42h76M42 4c12 10 19 23 19 38S54 70 42 80M42 4C30 14 23 27 23 42s7 28 19 38M11 23h62M11 61h62"/>
+      <path d="M42 80v13M24 93h36"/>
+    </g>
+    <g transform="translate(413 157)">
+      <path d="m0 22 48-21 48 21-48 21L0 22Z"/>
+      <path d="M21 34v24c18 10 36 10 54 0V34M96 22v35M96 57c-5 4-7 10-7 17h14c0-7-2-13-7-17Z"/>
+    </g>
+    <g transform="translate(367 277)">
+      <path d="M24 0h24M30 0v24L6 67a8 8 0 0 0 7 12h46a8 8 0 0 0 7-12L42 24V0"/>
+      <path d="M18 54h36M22 45h28M29 66h2M45 70h2"/>
+    </g>
+    <g>
+      <path d="m181 134 4 9 9 4-9 4-4 9-4-9-9-4 9-4 4-9ZM511 292l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z"/>
+      <circle cx="191" cy="294" r="4"/>
+      <circle cx="327" cy="122" r="3"/>
+      <path d="M103 319h43M93 330h63M109 341h31"/>
+      <path d="M190 247c9-12 20-12 29 0-9 12-20 12-29 0Z"/>
+      <circle cx="205" cy="247" r="4"/>
+    </g>
+  </g>
+</svg>
