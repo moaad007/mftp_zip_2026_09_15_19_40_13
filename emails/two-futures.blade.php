@@ -65,13 +65,33 @@
                 </tr>
 
                 <tr>
-                    <td class="pad" style="padding-top:10px; padding-bottom:32px;">
+                    <td class="pad" style="padding-top:10px; padding-bottom:24px;">
                         <h1 class="headline" style="margin:0 0 14px; font-size:34px; line-height:40px; font-weight:900; color:#061538; text-align:center;">
                             6 months from now.<br>Two versions of <span class="purple">you.</span>
                         </h1>
                         <p style="margin:0; font-size:17px; line-height:26px; color:#4E5A73; text-align:center;">
                             One of them started. The other kept waiting.
                         </p>
+                    </td>
+                </tr>
+
+                <!-- VISUAL: TWO PATHS -->
+                <tr>
+                    <td class="pad" style="padding-bottom:28px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-radius:16px; overflow:hidden;">
+                            <tr>
+                                <td width="50%" style="background:#FEF2F2; padding:24px 16px; text-align:center; vertical-align:top;">
+                                    <div style="width:48px; height:48px; border-radius:50%; background:#FECACA; color:#DC2626; font-size:24px; line-height:48px; text-align:center; margin:0 auto 12px;">&#10007;</div>
+                                    <div style="font-size:13px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Still waiting</div>
+                                    <div style="font-size:14px; line-height:20px; color:#7F1D1D;">Same fears.<br>Same excuses.<br>Same results.</div>
+                                </td>
+                                <td width="50%" style="background:#F0FDF4; padding:24px 16px; text-align:center; vertical-align:top;">
+                                    <div style="width:48px; height:48px; border-radius:50%; background:#BBF7D0; color:#16A34A; font-size:24px; line-height:48px; text-align:center; margin:0 auto 12px;">&#10003;</div>
+                                    <div style="font-size:13px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Started today</div>
+                                    <div style="font-size:14px; line-height:20px; color:#14532D;">New confidence.<br>New opportunities.<br>New you.</div>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
 

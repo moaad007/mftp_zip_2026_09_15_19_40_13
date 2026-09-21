@@ -85,6 +85,32 @@
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F8F8FC; border-radius:16px;">
                             <tr>
                                 <td style="padding:20px 18px;">
+                                    <!-- Visual: Participants -->
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
+                                        <tr>
+                                            <td align="center">
+                                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                                                    <tr>
+                                                        <td style="padding:0 4px;">
+                                                            <div style="width:36px; height:36px; border-radius:50%; background:#7B4DFF; color:#FFFFFF; font-size:14px; font-weight:900; line-height:36px; text-align:center;">A</div>
+                                                        </td>
+                                                        <td style="padding:0 4px;">
+                                                            <div style="width:36px; height:36px; border-radius:50%; background:#16A34A; color:#FFFFFF; font-size:14px; font-weight:900; line-height:36px; text-align:center;">M</div>
+                                                        </td>
+                                                        <td style="padding:0 4px;">
+                                                            <div style="width:36px; height:36px; border-radius:50%; background:#F59E0B; color:#FFFFFF; font-size:14px; font-weight:900; line-height:36px; text-align:center;">K</div>
+                                                        </td>
+                                                        <td style="padding:0 4px;">
+                                                            <div style="width:36px; height:36px; border-radius:50%; background:#DC2626; color:#FFFFFF; font-size:14px; font-weight:900; line-height:36px; text-align:center;">S</div>
+                                                        </td>
+                                                        <td style="padding:0 8px 0 4px;">
+                                                            <div style="font-size:12px; color:#64748B;">+5 more</div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
                                     <!-- Header -->
                                     <div style="font-size:12px; font-weight:700; color:#64748B; margin-bottom:16px; text-align:center;">Conversation Room &middot; Tuesday 7:00 PM &middot; Topic: Travel</div>
 

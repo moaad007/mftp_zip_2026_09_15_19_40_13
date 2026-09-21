@@ -73,6 +73,38 @@
                     </td>
                 </tr>
 
+                <!-- VISUAL: SALARY GAP -->
+                <tr>
+                    <td class="pad" style="padding-bottom:28px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-radius:16px; overflow:hidden;">
+                            <tr>
+                                <td style="background:#FEF2F2; padding:20px 24px;">
+                                    <div style="font-size:11px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Without fluent English</div>
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="background:#FECACA; height:24px; border-radius:12px; width:45%;"></td>
+                                            <td style="width:55%;"></td>
+                                        </tr>
+                                    </table>
+                                    <div style="font-size:14px; font-weight:700; color:#7F1D1D; margin-top:6px;">$55,000 / year avg.</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background:#F0FDF4; padding:20px 24px;">
+                                    <div style="font-size:11px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">With fluent English</div>
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="background:#86EFAC; height:24px; border-radius:12px; width:85%;"></td>
+                                            <td style="width:15%;"></td>
+                                        </tr>
+                                    </table>
+                                    <div style="font-size:14px; font-weight:700; color:#14532D; margin-top:6px;">$105,000+ / year avg.</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
                 <!-- BIG STAT -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
