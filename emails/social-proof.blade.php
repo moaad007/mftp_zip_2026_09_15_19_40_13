@@ -69,7 +69,7 @@
         }
     </style>
 </head>
-<body class="body" style="margin:0; padding:0; width:100%; background:#F8F8FC; color:#061538;">
+<body class="body" style="margin:0; padding:0; width:100%; background:#020A1E; color:#061538;">
 <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; overflow:hidden; opacity:0; color:#F8F8FC;">
     {{ $emailPreviewText }}
 </div>
@@ -115,7 +115,7 @@
                 <!-- STORY CARD -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="story-card" style="background:#F6F4FF; border:1px solid #E3DBFF; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="story-card" style="background:#F6F4FF; border-radius:16px;">
                             <tr>
                                 <td style="padding:28px 26px;">
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
@@ -146,12 +146,12 @@
                     <td class="pad" style="padding-bottom:24px;">
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                                <td width="48%" class="before-after-left" style="background:#FFF5F5; border:1px solid #FECACA; border-radius:14px; padding:18px 16px;">
+                                <td width="48%" class="before-after-left" style="background:#FFF5F5; border-radius:14px; padding:18px 16px;">
                                     <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#DC2626; margin-bottom:8px;">&#10060; Before</div>
                                     <div style="font-size:14px; line-height:21px; color:#7F1D1D;">Afraid to speak in meetings. Watched others get promoted.</div>
                                 </td>
                                 <td width="4%"></td>
-                                <td width="48%" class="before-after-right" style="background:#F0FDF4; border:1px solid #C8E6D5; border-radius:14px; padding:18px 16px;">
+                                <td width="48%" class="before-after-right" style="background:#F0FDF4; border-radius:14px; padding:18px 16px;">
                                     <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#16A34A; margin-bottom:8px;">&#10003; After 3 months</div>
                                     <div style="font-size:14px; line-height:21px; color:#14532D;">Led presentations in English. Got promoted.</div>
                                 </td>
@@ -174,7 +174,7 @@
                 <!-- URGENCY -->
                 <tr>
                     <td class="pad" style="padding-bottom:20px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="urgent-box" style="background:#FEF2F2; border-radius:16px;">
                             <tr>
                                 <td align="center" style="padding:16px 20px;">
                                     <div style="font-size:15px; font-weight:900; color:#DC2626;">
@@ -192,7 +192,7 @@
                 <!-- OFFER -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border:2px solid #7B4DFF; border-radius:20px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border-radius:20px;">
                             <tr>
                                 <td align="center" style="padding:24px;">
                                     <div style="margin-bottom:12px;">

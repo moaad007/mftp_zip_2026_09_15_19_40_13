@@ -109,7 +109,7 @@
         }
     </style>
 </head>
-<body class="body" style="margin:0; padding:0; width:100%; background:#F8F8FC; color:#061538;">
+<body class="body" style="margin:0; padding:0; width:100%; background:#020A1E; color:#061538;">
 <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; overflow:hidden; opacity:0; color:#F8F8FC;">
     {{ $emailPreviewText }}
 </div>
@@ -167,7 +167,7 @@
                 <!-- PRICING CARD -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border:2px solid #7B4DFF; border-radius:20px; overflow:hidden;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border-radius:20px; overflow:hidden;">
                             <tr>
                                 <td align="center" style="padding:28px 24px 20px;">
                                     <div style="margin-bottom:16px;">
@@ -227,7 +227,7 @@
                 <!-- URGENCY REMINDER -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="urgent-box" style="background:#FEF2F2; border-radius:16px;">
                             <tr>
                                 <td align="center" style="padding:16px 20px;">
                                     <div style="font-size:14px; font-weight:800; color:#DC2626;">

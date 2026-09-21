@@ -68,7 +68,7 @@
         }
     </style>
 </head>
-<body class="body" style="margin:0; padding:0; width:100%; background:#F8F8FC; color:#061538;">
+<body class="body" style="margin:0; padding:0; width:100%; background:#020A1E; color:#061538;">
 <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; overflow:hidden; opacity:0; color:#F8F8FC;">
     {{ $emailPreviewText }}
 </div>
@@ -117,7 +117,7 @@
                 <!-- PAIN POINT: ALONE -->
                 <tr>
                     <td class="pad" style="padding-bottom:16px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border-radius:16px;">
                             <tr>
                                 <td style="padding:22px 24px;">
                                     <div class="pain-text" style="font-size:18px; font-weight:900; color:#DC2626; margin-bottom:8px;">&#10060; Studying alone does not work</div>
@@ -133,7 +133,7 @@
                 <!-- PAIN POINT: APPS -->
                 <tr>
                     <td class="pad" style="padding-bottom:16px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border-radius:16px;">
                             <tr>
                                 <td style="padding:22px 24px;">
                                     <div class="pain-text" style="font-size:18px; font-weight:900; color:#DC2626; margin-bottom:8px;">&#10060; Apps keep you entertained, not fluent</div>
@@ -149,7 +149,7 @@
                 <!-- PAIN POINT: FEAR -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border-radius:16px;">
                             <tr>
                                 <td style="padding:22px 24px;">
                                     <div class="pain-text" style="font-size:18px; font-weight:900; color:#DC2626; margin-bottom:8px;">&#10060; Fear keeps you silent</div>
@@ -165,7 +165,7 @@
                 <!-- SOLUTION -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="solution-card" style="background:#F0FDF4; border:1px solid #C8E6D5; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="solution-card" style="background:#F0FDF4; border-radius:16px;">
                             <tr>
                                 <td style="padding:24px;">
                                     <div class="solution-text" style="font-size:20px; font-weight:900; color:#16A34A; margin-bottom:10px;">&#10003; This is what you are missing:</div>
@@ -199,7 +199,7 @@
                 <!-- OFFER -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border:2px solid #7B4DFF; border-radius:20px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border-radius:20px;">
                             <tr>
                                 <td align="center" style="padding:24px;">
                                     <div class="price-strike">$70/month</div>
@@ -237,7 +237,7 @@
                 <!-- URGENCY -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="urgent-box" style="background:#FEF2F2; border-radius:16px;">
                             <tr>
                                 <td align="center" style="padding:16px 20px;">
                                     <div style="font-size:15px; font-weight:900; color:#DC2626;">
