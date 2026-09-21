@@ -101,7 +101,11 @@
             .text-muted { color: #AAB7D6 !important; -webkit-text-fill-color: #AAB7D6 !important; }
             .check-item { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
             .price-month { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .footer-section { background: #071636 !important; }
+            .email-footer-end, .brand-footer, .help-panel, .contact-card { background: #071636 !important; background-color: #071636 !important; }
+            .text-main, .text-main *, .footer-title { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
+            .text-muted, .text-muted *, .footer-copy, .contact-value, .contact-value:link, .contact-value:visited, .contact-value span, .contact-value * { color: #AAB7D6 !important; -webkit-text-fill-color: #AAB7D6 !important; }
+            .text-accent, .text-accent *, .footer-accent, .contact-chevron { color: #C4B5FD !important; -webkit-text-fill-color: #C4B5FD !important; }
+            .contact-icon { border-color: #29416D !important; }
         }
     </style>
 </head>
@@ -240,20 +244,68 @@
 
                 <!-- FOOTER -->
                 <tr>
-                    <td class="footer-section" style="padding:24px 28px 30px; border-top:1px solid #ECEFF6; background:#FBFBFF;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <td class="email-footer-end" style="padding:0; background:#FBFBFF;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                             <tr>
-                                <td align="center">
-                                    <div class="text-dark" style="font-size:20px; font-weight:900; color:#061538; letter-spacing:-0.5px;">Boston <span class="purple">English</span> Center</div>
-                                    <div class="text-muted" style="font-size:13px; line-height:20px; color:#64748B; margin-top:8px; text-align:center;">
-                                        Need help? Contact us at<br>
-                                        <a href="tel:16178482317" style="color:#7B4DFF; font-weight:700;">+1 (617) 848-2317</a> or
-                                        <a href="mailto:{{ $supportEmail }}" style="color:#7B4DFF; font-weight:700;">{{ $supportEmail }}</a>
-                                    </div>
-                                    <div class="text-muted" style="font-size:11px; line-height:18px; color:#9CA3AF; margin-top:14px; text-align:center;">
-                                        &copy; {{ date('Y') }} Boston English Center. All Rights Reserved.<br>
-                                        <a href="{{ $unsubscribeUrl }}" style="color:#9CA3AF; text-decoration:underline;">Unsubscribe</a>
-                                    </div>
+                                <td class="help-panel" style="padding:28px 18px 24px; background:#FBFBFF;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td valign="top" style="padding:0 18px 12px 0;">
+                                                <div class="text-main help-title" style="font-size:30px; line-height:34px; font-weight:900; color:#071A44; letter-spacing:-0.8px;">Need Help?</div>
+                                                <div class="text-muted help-copy" style="padding-top:8px; font-size:16px; line-height:23px; font-weight:600; color:#405273;">We're here to help you on your English learning journey.</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-top:6px;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                    <tr>
+                                                        <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
+                                                            <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#EFF6FF; color:#3385F2; font-size:18px; line-height:42px; font-weight:900; text-align:center;">TEL</div>
+                                                        </td>
+                                                        <td valign="middle" class="contact-copy-cell" style="padding:14px 10px;">
+                                                            <div class="text-main contact-label" style="font-size:17px; line-height:22px; font-weight:900; color:#071A44;">Call Us</div>
+                                                            <a href="tel:16178482317" class="text-muted contact-value" style="display:block; padding-top:2px; font-size:15px; line-height:21px; font-weight:600; color:#405273; -webkit-text-fill-color:#405273; text-decoration:none;">+1 (617) 848-2317</a>
+                                                        </td>
+                                                        <td width="28" align="center" valign="middle" class="contact-chevron" style="width:28px; padding-right:14px; color:#4024D6; font-size:22px; line-height:22px; font-weight:900;">&#8250;</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-top:12px;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                    <tr>
+                                                        <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
+                                                            <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#F5F3FF; color:#6F2AE8; font-size:14px; line-height:42px; font-weight:900; text-align:center;">@</div>
+                                                        </td>
+                                                        <td valign="middle" class="contact-copy-cell" style="padding:14px 10px;">
+                                                            <div class="text-main contact-label" style="font-size:17px; line-height:22px; font-weight:900; color:#071A44;">Email Us</div>
+                                                            <a href="mailto:{{ $supportEmail }}" class="text-muted contact-value" style="display:block; padding-top:2px; font-size:16px; line-height:22px; font-weight:600; color:#405273; -webkit-text-fill-color:#405273; text-decoration:none; word-break:break-word;">{{ $supportEmail }}</a>
+                                                        </td>
+                                                        <td width="28" align="center" valign="middle" class="contact-chevron" style="width:28px; padding-right:14px; color:#4024D6; font-size:22px; line-height:22px; font-weight:900;">&#8250;</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="brand-footer" style="padding:22px 0 26px; background:#FBFBFF;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td align="center">
+                                                <div class="text-main footer-title" style="font-size:23px; line-height:24px; font-weight:900; color:#071A44; letter-spacing:-0.6px;">Boston</div>
+                                                <div class="text-accent footer-accent" style="font-size:15px; line-height:18px; font-weight:900; color:#1357E8;">English Center</div>
+                                                <div class="text-muted footer-copy" style="margin:14px 0 0; font-size:13px; line-height:20px; font-weight:600; color:#64748B; text-align:center;">
+                                                    &copy; {{ date('Y') }} Boston English Center<br>All Rights Reserved.
+                                                </div>
+                                                <div style="margin-top:10px; font-size:12px; text-align:center;">
+                                                    <a href="{{ $unsubscribeUrl }}" style="color:#9CA3AF; text-decoration:underline;">Unsubscribe</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
