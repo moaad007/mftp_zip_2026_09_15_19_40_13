@@ -32,9 +32,14 @@
         .body-text { font-size:16px; line-height:26px; color:#4E5A73; margin:0 0 16px; }
         .section-rule { border:none; border-top:1px solid #E3E6F2; margin:28px 0; }
         .left-accent { border-left:4px solid #7B4DFF; padding:16px 20px; background:#F6F4FF; border-radius:0 8px 8px 0; margin:0 0 20px; }
+        .left-accent p { font-size:15px; line-height:24px; color:#061538; margin:0; }
+        .chat-container { background:#F8F8FC; border-radius:12px; padding:20px; }
+        .chat-header { font-size:12px; font-weight:700; color:#6B7280; text-align:center; margin-bottom:16px; }
+        .chat-name { font-size:11px; font-weight:700; margin-bottom:2px; }
         .chat-bubble { max-width:80%; border-radius:14px; padding:12px 16px; margin-bottom:10px; font-size:14px; line-height:20px; }
         .chat-left { background:#EFF6FF; color:#061538; border-bottom-left-radius:4px; }
         .chat-right { background:#7B4DFF; color:#FFFFFF; border-bottom-right-radius:4px; margin-left:auto; }
+        .chat-teacher { background:#FEF2F2; color:#7F1D1D; border-bottom-left-radius:4px; }
         .chat-time { font-size:11px; color:#9CA3AF; margin-top:4px; }
         .cta-card { background:#061538; border-radius:12px; padding:32px 28px; text-align:center; margin:0 0 20px; }
         .cta-link { display:inline-block; background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; }
@@ -48,15 +53,21 @@
             .pad { padding:0 18px !important; }
             .headline { font-size:26px !important; line-height:32px !important; }
             .chat-bubble { max-width:90% !important; }
+            .chat-container { padding:14px !important; }
         }
         @media (prefers-color-scheme:dark) {
             body, .body, .email-bg { background:#020A1E !important; }
             .container { background:#020A1E !important; }
-            .headline, .footer-brand { color:#F7F9FF !important; }
+            .headline { color:#F7F9FF !important; }
             .body-text { color:#AAB7D6 !important; }
             .left-accent { background:#10224C !important; border-left-color:#C4B5FD !important; }
-            .chat-bubble.chat-left { background:#151F4B !important; color:#F7F9FF !important; }
+            .left-accent p { color:#D1D5DB !important; }
+            .chat-container { background:#071636 !important; }
+            .chat-header { color:#6B7280 !important; }
+            .chat-left { background:#151F4B !important; color:#F7F9FF !important; }
+            .chat-teacher { background:#3f201f !important; color:#FCA5A5 !important; }
             .chat-time { color:#6B7280 !important; }
+            .logo-text { color:#F7F9FF !important; }
             .section-rule { border-top-color:#1E2A4A !important; }
             .cta-card { background:#071636 !important; }
             .footer-brand { color:#F7F9FF !important; }
@@ -71,21 +82,16 @@
         {{ $emailPreviewText }}
         @for($i = 0; $i < 40; $i++)&#8204;@endfor
     </div>
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8F8FC;">
+    <table role="presentation" class="email-bg" cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td align="center" style="padding:32px 12px;">
                 <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="580" style="max-width:580px; background:#FBFBFF; border-radius:16px;">
-                    {{-- TOP BAR --}}
                     <tr><td height="4" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td></tr>
-
-                    {{-- LOGO --}}
                     <tr>
                         <td class="pad" style="padding-top:28px;">
-                            <div style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                            <div class="logo-text" style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
                         </td>
                     </tr>
-
-                    {{-- HEADLINE --}}
                     <tr>
                         <td class="pad" style="padding-top:24px;">
                             <div class="overline">A real moment</div>
@@ -96,72 +102,64 @@
                             </p>
                         </td>
                     </tr>
-
                     <hr class="section-rule" style="margin:0 24px;">
-
-                    {{-- CHAT --}}
                     <tr>
                         <td class="pad" style="padding-top:28px; padding-bottom:28px;">
-                            <div style="background:#F8F8FC; border-radius:12px; padding:20px;">
-                                <div style="font-size:12px; font-weight:700; color:#6B7280; text-align:center; margin-bottom:16px;">Conversation Room &middot; Tuesday 7:00 PM &middot; Topic: Travel</div>
+                            <div class="chat-container">
+                                <div class="chat-header">Conversation Room &middot; Tuesday 7:00 PM &middot; Topic: Travel</div>
 
-                                {{-- Ahmed --}}
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td width="32" valign="top">
                                             <div style="width:28px; height:28px; border-radius:50%; background:#7B4DFF; color:#FFF; font-size:11px; font-weight:900; line-height:28px; text-align:center;">A</div>
                                         </td>
                                         <td style="padding-left:8px;" valign="top">
-                                            <div style="font-size:11px; font-weight:700; color:#7B4DFF;">Ahmed, Egypt</div>
+                                            <div class="chat-name" style="color:#7B4DFF;">Ahmed, Egypt</div>
                                             <div class="chat-bubble chat-left">I went to London last year and I was so nervous to speak</div>
                                             <div class="chat-time">7:02 PM</div>
                                         </td>
                                     </tr>
                                 </table>
 
-                                {{-- Maria --}}
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td width="32" valign="top">
                                             <div style="width:28px; height:28px; border-radius:50%; background:#16A34A; color:#FFF; font-size:11px; font-weight:900; line-height:28px; text-align:center;">M</div>
                                         </td>
                                         <td style="padding-left:8px;" valign="top">
-                                            <div style="font-size:11px; font-weight:700; color:#16A34A;">Maria, Brazil</div>
+                                            <div class="chat-name" style="color:#16A34A;">Maria, Brazil</div>
                                             <div class="chat-bubble chat-left">I understand! When I first came here I could barely order food. I didn't know the word for... you know... the soup? The one in the bread?</div>
                                             <div class="chat-time">7:04 PM</div>
                                         </td>
                                     </tr>
                                 </table>
 
-                                {{-- Teacher --}}
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td width="32" valign="top">
                                             <div style="width:28px; height:28px; border-radius:50%; background:#DC2626; color:#FFF; font-size:11px; font-weight:900; line-height:28px; text-align:center;">S</div>
                                         </td>
                                         <td style="padding-left:8px;" valign="top">
-                                            <div style="font-size:11px; font-weight:700; color:#DC2626;">Teacher Sarah</div>
-                                            <div class="chat-bubble" style="background:#FEF2F2; color:#7F1D1D;">You mean "bread bowl"? That's a great description, Maria! See? You communicated the idea perfectly.</div>
+                                            <div class="chat-name" style="color:#DC2626;">Teacher Sarah</div>
+                                            <div class="chat-bubble chat-teacher">You mean "bread bowl"? That's a great description, Maria! See? You communicated the idea perfectly.</div>
                                             <div class="chat-time">7:05 PM</div>
                                         </td>
                                     </tr>
                                 </table>
 
-                                {{-- Kenji --}}
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td width="32" valign="top">
                                             <div style="width:28px; height:28px; border-radius:50%; background:#F59E0B; color:#FFF; font-size:11px; font-weight:900; line-height:28px; text-align:center;">K</div>
                                         </td>
                                         <td style="padding-left:8px;" valign="top">
-                                            <div style="font-size:11px; font-weight:700; color:#F59E0B;">Kenji, Japan</div>
+                                            <div class="chat-name" style="color:#F59E0B;">Kenji, Japan</div>
                                             <div class="chat-bubble chat-left">Ha! I did the same thing in Paris. I pointed at the menu and smiled</div>
                                             <div class="chat-time">7:06 PM</div>
                                         </td>
                                     </tr>
                                 </table>
 
-                                {{-- Ahmed again --}}
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td width="32" valign="top">
@@ -176,21 +174,16 @@
                             </div>
                         </td>
                     </tr>
-
                     <hr class="section-rule" style="margin:0 24px;">
-
-                    {{-- LESSON --}}
                     <tr>
                         <td class="pad" style="padding-top:28px; padding-bottom:28px;">
                             <div class="left-accent">
-                                <p style="font-size:15px; line-height:24px; color:#061538; margin:0;">
+                                <p>
                                     <strong>Maria didn't know the word.</strong> She described it anyway. That's fluency — not perfection. It's the ability to communicate even when you don't have the exact word. And that's exactly what we practice in every room.
                                 </p>
                             </div>
                         </td>
                     </tr>
-
-                    {{-- CTA --}}
                     <tr>
                         <td class="pad" style="padding-bottom:32px;">
                             <div class="cta-card">
@@ -206,8 +199,6 @@
                             </div>
                         </td>
                     </tr>
-
-                    {{-- FOOTER --}}
                     <tr>
                         <td class="pad" style="padding-bottom:28px;">
                             <hr class="section-rule" style="margin:0 0 20px;">

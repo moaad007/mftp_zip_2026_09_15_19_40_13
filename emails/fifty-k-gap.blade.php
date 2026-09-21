@@ -32,9 +32,13 @@
         .body-text { font-size:16px; line-height:26px; color:#4E5A73; margin:0 0 16px; }
         .section-rule { border:none; border-top:1px solid #E3E6F2; margin:28px 0; }
         .left-accent { border-left:4px solid #7B4DFF; padding:16px 20px; background:#F6F4FF; border-radius:0 8px 8px 0; margin:0 0 20px; }
+        .left-accent p { font-size:15px; line-height:24px; color:#061538; margin:0; }
+        .math-card { border-radius:8px; padding:16px 20px; }
+        .math-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+        .math-value { font-size:13px; font-weight:700; margin-top:6px; }
+        .urgency-box { background:#FEF2F2; border-radius:8px; padding:16px 20px; text-align:center; margin:0 0 20px; }
         .cta-card { background:#061538; border-radius:12px; padding:32px 28px; text-align:center; margin:0 0 20px; }
         .cta-link { display:inline-block; background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; }
-        .urgency-box { background:#FEF2F2; border-radius:8px; padding:16px 20px; text-align:center; margin:0 0 20px; }
         .footer-brand { font-size:20px; font-weight:900; color:#061538; margin:0 0 4px; }
         .footer-brand span { color:#7B4DFF; }
         .footer-copy { font-size:12px; color:#9CA3AF; margin:0; }
@@ -48,11 +52,19 @@
         @media (prefers-color-scheme:dark) {
             body, .body, .email-bg { background:#020A1E !important; }
             .container { background:#020A1E !important; }
-            .headline, .footer-brand { color:#F7F9FF !important; }
+            .headline { color:#F7F9FF !important; }
             .body-text { color:#AAB7D6 !important; }
             .left-accent { background:#10224C !important; border-left-color:#C4B5FD !important; }
+            .left-accent p { color:#D1D5DB !important; }
+            .math-card-danger { background:#3f201f !important; }
+            .math-card-success { background:#123c2e !important; }
+            .math-label-danger { color:#FCA5A5 !important; }
+            .math-label-success { color:#86EFAC !important; }
+            .math-value-danger { color:#FCA5A5 !important; }
+            .math-value-success { color:#86EFAC !important; }
             .urgency-box { background:#3f201f !important; }
             .urgency-box .body-text { color:#FCA5A5 !important; }
+            .logo-text { color:#F7F9FF !important; }
             .section-rule { border-top-color:#1E2A4A !important; }
             .cta-card { background:#071636 !important; }
             .footer-brand { color:#F7F9FF !important; }
@@ -67,21 +79,16 @@
         {{ $emailPreviewText }}
         @for($i = 0; $i < 40; $i++)&#8204;@endfor
     </div>
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8F8FC;">
+    <table role="presentation" class="email-bg" cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td align="center" style="padding:32px 12px;">
                 <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="580" style="max-width:580px; background:#FBFBFF; border-radius:16px;">
-                    {{-- TOP BAR --}}
                     <tr><td height="4" style="background:#DC2626; font-size:0; line-height:0;">&nbsp;</td></tr>
-
-                    {{-- LOGO --}}
                     <tr>
                         <td class="pad" style="padding-top:28px;">
-                            <div style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                            <div class="logo-text" style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
                         </td>
                     </tr>
-
-                    {{-- HEADLINE --}}
                     <tr>
                         <td class="pad" style="padding-top:24px;">
                             <div class="overline">The invisible tax</div>
@@ -92,50 +99,37 @@
                             </p>
                         </td>
                     </tr>
-
                     <hr class="section-rule" style="margin:0 24px;">
-
-                    {{-- THE MATH --}}
                     <tr>
                         <td class="pad" style="padding-top:28px;">
-                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                    <td style="background:#FEF2F2; border-radius:8px; padding:16px 20px; margin-bottom:8px;">
-                                        <div style="font-size:11px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Without fluent English</div>
-                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                            <tr>
-                                                <td style="background:#FECACA; height:20px; border-radius:10px; width:45%;"></td>
-                                                <td style="width:55%;"></td>
-                                            </tr>
-                                        </table>
-                                        <div style="font-size:13px; font-weight:700; color:#7F1D1D; margin-top:6px;">$55,000 / year avg.</div>
-                                    </td>
-                                </tr>
-                                <tr><td height="8"></td></tr>
-                                <tr>
-                                    <td style="background:#F0FDF4; border-radius:8px; padding:16px 20px;">
-                                        <div style="font-size:11px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">With fluent English</div>
-                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                            <tr>
-                                                <td style="background:#86EFAC; height:20px; border-radius:10px; width:85%;"></td>
-                                                <td style="width:15%;"></td>
-                                            </tr>
-                                        </table>
-                                        <div style="font-size:13px; font-weight:700; color:#14532D; margin-top:6px;">$105,000+ / year avg.</div>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="math-card math-card-danger" style="margin-bottom:8px;">
+                                <div class="math-label math-label-danger" style="color:#DC2626;">Without fluent English</div>
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                        <td style="background:#FECACA; height:20px; border-radius:10px; width:45%;"></td>
+                                        <td style="width:55%;"></td>
+                                    </tr>
+                                </table>
+                                <div class="math-value math-value-danger" style="color:#7F1D1D;">$55,000 / year avg.</div>
+                            </div>
+                            <div class="math-card math-card-success">
+                                <div class="math-label math-label-success" style="color:#16A34A;">With fluent English</div>
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                        <td style="background:#86EFAC; height:20px; border-radius:10px; width:85%;"></td>
+                                        <td style="width:15%;"></td>
+                                    </tr>
+                                </table>
+                                <div class="math-value math-value-success" style="color:#14532D;">$105,000+ / year avg.</div>
+                            </div>
                         </td>
                     </tr>
-
                     <hr class="section-rule" style="margin:0 24px;">
-
-                    {{-- CAREER BENEFITS --}}
                     <tr>
                         <td class="pad" style="padding-top:28px; padding-bottom:28px;">
                             <div class="left-accent">
                                 <div style="font-size:13px; font-weight:800; color:#7B4DFF; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">What fluency unlocks</div>
-                                <p style="font-size:15px; line-height:24px; color:#061538; margin:0;">
+                                <p>
                                     <strong>Interviews</strong> you can actually ace.<br>
                                     <strong>Promotions</strong> that require English.<br>
                                     <strong>Meetings</strong> where you lead, not listen.<br>
@@ -144,8 +138,6 @@
                             </div>
                         </td>
                     </tr>
-
-                    {{-- URGENCY --}}
                     <tr>
                         <td class="pad" style="padding-bottom:28px;">
                             <div class="urgency-box">
@@ -155,8 +147,6 @@
                             </div>
                         </td>
                     </tr>
-
-                    {{-- CTA --}}
                     <tr>
                         <td class="pad" style="padding-bottom:32px;">
                             <div class="cta-card">
@@ -172,8 +162,6 @@
                             </div>
                         </td>
                     </tr>
-
-                    {{-- FOOTER --}}
                     <tr>
                         <td class="pad" style="padding-bottom:28px;">
                             <hr class="section-rule" style="margin:0 0 20px;">

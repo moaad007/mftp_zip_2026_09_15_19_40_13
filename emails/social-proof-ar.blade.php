@@ -29,15 +29,22 @@
         .container { width:100%; max-width:580px; }
         .pad { padding:0 24px; }
         .overline { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#7B4DFF; margin:0 0 10px; }
-        .headline { font-size:32px; font-weight:900; line-height:40px; color:#061538; letter-spacing:-0.5px; margin:0 0 16px; }
+        .headline { font-size:32px; font-weight:900; line-height:40px; color:#061538; margin:0 0 16px; }
         .accent-bar { width:48px; height:3px; background:#7B4DFF; border-radius:2px; margin:0 0 20px; }
         .body-text { font-size:16px; line-height:26px; color:#4E5A73; margin:0 0 16px; }
         .section-rule { border:none; border-top:1px solid #E3E6F2; margin:28px 0; }
         .left-accent { border-right:4px solid #7B4DFF; border-left:none; padding:16px 20px; background:#F6F4FF; border-radius:8px 0 0 8px; margin:0 0 20px; }
+        .left-accent p { font-size:15px; line-height:24px; color:#061538; margin:0; }
         .story-card { background:#F6F4FF; border-radius:10px; padding:24px; margin:0 0 20px; }
+        .story-name { font-size:14px; font-weight:800; color:#061538; }
+        .story-quote { font-size:15px; line-height:24px; color:#061538; margin:16px 0 0; font-style:italic; }
         .stat-row { text-align:center; padding:12px 0; }
         .stat-num { font-size:28px; font-weight:900; color:#061538; }
         .stat-label { font-size:12px; color:#6B7280; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+        .card-danger { background:#FEF2F2; border-radius:8px; padding:14px 16px; }
+        .card-success { background:#F0FDF4; border-radius:8px; padding:14px 16px; }
+        .card-text-danger { font-size:13px; color:#7F1D1D; line-height:18px; }
+        .card-text-success { font-size:13px; color:#14532D; line-height:18px; }
         .cta-card { background:#061538; border-radius:12px; padding:32px 28px; text-align:center; margin:0 0 20px; }
         .cta-link { display:inline-block; background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; }
         .footer-brand { font-size:20px; font-weight:900; color:#061538; margin:0 0 4px; }
@@ -51,16 +58,25 @@
             .pad { padding:0 18px !important; }
             .headline { font-size:26px !important; line-height:34px !important; }
             .stat-num { font-size:22px !important; }
+            .col-half { display:block !important; width:100% !important; padding:6px 0 !important; }
         }
         @media (prefers-color-scheme:dark) {
             body, .body, .email-bg { background:#020A1E !important; }
             .container { background:#020A1E !important; }
-            .headline, .footer-brand { color:#F7F9FF !important; }
+            .headline { color:#F7F9FF !important; }
             .body-text { color:#AAB7D6 !important; }
             .left-accent { background:#10224C !important; border-right-color:#C4B5FD !important; }
+            .left-accent p { color:#D1D5DB !important; }
             .story-card { background:#10224C !important; }
+            .story-name { color:#F7F9FF !important; }
+            .story-quote { color:#D1D5DB !important; }
             .stat-num { color:#F7F9FF !important; }
             .stat-label { color:#6B7280 !important; }
+            .card-danger { background:#3f201f !important; }
+            .card-success { background:#123c2e !important; }
+            .card-text-danger { color:#FCA5A5 !important; }
+            .card-text-success { color:#86EFAC !important; }
+            .logo-text { color:#F7F9FF !important; }
             .section-rule { border-top-color:#1E2A4A !important; }
             .cta-card { background:#071636 !important; }
             .footer-brand { color:#F7F9FF !important; }
@@ -75,14 +91,14 @@
         {{ $emailPreviewText }}
         @for($i = 0; $i < 40; $i++)&#8204;@endfor
     </div>
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8F8FC;">
+    <table role="presentation" class="email-bg" cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td align="center" style="padding:32px 12px;">
                 <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="580" style="max-width:580px; background:#FBFBFF; border-radius:16px;">
                     <tr><td height="4" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td></tr>
                     <tr>
                         <td class="pad" style="padding-top:28px;">
-                            <div style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                            <div class="logo-text" style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
                         </td>
                     </tr>
                     <tr>
@@ -110,12 +126,12 @@
                                             <div style="width:40px; height:40px; border-radius:50%; background:#E8F5E9; color:#16A34A; font-size:16px; font-weight:900; line-height:40px; text-align:center;">س</div>
                                         </td>
                                         <td style="padding-right:12px; padding-left:0; vertical-align:top;">
-                                            <div style="font-size:14px; font-weight:800; color:#061538;">سارة، كندا</div>
+                                            <div class="story-name">سارة، كندا</div>
                                             <div style="font-size:12px; color:#6B7280; margin-top:2px;">طالبة منذ 8 أشهر</div>
                                         </td>
                                     </tr>
                                 </table>
-                                <p style="font-size:15px; line-height:24px; color:#061538; margin:16px 0 0; font-style:italic;">
+                                <p class="story-quote">
                                     "كنت أتجمد كل مرة يتحدث إلي أحد بالإنجليزية. الآن أقود الاجتماعات بالإنجليزية. التغيير لم يكن تدريجياً — حدث في اللحظة التي بدأت فيها فعلياً التحدث."
                                 </p>
                             </div>
@@ -125,14 +141,18 @@
                         <td class="pad" style="padding-bottom:28px;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                    <td width="48%" style="vertical-align:top; background:#FEF2F2; border-radius:8px; padding:14px 16px;">
-                                        <div style="font-size:11px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">قبل</div>
-                                        <div style="font-size:13px; color:#7F1D1D; line-height:18px;">تجنبت محادثات الإنجليزية. تجمدت في الاجتماعات. شاهدت الآخرين يحصلون على ترقيات.</div>
+                                    <td class="col-half" width="48%" style="vertical-align:top;">
+                                        <div class="card-danger">
+                                            <div style="font-size:11px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">قبل</div>
+                                            <div class="card-text-danger">تجنبت محادثات الإنجليزية. تجمدت في الاجتماعات. شاهدت الآخرين يحصلون على ترقيات.</div>
+                                        </div>
                                     </td>
                                     <td width="4%"></td>
-                                    <td width="48%" style="vertical-align:top; background:#F0FDF4; border-radius:8px; padding:14px 16px;">
-                                        <div style="font-size:11px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">بعد</div>
-                                        <div style="font-size:13px; color:#14532D; line-height:18px;">أقود الاجتماعات. أتحدث بثقة. حصلت على ترقية خلال 6 أشهر.</div>
+                                    <td class="col-half" width="48%" style="vertical-align:top;">
+                                        <div class="card-success">
+                                            <div style="font-size:11px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">بعد</div>
+                                            <div class="card-text-success">أقود الاجتماعات. أتحدث بثقة. حصلت على ترقية خلال 6 أشهر.</div>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>

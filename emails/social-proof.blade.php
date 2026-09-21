@@ -33,10 +33,17 @@
         .body-text { font-size:16px; line-height:26px; color:#4E5A73; margin:0 0 16px; }
         .section-rule { border:none; border-top:1px solid #E3E6F2; margin:28px 0; }
         .left-accent { border-left:4px solid #7B4DFF; padding:16px 20px; background:#F6F4FF; border-radius:0 8px 8px 0; margin:0 0 20px; }
+        .left-accent p { font-size:15px; line-height:24px; color:#061538; margin:0; }
         .story-card { background:#F6F4FF; border-radius:10px; padding:24px; margin:0 0 20px; }
+        .story-name { font-size:14px; font-weight:800; color:#061538; }
+        .story-quote { font-size:15px; line-height:24px; color:#061538; margin:16px 0 0; font-style:italic; }
         .stat-row { text-align:center; padding:12px 0; }
         .stat-num { font-size:28px; font-weight:900; color:#061538; }
         .stat-label { font-size:12px; color:#6B7280; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+        .card-danger { background:#FEF2F2; border-radius:8px; padding:14px 16px; }
+        .card-success { background:#F0FDF4; border-radius:8px; padding:14px 16px; }
+        .card-text-danger { font-size:13px; color:#7F1D1D; line-height:18px; }
+        .card-text-success { font-size:13px; color:#14532D; line-height:18px; }
         .cta-card { background:#061538; border-radius:12px; padding:32px 28px; text-align:center; margin:0 0 20px; }
         .cta-link { display:inline-block; background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; }
         .footer-brand { font-size:20px; font-weight:900; color:#061538; margin:0 0 4px; }
@@ -49,16 +56,25 @@
             .pad { padding:0 18px !important; }
             .headline { font-size:26px !important; line-height:32px !important; }
             .stat-num { font-size:22px !important; }
+            .col-half { display:block !important; width:100% !important; padding:6px 0 !important; }
         }
         @media (prefers-color-scheme:dark) {
             body, .body, .email-bg { background:#020A1E !important; }
             .container { background:#020A1E !important; }
-            .headline, .footer-brand { color:#F7F9FF !important; }
+            .headline { color:#F7F9FF !important; }
             .body-text { color:#AAB7D6 !important; }
             .left-accent { background:#10224C !important; border-left-color:#C4B5FD !important; }
+            .left-accent p { color:#D1D5DB !important; }
             .story-card { background:#10224C !important; }
+            .story-name { color:#F7F9FF !important; }
+            .story-quote { color:#D1D5DB !important; }
             .stat-num { color:#F7F9FF !important; }
             .stat-label { color:#6B7280 !important; }
+            .card-danger { background:#3f201f !important; }
+            .card-success { background:#123c2e !important; }
+            .card-text-danger { color:#FCA5A5 !important; }
+            .card-text-success { color:#86EFAC !important; }
+            .logo-text { color:#F7F9FF !important; }
             .section-rule { border-top-color:#1E2A4A !important; }
             .cta-card { background:#071636 !important; }
             .footer-brand { color:#F7F9FF !important; }
@@ -73,21 +89,16 @@
         {{ $emailPreviewText }}
         @for($i = 0; $i < 40; $i++)&#8204;@endfor
     </div>
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8F8FC;">
+    <table role="presentation" class="email-bg" cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td align="center" style="padding:32px 12px;">
                 <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="580" style="max-width:580px; background:#FBFBFF; border-radius:16px;">
-                    {{-- TOP BAR --}}
                     <tr><td height="4" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td></tr>
-
-                    {{-- LOGO --}}
                     <tr>
                         <td class="pad" style="padding-top:28px;">
-                            <div style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                            <div class="logo-text" style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
                         </td>
                     </tr>
-
-                    {{-- HEADLINE --}}
                     <tr>
                         <td class="pad" style="padding-top:24px;">
                             <div class="overline">Real students. Real results.</div>
@@ -98,17 +109,12 @@
                             </p>
                         </td>
                     </tr>
-
-                    {{-- HERO IMAGE --}}
                     <tr>
                         <td class="pad" style="padding-bottom:28px;">
                             <img src="{{ $heroUrl }}" alt="Imagine speaking with confidence" width="532" style="width:100%; max-width:532px; height:auto; border-radius:10px;">
                         </td>
                     </tr>
-
                     <hr class="section-rule" style="margin:0 24px;">
-
-                    {{-- SARA'S STORY --}}
                     <tr>
                         <td class="pad" style="padding-top:28px;">
                             <div class="story-card">
@@ -118,40 +124,39 @@
                                             <div style="width:40px; height:40px; border-radius:50%; background:#E8F5E9; color:#16A34A; font-size:16px; font-weight:900; line-height:40px; text-align:center;">S</div>
                                         </td>
                                         <td style="padding-left:12px; vertical-align:top;">
-                                            <div style="font-size:14px; font-weight:800; color:#061538;">Sara, Canada</div>
+                                            <div class="story-name">Sara, Canada</div>
                                             <div style="font-size:12px; color:#6B7280; margin-top:2px;">Student for 8 months</div>
                                         </td>
                                     </tr>
                                 </table>
-                                <p style="font-size:15px; line-height:24px; color:#061538; margin:16px 0 0; font-style:italic;">
+                                <p class="story-quote">
                                     "I used to freeze every time someone spoke to me in English. Now I lead meetings in English. The change wasn't gradual — it happened the moment I started actually speaking."
                                 </p>
                             </div>
                         </td>
                     </tr>
-
-                    {{-- BEFORE / AFTER --}}
                     <tr>
                         <td class="pad" style="padding-bottom:28px;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
-                                    <td width="48%" style="vertical-align:top; background:#FEF2F2; border-radius:8px; padding:14px 16px;">
-                                        <div style="font-size:11px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Before</div>
-                                        <div style="font-size:13px; color:#7F1D1D; line-height:18px;">Avoided English conversations. Froze in meetings. Watched others get promoted.</div>
+                                    <td class="col-half" width="48%" style="vertical-align:top;">
+                                        <div class="card-danger">
+                                            <div style="font-size:11px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Before</div>
+                                            <div class="card-text-danger">Avoided English conversations. Froze in meetings. Watched others get promoted.</div>
+                                        </div>
                                     </td>
                                     <td width="4%"></td>
-                                    <td width="48%" style="vertical-align:top; background:#F0FDF4; border-radius:8px; padding:14px 16px;">
-                                        <div style="font-size:11px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">After</div>
-                                        <div style="font-size:13px; color:#14532D; line-height:18px;">Leads meetings. Speaks with confidence. Got promoted within 6 months.</div>
+                                    <td class="col-half" width="48%" style="vertical-align:top;">
+                                        <div class="card-success">
+                                            <div style="font-size:11px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">After</div>
+                                            <div class="card-text-success">Leads meetings. Speaks with confidence. Got promoted within 6 months.</div>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-
                     <hr class="section-rule" style="margin:0 24px;">
-
-                    {{-- PROOF NUMBERS --}}
                     <tr>
                         <td class="pad" style="padding-top:28px; padding-bottom:28px;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -172,8 +177,6 @@
                             </table>
                         </td>
                     </tr>
-
-                    {{-- CTA --}}
                     <tr>
                         <td class="pad" style="padding-bottom:32px;">
                             <div class="cta-card">
@@ -189,8 +192,6 @@
                             </div>
                         </td>
                     </tr>
-
-                    {{-- FOOTER --}}
                     <tr>
                         <td class="pad" style="padding-bottom:28px;">
                             <hr class="section-rule" style="margin:0 0 20px;">

@@ -29,7 +29,7 @@
         .container { width:100%; max-width:580px; }
         .pad { padding:0 24px; }
         .overline { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#DC2626; margin:0 0 10px; }
-        .headline { font-size:32px; font-weight:900; line-height:40px; color:#061538; letter-spacing:-0.5px; margin:0 0 16px; }
+        .headline { font-size:32px; font-weight:900; line-height:40px; color:#061538; margin:0 0 16px; }
         .accent-bar { width:48px; height:3px; background:#DC2626; border-radius:2px; margin:0 0 20px; }
         .body-text { font-size:16px; line-height:26px; color:#4E5A73; margin:0 0 16px; }
         .section-rule { border:none; border-top:1px solid #E3E6F2; margin:28px 0; }
@@ -39,9 +39,10 @@
         .price-suffix { font-size:18px; font-weight:700; color:#061538; }
         .check-item { padding:8px 0; font-size:15px; line-height:24px; color:#061538; }
         .check-mark { color:#16A34A; font-weight:800; margin-left:8px; margin-right:0; }
+        .section-label { font-size:14px; font-weight:800; color:#061538; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+        .urgency-box { background:#FEF2F2; border-radius:8px; padding:16px 20px; text-align:center; margin:0 0 20px; }
         .cta-card { background:#061538; border-radius:12px; padding:32px 28px; text-align:center; margin:0 0 20px; }
         .cta-link { display:inline-block; background:#DC2626; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; }
-        .urgency-box { background:#FEF2F2; border-radius:8px; padding:16px 20px; text-align:center; margin:0 0 20px; }
         .footer-brand { font-size:20px; font-weight:900; color:#061538; margin:0 0 4px; }
         .footer-brand span { color:#7B4DFF; }
         .footer-copy { font-size:12px; color:#9CA3AF; margin:0; }
@@ -57,12 +58,14 @@
         @media (prefers-color-scheme:dark) {
             body, .body, .email-bg { background:#020A1E !important; }
             .container { background:#020A1E !important; }
-            .headline, .footer-brand { color:#F7F9FF !important; }
+            .headline { color:#F7F9FF !important; }
             .body-text { color:#AAB7D6 !important; }
             .price-suffix { color:#F7F9FF !important; }
             .check-item { color:#AAB7D6 !important; }
+            .section-label { color:#F7F9FF !important; }
             .urgency-box { background:#3f201f !important; }
             .urgency-box .body-text { color:#FCA5A5 !important; }
+            .logo-text { color:#F7F9FF !important; }
             .section-rule { border-top-color:#1E2A4A !important; }
             .cta-card { background:#071636 !important; }
             .footer-brand { color:#F7F9FF !important; }
@@ -77,14 +80,14 @@
         {{ $emailPreviewText }}
         @for($i = 0; $i < 40; $i++)&#8204;@endfor
     </div>
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8F8FC;">
+    <table role="presentation" class="email-bg" cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
             <td align="center" style="padding:32px 12px;">
                 <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="580" style="max-width:580px; background:#FBFBFF; border-radius:16px;">
                     <tr><td height="4" style="background:#DC2626; font-size:0; line-height:0;">&nbsp;</td></tr>
                     <tr>
                         <td class="pad" style="padding-top:28px;">
-                            <div style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                            <div class="logo-text" style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
                         </td>
                     </tr>
                     <tr>
@@ -114,7 +117,7 @@
                     </tr>
                     <tr>
                         <td class="pad" style="padding-bottom:28px;">
-                            <div style="font-size:14px; font-weight:800; color:#061538; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">ما تحصل عليه</div>
+                            <div class="section-label">ما تحصل عليه</div>
                             <div class="check-item"><span class="check-mark">&#10003;</span> غرف محادثة حية مع أشخاص حقيقيين</div>
                             <div class="check-item"><span class="check-mark">&#10003;</span> ملاحظات مخصصة من متحدثين أصليين</div>
                             <div class="check-item"><span class="check-mark">&#10003;</span> منهج منظم يعمل فعلاً</div>
