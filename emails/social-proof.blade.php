@@ -1,8 +1,9 @@
 @php
     $supportEmail = $supportEmail ?? 'support@bostonenglishcenter.com';
     $unsubscribeUrl = $unsubscribeUrl ?? '#';
-    $dashboardUrl = $dashboardUrl ?? route('landing', ['ref' => 'email_social_proof']);
-    $emailPreviewText = '4.9 out of 5 stars. 3,237 reviews. See why students love Boston English Center.';
+    $dashboardUrl = $dashboardUrl ?? route('landing', ['ref' => 'email_sales_story']);
+    $offerBadgeImageUrl = "https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/slider/emails/offer-badge-square.png";
+    $emailPreviewText = 'Sara was afraid to speak. 3 months later she got promoted. Here is what changed.';
 @endphp
 <!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -13,7 +14,7 @@
     <meta name="color-scheme" content="light dark">
     <meta name="supported-color-schemes" content="light dark">
     <meta name="description" content="{{ $emailPreviewText }}">
-    <title>Boston English Center - Student Stories</title>
+    <title>Boston English Center - Real Results</title>
     <!--[if mso]>
     <style>
         * { font-family: Arial, Helvetica, sans-serif !important; }
@@ -35,45 +36,32 @@
         table { border-collapse: collapse; border-spacing: 0; }
         img { display: block; border: 0; }
         a { text-decoration: none; }
-        .container {
-            width: 100%;
-            max-width: 680px;
-            background: #FBFBFF;
-        }
+        .container { width: 100%; max-width: 680px; background: #FBFBFF; }
         .pad { padding-left: 28px; padding-right: 28px; }
         .purple { color: #7B4DFF !important; -webkit-text-fill-color: #7B4DFF !important; }
         .stars { color: #F59E0B; font-size: 20px; letter-spacing: 2px; }
-        .testimonial-card {
-            background: #FFFFFF;
-            border: 1px solid #E3E6F2;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        .stat-box {
-            background: #F6F4FF;
-            border: 1px solid #E3DBFF;
-            border-radius: 12px;
-            text-align: center;
-            padding: 18px 10px;
-        }
+        .price-strike { font-size: 22px; font-weight: 800; color: #9CA3AF; text-decoration: line-through; }
+        .price-big { font-size: 56px; font-weight: 900; color: #7B4DFF; line-height: 1; letter-spacing: -2px; }
+        .price-month { font-size: 22px; font-weight: 900; color: #061538; }
         @media only screen and (max-width: 600px) {
             .container { width: 100% !important; }
             .pad { padding-left: 18px !important; padding-right: 18px !important; }
             .hero-title { font-size: 28px !important; line-height: 34px !important; }
-            .stat-grid td { display: block !important; width: 100% !important; padding-bottom: 10px !important; }
-            .testimonial-stack { display: block !important; width: 100% !important; }
+            .price-big { font-size: 48px !important; }
         }
         @media (prefers-color-scheme: dark) {
             body, .email-bg { background: #020A1E !important; }
             .container { background: #071636 !important; }
-            .testimonial-card { background: #10224C !important; border-color: #29416D !important; }
-            .stat-box { background: #151F4B !important; border-color: #29416D !important; }
-            .quote-box { background: #151F4B !important; border-color: #29416D !important; }
+            .story-card { background: #10224C !important; border-color: #29416D !important; }
+            .pricing-card { background: #10224C !important; border-color: #7B4DFF !important; }
+            .urgent-box { background: #3f201f !important; border-color: #5c2c28 !important; }
             .text-dark { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
             .text-muted { color: #AAB7D6 !important; -webkit-text-fill-color: #AAB7D6 !important; }
-            .review-text { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
+            .story-text { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
+            .before-after-left { background: #151F4B !important; border-color: #29416D !important; }
+            .before-after-right { background: #123c2e !important; border-color: #2e6d54 !important; }
+            .price-month { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
             .footer-section { background: #071636 !important; }
-            .rating-bar { background: #151F4B !important; }
         }
     </style>
 </head>
@@ -90,7 +78,7 @@
             <!--[if mso]><table role="presentation" width="680" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="container" style="max-width:680px; background:#FBFBFF; border-radius:20px; overflow:hidden; border:1px solid #E3E6F2;">
 
-                <!-- TOP ACCENT BAR -->
+                <!-- TOP BAR -->
                 <tr>
                     <td height="5" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td>
                 </tr>
@@ -104,128 +92,104 @@
 
                 <!-- HEADLINE -->
                 <tr>
-                    <td class="pad" style="padding-top:10px; padding-bottom:20px;">
-                        <div style="font-size:13px; font-weight:800; color:#7B4DFF; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
-                            STUDENT SUCCESS STORIES
-                        </div>
+                    <td class="pad" style="padding-top:10px; padding-bottom:24px;">
                         <h1 class="hero-title text-dark" style="margin:0 0 14px; font-size:34px; line-height:40px; font-weight:900; color:#061538; letter-spacing:-1px;">
-                            Don't take our word for it.<br>Hear from <span class="purple">our students</span>.
+                            She was afraid to speak.<br>3 months later, she got <span class="purple">promoted.</span>
                         </h1>
                     </td>
                 </tr>
 
-                <!-- RATING SUMMARY -->
+                <!-- STORY CARD -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F6F4FF; border:1px solid #E3DBFF; border-radius:16px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="story-card" style="background:#F6F4FF; border:1px solid #E3DBFF; border-radius:18px;">
                             <tr>
-                                <td align="center" style="padding:24px 20px;">
-                                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <div class="text-dark" style="font-size:42px; font-weight:900; color:#061538; margin:6px 0 2px;">4.9</div>
-                                    <div class="text-muted" style="font-size:14px; color:#4E5A73;">out of 5 &middot; 3,237 verified reviews</div>
+                                <td style="padding:28px 26px;">
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
+                                        <tr>
+                                            <td valign="middle">
+                                                <div style="width:48px; height:48px; border-radius:50%; background:#E8F5E9; color:#16A34A; font-size:16px; font-weight:900; text-align:center; line-height:48px;">S</div>
+                                            </td>
+                                            <td valign="middle" style="padding-left:14px;">
+                                                <div class="text-dark" style="font-size:16px; font-weight:900; color:#061538;">Sara from Canada</div>
+                                                <div class="stars" style="font-size:14px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="story-text" style="font-size:16px; line-height:25px; color:#221A4B;">
+                                        "I knew English. I had the grammar. But every time I had to speak in a meeting, I <strong>froze.</strong> I watched colleagues with weaker skills get promoted because they could communicate better."
+                                    </div>
+                                    <div class="story-text" style="font-size:16px; line-height:25px; color:#221A4B; margin-top:14px;">
+                                        "Then I joined Boston English Center. The conversation rooms forced me to actually <strong>use</strong> English, not just study it. After 3 months, I led my first presentation in English. Last week I got the promotion I wanted."
+                                    </div>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
 
-                <!-- STATS ROW -->
+                <!-- BEFORE / AFTER -->
                 <tr>
-                    <td class="pad" style="padding-bottom:28px;">
+                    <td class="pad" style="padding-bottom:24px;">
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                            <tr class="stat-grid">
-                                <td width="33%" class="stat-box" style="padding:16px 8px;">
-                                    <div class="text-dark" style="font-size:28px; font-weight:900; color:#061538;">25K+</div>
-                                    <div class="text-muted" style="font-size:12px; color:#4E5A73; margin-top:2px;">Students improved</div>
+                            <tr>
+                                <td width="48%" class="before-after-left" style="background:#FFF5F5; border:1px solid #FECACA; border-radius:12px; padding:18px 16px;">
+                                    <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#DC2626; margin-bottom:8px;">&#10060; Before</div>
+                                    <div style="font-size:14px; line-height:21px; color:#7F1D1D;">Afraid to speak in meetings. Watched others get promoted.</div>
                                 </td>
                                 <td width="4%"></td>
-                                <td width="29%" class="stat-box" style="padding:16px 8px;">
-                                    <div class="text-dark" style="font-size:28px; font-weight:900; color:#061538;">80+</div>
-                                    <div class="text-muted" style="font-size:12px; color:#4E5A73; margin-top:2px;">Countries</div>
-                                </td>
-                                <td width="4%"></td>
-                                <td width="30%" class="stat-box" style="padding:16px 8px;">
-                                    <div class="text-dark" style="font-size:28px; font-weight:900; color:#061538;">6</div>
-                                    <div class="text-muted" style="font-size:12px; color:#4E5A73; margin-top:2px;">Days a week</div>
+                                <td width="48%" class="before-after-right" style="background:#F0FDF4; border:1px solid #C8E6D5; border-radius:12px; padding:18px 16px;">
+                                    <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#16A34A; margin-bottom:8px;">&#10003; After 3 months</div>
+                                    <div style="font-size:14px; line-height:21px; color:#14532D;">Led presentations in English. Got promoted.</div>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
 
-                <!-- TESTIMONIAL 1 -->
+                <!-- MORE PROOF -->
                 <tr>
-                    <td class="pad" style="padding-bottom:16px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="testimonial-card">
-                            <tr>
-                                <td style="padding:22px 24px;">
-                                    <div class="stars" style="margin-bottom:10px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <div class="review-text" style="font-size:15px; line-height:23px; color:#221A4B; font-style:italic;">
-                                        "I used to be afraid of making mistakes. After 3 months at Boston English Center, I speak with confidence in meetings and with friends. The conversation rooms changed everything for me."
-                                    </div>
-                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;">
-                                        <tr>
-                                            <td valign="middle">
-                                                <div style="width:40px; height:40px; border-radius:50%; background:#E8F5E9; color:#16A34A; font-size:14px; font-weight:900; text-align:center; line-height:40px;">S</div>
-                                            </td>
-                                            <td valign="middle" style="padding-left:12px;">
-                                                <div class="text-dark" style="font-size:14px; font-weight:800; color:#061538;">Sara from Canada</div>
-                                                <div class="text-muted" style="font-size:12px; color:#4E5A73;">Student for 1 year+</div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
+                    <td class="pad" style="padding-bottom:24px;">
+                        <div style="font-size:16px; font-weight:800; color:#061538; margin-bottom:12px;">She is not alone.</div>
+                        <div style="font-size:14px; line-height:24px; color:#4E5A73;">
+                            <strong style="color:#061538;">25,000+ students</strong> from 80+ countries have already transformed their English.<br>
+                            <span class="stars" style="font-size:14px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <strong style="color:#061538;">4.9 out of 5</strong> &middot; 3,237 verified reviews
+                        </div>
                     </td>
                 </tr>
 
-                <!-- TESTIMONIAL 2 -->
+                <!-- URGENCY -->
                 <tr>
-                    <td class="pad" style="padding-bottom:16px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="testimonial-card">
+                    <td class="pad" style="padding-bottom:20px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:14px;">
                             <tr>
-                                <td style="padding:22px 24px;">
-                                    <div class="stars" style="margin-bottom:10px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <div class="review-text" style="font-size:15px; line-height:23px; color:#221A4B; font-style:italic;">
-                                        "I knew English grammar, but I couldn't hold a conversation. Now I can talk to anyone. The teachers are amazing and the community is so welcoming."
+                                <td align="center" style="padding:16px 20px;">
+                                    <div style="font-size:15px; font-weight:900; color:#DC2626;">
+                                        &#9200; Your 50% discount is waiting.
                                     </div>
-                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;">
-                                        <tr>
-                                            <td valign="middle">
-                                                <div style="width:40px; height:40px; border-radius:50%; background:#E3F2FD; color:#1976D2; font-size:14px; font-weight:900; text-align:center; line-height:40px;">N</div>
-                                            </td>
-                                            <td valign="middle" style="padding-left:12px;">
-                                                <div class="text-dark" style="font-size:14px; font-weight:800; color:#061538;">Nada from USA</div>
-                                                <div class="text-muted" style="font-size:12px; color:#4E5A73;">Student for 9 months+</div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div style="font-size:14px; color:#7F1D1D; margin-top:4px;">
+                                        But not for long. The price goes back to $70/month soon.
+                                    </div>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
 
-                <!-- TESTIMONIAL 3 -->
+                <!-- OFFER -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="testimonial-card">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border:2px solid #7B4DFF; border-radius:20px;">
                             <tr>
-                                <td style="padding:22px 24px;">
-                                    <div class="stars" style="margin-bottom:10px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                    <div class="review-text" style="font-size:15px; line-height:23px; color:#221A4B; font-style:italic;">
-                                        "I always got nervous when speaking English. Now I enjoy talking. The practice groups helped me remember what I learned and build real confidence."
+                                <td align="center" style="padding:24px;">
+                                    <div style="margin-bottom:12px;">
+                                        <img src="{{ $offerBadgeImageUrl }}" width="90" height="90" alt="50% OFF" style="width:90px; height:90px; display:inline-block;">
                                     </div>
-                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;">
+                                    <div class="price-strike">$70/month</div>
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:4px auto;">
                                         <tr>
-                                            <td valign="middle">
-                                                <div style="width:40px; height:40px; border-radius:50%; background:#FFF3E0; color:#E65100; font-size:14px; font-weight:900; text-align:center; line-height:40px;">M</div>
-                                            </td>
-                                            <td valign="middle" style="padding-left:12px;">
-                                                <div class="text-dark" style="font-size:14px; font-weight:800; color:#061538;">Mohamed from Turkey</div>
-                                                <div class="text-muted" style="font-size:12px; color:#4E5A73;">Student for 6 months+</div>
-                                            </td>
+                                            <td valign="baseline" class="price-big">$35</td>
+                                            <td valign="baseline" class="price-month" style="padding-left:8px;">/month</td>
                                         </tr>
                                     </table>
                                 </td>
@@ -236,18 +200,18 @@
 
                 <!-- CTA -->
                 <tr>
-                    <td class="pad" style="padding-bottom:32px; text-align:center;">
+                    <td class="pad" style="padding-bottom:12px; text-align:center;">
                         <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                             <tr>
                                 <td bgcolor="#7B4DFF" style="border-radius:14px; padding:18px 24px; text-align:center;">
                                     <a href="{{ $dashboardUrl }}" style="display:inline-block; font-size:18px; font-weight:900; color:#FFFFFF; text-decoration:none;">
-                                        Join 25,000+ Happy Students &rarr;
+                                        Start Speaking With Confidence &rarr;
                                     </a>
                                 </td>
                             </tr>
                         </table>
                         <div class="text-muted" style="font-size:12px; color:#7B849A; margin-top:10px;">
-                            Starting from $35/month. Cancel anytime.
+                            Cancel anytime. No hidden fees. Start speaking this week.
                         </div>
                     </td>
                 </tr>
