@@ -76,7 +76,32 @@
                 <!-- VISUAL: BROKEN PATH -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <img src="{{ asset('img/its-not-you.webp.jpg') }}?v=1.1" alt="Breaking free from old learning methods" width="520" style="display:block; width:100%; max-width:520px; height:auto; border-radius:16px; border:0;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-radius:16px; overflow:hidden;">
+                            <tr>
+                                <td width="33%" style="background:#FEF2F2; padding:20px 12px; text-align:center;">
+                                    <div style="font-size:32px; margin-bottom:6px;">&#128218;</div>
+                                    <div style="font-size:12px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px;">Books</div>
+                                    <div style="font-size:11px; color:#7F1D1D; margin-top:4px;">Passive learning</div>
+                                </td>
+                                <td width="33%" style="background:#FEF2F2; padding:20px 12px; text-align:center;">
+                                    <div style="font-size:32px; margin-bottom:6px;">&#128241;</div>
+                                    <div style="font-size:12px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px;">Apps</div>
+                                    <div style="font-size:11px; color:#7F1D1D; margin-top:4px;">No real practice</div>
+                                </td>
+                                <td width="33%" style="background:#FEF2F2; padding:20px 12px; text-align:center;">
+                                    <div style="font-size:32px; margin-bottom:6px;">&#127909;</div>
+                                    <div style="font-size:12px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px;">YouTube</div>
+                                    <div style="font-size:11px; color:#7F1D1D; margin-top:4px;">One-way only</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background:#F0FDF4; padding:20px 24px; text-align:center;">
+                                    <div style="font-size:32px; margin-bottom:6px;">&#128172;</div>
+                                    <div style="font-size:13px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:1px;">Real Conversations</div>
+                                    <div style="font-size:12px; color:#14532D; margin-top:4px;">The only way that actually works</div>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
 
