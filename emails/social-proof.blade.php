@@ -51,7 +51,7 @@
         }
         @media (prefers-color-scheme: dark) {
             body, .email-bg { background: #020A1E !important; }
-            .container { background: #071636 !important; }
+            .container { background: #071636 !important; border-color: #071636 !important; }
             .story-card { background: #10224C !important; border-color: #29416D !important; }
             .pricing-card { background: #10224C !important; border-color: #7B4DFF !important; }
             .urgent-box { background: #3f201f !important; border-color: #5c2c28 !important; }

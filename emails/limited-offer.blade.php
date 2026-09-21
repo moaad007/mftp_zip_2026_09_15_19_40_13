@@ -93,7 +93,7 @@
         }
         @media (prefers-color-scheme: dark) {
             body, .email-bg { background: #020A1E !important; }
-            .container { background: #071636 !important; }
+            .container { background: #071636 !important; border-color: #071636 !important; }
             .offer-card { background: #10224C !important; border-color: #29416D !important; }
             .feature-card { background: #151F4B !important; border-color: #29416D !important; }
             .pricing-card { background: #10224C !important; border-color: #7B4DFF !important; }

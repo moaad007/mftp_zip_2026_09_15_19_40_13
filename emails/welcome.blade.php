@@ -73,7 +73,7 @@
         }
         @media (prefers-color-scheme: dark) {
             body, .email-bg { background: #020A1E !important; }
-            .container { background: #071636 !important; }
+            .container { background: #071636 !important; border-color: #071636 !important; }
             .card, .offer-card { background: #10224C !important; border-color: #29416D !important; }
             .offer-card { background: #071636 !important; border-color: #071636 !important; }
             .headline, .subhead, .cta-question, .safe-note { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
