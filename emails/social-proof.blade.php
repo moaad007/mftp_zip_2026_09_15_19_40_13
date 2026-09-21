@@ -115,7 +115,7 @@
                 <!-- STORY CARD -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="story-card" style="background:#F6F4FF; border:1px solid #E3DBFF; border-radius:18px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="story-card" style="background:#F6F4FF; border:1px solid #E3DBFF; border-radius:16px;">
                             <tr>
                                 <td style="padding:28px 26px;">
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
@@ -146,12 +146,12 @@
                     <td class="pad" style="padding-bottom:24px;">
                         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
-                                <td width="48%" class="before-after-left" style="background:#FFF5F5; border:1px solid #FECACA; border-radius:12px; padding:18px 16px;">
+                                <td width="48%" class="before-after-left" style="background:#FFF5F5; border:1px solid #FECACA; border-radius:14px; padding:18px 16px;">
                                     <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#DC2626; margin-bottom:8px;">&#10060; Before</div>
                                     <div style="font-size:14px; line-height:21px; color:#7F1D1D;">Afraid to speak in meetings. Watched others get promoted.</div>
                                 </td>
                                 <td width="4%"></td>
-                                <td width="48%" class="before-after-right" style="background:#F0FDF4; border:1px solid #C8E6D5; border-radius:12px; padding:18px 16px;">
+                                <td width="48%" class="before-after-right" style="background:#F0FDF4; border:1px solid #C8E6D5; border-radius:14px; padding:18px 16px;">
                                     <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#16A34A; margin-bottom:8px;">&#10003; After 3 months</div>
                                     <div style="font-size:14px; line-height:21px; color:#14532D;">Led presentations in English. Got promoted.</div>
                                 </td>
@@ -174,7 +174,7 @@
                 <!-- URGENCY -->
                 <tr>
                     <td class="pad" style="padding-bottom:20px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:14px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
                             <tr>
                                 <td align="center" style="padding:16px 20px;">
                                     <div style="font-size:15px; font-weight:900; color:#DC2626;">
@@ -244,7 +244,7 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-top:6px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
                                                     <tr>
                                                         <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
                                                             <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#EFF6FF; color:#3385F2; font-size:18px; line-height:42px; font-weight:900; text-align:center;">TEL</div>
@@ -260,7 +260,7 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-top:12px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
                                                     <tr>
                                                         <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
                                                             <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#F5F3FF; color:#6F2AE8; font-size:14px; line-height:42px; font-weight:900; text-align:center;">@</div>
@@ -288,7 +288,7 @@
                                                     &copy; {{ date('Y') }} Boston English Center<br>All Rights Reserved.
                                                 </div>
                                                 <div style="margin-top:10px; font-size:12px; text-align:center;">
-                                                    <a href="{{ $unsubscribeUrl }}" style="color:#9CA3AF; text-decoration:underline;">Unsubscribe</a>
+                                                    <a href="{{ $unsubscribeUrl }}" style="color:#64748B; text-decoration:underline;">Unsubscribe</a>
                                                 </div>
                                             </td>
                                         </tr>

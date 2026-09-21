@@ -227,7 +227,7 @@
                 <!-- URGENCY REMINDER -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:12px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
                             <tr>
                                 <td align="center" style="padding:16px 20px;">
                                     <div style="font-size:14px; font-weight:800; color:#DC2626;">
@@ -257,7 +257,7 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-top:6px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
                                                     <tr>
                                                         <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
                                                             <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#EFF6FF; color:#3385F2; font-size:18px; line-height:42px; font-weight:900; text-align:center;">TEL</div>
@@ -273,7 +273,7 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-top:12px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
                                                     <tr>
                                                         <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
                                                             <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#F5F3FF; color:#6F2AE8; font-size:14px; line-height:42px; font-weight:900; text-align:center;">@</div>
@@ -301,7 +301,7 @@
                                                     &copy; {{ date('Y') }} Boston English Center<br>All Rights Reserved.
                                                 </div>
                                                 <div style="margin-top:10px; font-size:12px; text-align:center;">
-                                                    <a href="{{ $unsubscribeUrl }}" style="color:#9CA3AF; text-decoration:underline;">Unsubscribe</a>
+                                                    <a href="{{ $unsubscribeUrl }}" style="color:#64748B; text-decoration:underline;">Unsubscribe</a>
                                                 </div>
                                             </td>
                                         </tr>

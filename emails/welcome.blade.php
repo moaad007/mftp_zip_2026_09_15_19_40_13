@@ -37,9 +37,9 @@
         table { border-collapse: collapse; border-spacing: 0; }
         img { display: block; border: 0; outline: none; text-decoration: none; }
         a { text-decoration: none; }
-        .container { width: 100%; max-width: 740px; background: #FBFBFF; }
-        .pad { padding-left: 26px; padding-right: 26px; }
-        .card { background: #ffffff; border: 1px solid #E3E6F2; border-radius: 22px; overflow: hidden; }
+        .container { width: 100%; max-width: 740px; background: #FBFBFF; border-radius: 20px; }
+        .pad { padding-left: 28px; padding-right: 28px; }
+        .card { background: #ffffff; border: 1px solid #E3E6F2; border-radius: 16px; overflow: hidden; }
         .purple { color: #7B4DFF !important; -webkit-text-fill-color: #7B4DFF !important; }
         .desktop-img-row { display: table-row; }
         .mobile-img-row { display: none; max-height: 0; overflow: hidden; mso-hide: all; }
@@ -100,7 +100,7 @@
     <tr>
         <td align="center" style="padding:0; border:0; border-top:0; border-bottom:0; outline:0; box-shadow:none;">
             <!--[if mso]><table role="presentation" width="740" cellpadding="0" cellspacing="0" border="0" style="border:0;border-top:0;border-bottom:0;outline:0;box-shadow:none;border-collapse:collapse;border-spacing:0;"><tr><td style="border:0;border-top:0;border-bottom:0;outline:0;box-shadow:none;"><![endif]-->
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="container" style="width:100%; max-width:740px; background:#FBFBFF; border:0; border-top:0; border-bottom:0; outline:0; box-shadow:none; border-collapse:collapse; border-spacing:0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="container" style="width:100%; max-width:740px; background:#FBFBFF; border-radius:20px; overflow:hidden; border:0; outline:0; box-shadow:none;">
 
                 <!-- HEADLINE -->
                 <tr>
@@ -117,8 +117,8 @@
 
                 <!-- HERO IMAGE -->
                 <tr>
-                    <td class="pad" style="padding-top:6px;">
-                        <div style="border-radius:18px; overflow:hidden;">
+                    <td class="pad" style="padding-top:6px; padding-bottom:20px;">
+                        <div style="border-radius:16px; overflow:hidden;">
                             <img src="https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/landing-page/img/hero.webp?v=1.1" width="688" alt="Students practicing English in a live conversation" style="width:100%; max-width:100%; height:auto; display:block;">
                         </div>
                     </td>
@@ -127,7 +127,7 @@
                 <!-- PAIN POINTS -->
                 <tr>
                     <td class="pad section" style="padding-top:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:18px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FEF2F2; border:1px solid #FECACA; border-radius:16px;">
                             <tr>
                                 <td style="padding:24px 28px;">
                                     <div style="font-size:18px; font-weight:900; color:#DC2626; margin-bottom:14px;">Sound familiar?</div>
@@ -176,7 +176,7 @@
                 <!-- OFFER -->
                 <tr>
                     <td class="pad section" style="padding-top:20px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="card offer-card" style="background:#ffffff; border-color:#D8DDEB; border-radius:18px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="card offer-card" style="background:#ffffff; border-color:#D8DDEB; border-radius:16px;">
                             <tr>
                                 <td class="offer-inner" style="padding:28px 20px 22px;">
                                     <div class="cta-question" style="margin-bottom:16px; font-size:22px; line-height:28px; font-weight:900; color:#061538; text-align:center; white-space:normal;">
@@ -200,8 +200,8 @@
 
                                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
-                                            <td bgcolor="#7B4DFF" style="background:#7B4DFF; border-radius:13px;">
-                                                <a href="{{ $dashboardUrl }}" class="button-link cta-link" style="display:block; padding:18px 22px; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; border-radius:13px; text-align:center; white-space:nowrap;">
+                                                                                            <td bgcolor="#7B4DFF" style="background:#7B4DFF; border-radius:14px;">
+                                                <a href="{{ $dashboardUrl }}" class="button-link cta-link" style="display:block; padding:18px 22px; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; text-decoration:none !important; border-radius:14px; text-align:center; white-space:nowrap;">
                                                     <span class="button-heart" style="display:inline-block; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important; font-size:25px; line-height:25px; text-align:center; vertical-align:middle; margin-right:10px;">&#128156;</span>
                                                     <span class="gmail-blend-screen" style="display:inline-block; vertical-align:middle;"><span class="gmail-blend-difference" style="display:inline-block;"><span class="cta-text" style="display:inline-block; font-size:22px; line-height:28px; font-weight:900; color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;">Start Your Journey Now</span></span></span>
                                                 </a>
@@ -209,7 +209,7 @@
                                         </tr>
                                     </table>
 
-                                    <div class="safe-note" style="margin-top:14px; font-size:13px; line-height:19px; color:#6B7280; text-align:center;">
+                                    <div class="safe-note" style="margin-top:14px; font-size:13px; line-height:19px; color:#4E5A73; text-align:center;">
                                         Cancel anytime &middot; No hidden fees &middot; Start speaking this week
                                     </div>
                                 </td>
@@ -243,7 +243,7 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-top:6px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
                                                     <tr>
                                                         <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
                                                             <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#EFF6FF; color:#3385F2; font-size:18px; line-height:42px; font-weight:900; text-align:center;">TEL</div>
@@ -259,7 +259,7 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-top:12px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:16px; background:#FBFBFF;">
+                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
                                                     <tr>
                                                         <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
                                                             <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#F5F3FF; color:#6F2AE8; font-size:14px; line-height:42px; font-weight:900; text-align:center;">@</div>
@@ -288,7 +288,7 @@
                                                     &copy; {{ date('Y') }} Boston English Center<br>All Rights Reserved.
                                                 </div>
                                                 <div style="margin-top:10px; font-size:12px; text-align:center;">
-                                                    <a href="{{ $unsubscribeUrl }}" style="color:#9CA3AF; text-decoration:underline;">Unsubscribe</a>
+                                                    <a href="{{ $unsubscribeUrl }}" style="color:#64748B; text-decoration:underline;">Unsubscribe</a>
                                                 </div>
                                             </td>
                                         </tr>
