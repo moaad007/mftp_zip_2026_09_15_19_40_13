@@ -99,6 +99,15 @@
                     </td>
                 </tr>
 
+                <!-- HERO IMAGE -->
+                <tr>
+                    <td class="pad" style="padding-bottom:24px;">
+                        <div style="border-radius:18px; overflow:hidden;">
+                            <img src="https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/landing-page/img/imagine.webp?v=1.1" width="624" alt="Woman speaking English confidently with friends" style="width:100%; max-width:100%; height:auto; display:block;">
+                        </div>
+                    </td>
+                </tr>
+
                 <!-- STORY CARD -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">

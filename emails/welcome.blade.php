@@ -114,6 +114,15 @@
                     </td>
                 </tr>
 
+                <!-- HERO IMAGE -->
+                <tr>
+                    <td class="pad" style="padding-top:6px;">
+                        <div style="border-radius:18px; overflow:hidden;">
+                            <img src="https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/landing-page/img/hero.webp?v=1.1" width="688" alt="Students practicing English in a live conversation" style="width:100%; max-width:100%; height:auto; display:block;">
+                        </div>
+                    </td>
+                </tr>
+
                 <!-- PAIN POINTS -->
                 <tr>
                     <td class="pad section" style="padding-top:28px;">
