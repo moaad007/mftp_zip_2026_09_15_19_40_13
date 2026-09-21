@@ -78,20 +78,7 @@
                 <!-- VISUAL: TWO PATHS -->
                 <tr>
                     <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-radius:16px; overflow:hidden;">
-                            <tr>
-                                <td width="50%" style="background:#FEF2F2; padding:24px 16px; text-align:center; vertical-align:top;">
-                                    <div style="width:48px; height:48px; border-radius:50%; background:#FECACA; color:#DC2626; font-size:24px; line-height:48px; text-align:center; margin:0 auto 12px;">&#10007;</div>
-                                    <div style="font-size:13px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Still waiting</div>
-                                    <div style="font-size:14px; line-height:20px; color:#7F1D1D;">Same fears.<br>Same excuses.<br>Same results.</div>
-                                </td>
-                                <td width="50%" style="background:#F0FDF4; padding:24px 16px; text-align:center; vertical-align:top;">
-                                    <div style="width:48px; height:48px; border-radius:50%; background:#BBF7D0; color:#16A34A; font-size:24px; line-height:48px; text-align:center; margin:0 auto 12px;">&#10003;</div>
-                                    <div style="font-size:13px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Started today</div>
-                                    <div style="font-size:14px; line-height:20px; color:#14532D;">New confidence.<br>New opportunities.<br>New you.</div>
-                                </td>
-                            </tr>
-                        </table>
+                        <img src="{{ asset('img/two-futures.webp.jpg') }}?v=1.1" alt="Two futures - one dark, one bright" width="520" style="display:block; width:100%; max-width:520px; height:auto; border-radius:16px; border:0;">
                     </td>
                 </tr>
 

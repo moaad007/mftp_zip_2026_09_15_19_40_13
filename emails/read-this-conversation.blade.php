@@ -79,6 +79,13 @@
                     </td>
                 </tr>
 
+                <!-- VISUAL: CHAT PREVIEW -->
+                <tr>
+                    <td class="pad" style="padding-bottom:24px;">
+                        <img src="{{ asset('img/read-this-conversation.webp.jpg') }}?v=1.1" alt="Live group chat preview" width="520" style="display:block; width:100%; max-width:520px; height:auto; border-radius:16px; border:0;">
+                    </td>
+                </tr>
+
                 <!-- CHAT TRANSCRIPT -->
                 <tr>
                     <td class="pad" style="padding-bottom:24px;">
