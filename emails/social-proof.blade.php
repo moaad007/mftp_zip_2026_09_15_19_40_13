@@ -1,9 +1,9 @@
 @php
     $supportEmail = $supportEmail ?? 'support@bostonenglishcenter.com';
     $unsubscribeUrl = $unsubscribeUrl ?? '#';
-    $dashboardUrl = $dashboardUrl ?? route('landing', ['ref' => 'email_sales_story']);
-    $offerBadgeImageUrl = "https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/slider/emails/offer-badge-square.png";
-    $emailPreviewText = 'Sara was afraid to speak. 3 months later she got promoted. Here is what changed.';
+    $dashboardUrl = $dashboardUrl ?? route('landing', ['ref' => 'email_sales_gap']);
+    $heroUrl = 'https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/landing-page/img/imagine.webp?v=1.1';
+    $emailPreviewText = 'They didn\'t believe it either. Until they tried.';
 @endphp
 <!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -13,296 +13,201 @@
     <meta name="x-apple-disable-message-reformatting">
     <meta name="color-scheme" content="light dark">
     <meta name="supported-color-schemes" content="light dark">
-    <meta name="description" content="{{ $emailPreviewText }}">
-    <title>Boston English Center - Real Results</title>
+    <title>Boston English Center</title>
     <!--[if mso]>
     <style>
         * { font-family: Arial, Helvetica, sans-serif !important; }
     </style>
     <![endif]-->
     <style>
-        :root {
-            color-scheme: light dark;
-            supported-color-schemes: light dark;
+        :root { color-scheme: light dark; supported-color-schemes: light dark; }
+        body, .body, .email-bg { margin:0; padding:0; width:100%; background:#F8F8FC; font-family:Arial,Helvetica,sans-serif; -webkit-text-size-adjust:100%; }
+        table { border-collapse:collapse; border-spacing:0; }
+        img { display:block; border:0; outline:none; text-decoration:none; max-width:100%; height:auto; }
+        a { text-decoration:none; }
+        .container { width:100%; max-width:580px; }
+        .pad { padding:0 24px; }
+        .overline { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#7B4DFF; margin:0 0 10px; }
+        .headline { font-size:32px; font-weight:900; line-height:38px; color:#061538; letter-spacing:-0.5px; margin:0 0 16px; }
+        .accent-bar { width:48px; height:3px; background:#7B4DFF; border-radius:2px; margin:0 0 20px; }
+        .body-text { font-size:16px; line-height:26px; color:#4E5A73; margin:0 0 16px; }
+        .section-rule { border:none; border-top:1px solid #E3E6F2; margin:28px 0; }
+        .left-accent { border-left:4px solid #7B4DFF; padding:16px 20px; background:#F6F4FF; border-radius:0 8px 8px 0; margin:0 0 20px; }
+        .story-card { background:#F6F4FF; border-radius:10px; padding:24px; margin:0 0 20px; }
+        .stat-row { text-align:center; padding:12px 0; }
+        .stat-num { font-size:28px; font-weight:900; color:#061538; }
+        .stat-label { font-size:12px; color:#6B7280; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+        .cta-card { background:#061538; border-radius:12px; padding:32px 28px; text-align:center; margin:0 0 20px; }
+        .cta-link { display:inline-block; background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; }
+        .footer-brand { font-size:20px; font-weight:900; color:#061538; margin:0 0 4px; }
+        .footer-brand span { color:#7B4DFF; }
+        .footer-copy { font-size:12px; color:#9CA3AF; margin:0; }
+        .footer-links { font-size:12px; color:#9CA3AF; margin:8px 0 0; }
+        .footer-links a { color:#7B4DFF; text-decoration:underline; }
+        @media only screen and (max-width:600px) {
+            .container { max-width:100% !important; }
+            .pad { padding:0 18px !important; }
+            .headline { font-size:26px !important; line-height:32px !important; }
+            .stat-num { font-size:22px !important; }
         }
-        body, .body, .email-bg {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            background: #F8F8FC;
-            font-family: Arial, Helvetica, sans-serif;
-            -webkit-text-size-adjust: 100%;
-        }
-        table { border-collapse: collapse; border-spacing: 0; }
-        img { display: block; border: 0; }
-        a { text-decoration: none; }
-        .container { width: 100%; max-width: 680px; background: #FBFBFF; }
-        .pad { padding-left: 28px; padding-right: 28px; }
-        .purple { color: #7B4DFF !important; -webkit-text-fill-color: #7B4DFF !important; }
-        .stars { color: #F59E0B; font-size: 20px; letter-spacing: 2px; }
-        .price-strike { font-size: 22px; font-weight: 800; color: #9CA3AF; text-decoration: line-through; }
-        .price-big { font-size: 56px; font-weight: 900; color: #7B4DFF; line-height: 1; letter-spacing: -2px; }
-        .price-month { font-size: 22px; font-weight: 900; color: #061538; }
-        @media only screen and (max-width: 600px) {
-            .container { width: 100% !important; }
-            .pad { padding-left: 18px !important; padding-right: 18px !important; }
-            .hero-title { font-size: 28px !important; line-height: 34px !important; }
-            .price-big { font-size: 48px !important; }
-        }
-        @media (prefers-color-scheme: dark) {
-            body, .email-bg { background: #020A1E !important; }
-            .container { background: #071636 !important; border-color: #071636 !important; }
-            .story-card { background: #10224C !important; border-color: #29416D !important; }
-            .pricing-card { background: #10224C !important; border-color: #7B4DFF !important; }
-            .urgent-box { background: #3f201f !important; border-color: #5c2c28 !important; }
-            .text-dark { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .text-muted { color: #AAB7D6 !important; -webkit-text-fill-color: #AAB7D6 !important; }
-            .story-text { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .before-after-left { background: #151F4B !important; border-color: #29416D !important; }
-            .before-after-right { background: #123c2e !important; border-color: #2e6d54 !important; }
-            .price-month { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .email-footer-end, .brand-footer, .help-panel, .contact-card { background: #071636 !important; background-color: #071636 !important; }
-            .text-main, .text-main *, .footer-title { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .text-muted, .text-muted *, .footer-copy, .contact-value, .contact-value:link, .contact-value:visited, .contact-value span, .contact-value * { color: #AAB7D6 !important; -webkit-text-fill-color: #AAB7D6 !important; }
-            .text-accent, .text-accent *, .footer-accent, .contact-chevron { color: #C4B5FD !important; -webkit-text-fill-color: #C4B5FD !important; }
-            .contact-icon { border-color: #29416D !important; }
+        @media (prefers-color-scheme:dark) {
+            body, .body, .email-bg { background:#020A1E !important; }
+            .container { background:#020A1E !important; }
+            .headline, .footer-brand { color:#F7F9FF !important; }
+            .body-text { color:#AAB7D6 !important; }
+            .left-accent { background:#10224C !important; border-left-color:#C4B5FD !important; }
+            .story-card { background:#10224C !important; }
+            .stat-num { color:#F7F9FF !important; }
+            .stat-label { color:#6B7280 !important; }
+            .section-rule { border-top-color:#1E2A4A !important; }
+            .cta-card { background:#071636 !important; }
+            .footer-brand { color:#F7F9FF !important; }
+            .footer-brand span { color:#C4B5FD !important; }
+            .footer-copy, .footer-links { color:#6B7280 !important; }
+            .footer-links a { color:#C4B5FD !important; }
         }
     </style>
 </head>
-<body class="body" style="margin:0; padding:0; width:100%; background:#020A1E; color:#061538;">
-<div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; overflow:hidden; opacity:0; color:#F8F8FC;">
-    {{ $emailPreviewText }}
-</div>
-<div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; overflow:hidden; opacity:0; color:#F8F8FC;">
-    &nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;
-</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="email-bg" style="width:100%; background:#F8F8FC;">
-    <tr>
-        <td align="center" style="padding: 24px 10px 40px;">
-            <!--[if mso]><table role="presentation" width="680" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="container" style="max-width:680px; background:#FBFBFF; border-radius:20px; overflow:hidden; border:1px solid #E3E6F2;">
+<body class="body" style="margin:0; padding:0; width:100%; background:#F8F8FC; -webkit-text-size-adjust:100%;">
+    <div style="display:none; max-height:0; overflow:hidden;">
+        {{ $emailPreviewText }}
+        @for($i = 0; $i < 40; $i++)&#8204;@endfor
+    </div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8F8FC;">
+        <tr>
+            <td align="center" style="padding:32px 12px;">
+                <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="580" style="max-width:580px; background:#FBFBFF; border-radius:16px;">
+                    {{-- TOP BAR --}}
+                    <tr><td height="4" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td></tr>
 
-                <!-- TOP BAR -->
-                <tr>
-                    <td height="5" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td>
-                </tr>
+                    {{-- LOGO --}}
+                    <tr>
+                        <td class="pad" style="padding-top:28px;">
+                            <div style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                        </td>
+                    </tr>
 
-                <!-- LOGO -->
-                <tr>
-                    <td class="pad" style="padding-top:28px; padding-bottom:8px;">
-                        <div class="text-dark" style="font-size:22px; font-weight:900; color:#061538; letter-spacing:-0.5px;">BOSTON <span class="purple">ENGLISH</span> CENTER</div>
-                    </td>
-                </tr>
+                    {{-- HEADLINE --}}
+                    <tr>
+                        <td class="pad" style="padding-top:24px;">
+                            <div class="overline">Real students. Real results.</div>
+                            <h1 class="headline">They didn't believe<br>it either</h1>
+                            <div class="accent-bar"></div>
+                            <p class="body-text">
+                                Sara from Canada spent years studying alone. Apps, books, YouTube — nothing stuck. Then she tried one conversation room. That was 8 months ago. She hasn't stopped since.
+                            </p>
+                        </td>
+                    </tr>
 
-                <!-- HEADLINE -->
-                <tr>
-                    <td class="pad" style="padding-top:10px; padding-bottom:24px;">
-                        <h1 class="hero-title text-dark" style="margin:0 0 14px; font-size:34px; line-height:40px; font-weight:900; color:#061538; letter-spacing:-1px;">
-                            She was afraid to speak.<br>3 months later, she got <span class="purple">promoted.</span>
-                        </h1>
-                    </td>
-                </tr>
+                    {{-- HERO IMAGE --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:28px;">
+                            <img src="{{ $heroUrl }}" alt="Imagine speaking with confidence" width="532" style="width:100%; max-width:532px; height:auto; border-radius:10px;">
+                        </td>
+                    </tr>
 
-                <!-- HERO IMAGE -->
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <div style="border-radius:18px; overflow:hidden;">
-                            <img src="https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/landing-page/img/imagine.webp?v=1.1" width="624" alt="Woman speaking English confidently with friends" style="width:100%; max-width:100%; height:auto; display:block;">
-                        </div>
-                    </td>
-                </tr>
+                    <hr class="section-rule" style="margin:0 24px;">
 
-                <!-- STORY CARD -->
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="story-card" style="background:#F6F4FF; border-radius:16px;">
-                            <tr>
-                                <td style="padding:28px 26px;">
-                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
-                                        <tr>
-                                            <td valign="middle">
-                                                <div style="width:48px; height:48px; border-radius:50%; background:#E8F5E9; color:#16A34A; font-size:16px; font-weight:900; text-align:center; line-height:48px;">S</div>
-                                            </td>
-                                            <td valign="middle" style="padding-left:14px;">
-                                                <div class="text-dark" style="font-size:16px; font-weight:900; color:#061538;">Sara from Canada</div>
-                                                <div class="stars" style="font-size:14px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <div class="story-text" style="font-size:16px; line-height:25px; color:#221A4B;">
-                                        "I knew English. I had the grammar. But every time I had to speak in a meeting, I <strong>froze.</strong> I watched colleagues with weaker skills get promoted because they could communicate better."
-                                    </div>
-                                    <div class="story-text" style="font-size:16px; line-height:25px; color:#221A4B; margin-top:14px;">
-                                        "Then I joined Boston English Center. The conversation rooms forced me to actually <strong>use</strong> English, not just study it. After 3 months, I led my first presentation in English. Last week I got the promotion I wanted."
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    {{-- SARA'S STORY --}}
+                    <tr>
+                        <td class="pad" style="padding-top:28px;">
+                            <div class="story-card">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                                    <tr>
+                                        <td style="vertical-align:top;">
+                                            <div style="width:40px; height:40px; border-radius:50%; background:#E8F5E9; color:#16A34A; font-size:16px; font-weight:900; line-height:40px; text-align:center;">S</div>
+                                        </td>
+                                        <td style="padding-left:12px; vertical-align:top;">
+                                            <div style="font-size:14px; font-weight:800; color:#061538;">Sara, Canada</div>
+                                            <div style="font-size:12px; color:#6B7280; margin-top:2px;">Student for 8 months</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p style="font-size:15px; line-height:24px; color:#061538; margin:16px 0 0; font-style:italic;">
+                                    "I used to freeze every time someone spoke to me in English. Now I lead meetings in English. The change wasn't gradual — it happened the moment I started actually speaking."
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
 
-                <!-- BEFORE / AFTER -->
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                            <tr>
-                                <td width="48%" class="before-after-left" style="background:#FFF5F5; border-radius:14px; padding:18px 16px;">
-                                    <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#DC2626; margin-bottom:8px;">&#10060; Before</div>
-                                    <div style="font-size:14px; line-height:21px; color:#7F1D1D;">Afraid to speak in meetings. Watched others get promoted.</div>
-                                </td>
-                                <td width="4%"></td>
-                                <td width="48%" class="before-after-right" style="background:#F0FDF4; border-radius:14px; padding:18px 16px;">
-                                    <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:#16A34A; margin-bottom:8px;">&#10003; After 3 months</div>
-                                    <div style="font-size:14px; line-height:21px; color:#14532D;">Led presentations in English. Got promoted.</div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    {{-- BEFORE / AFTER --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:28px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td width="48%" style="vertical-align:top; background:#FEF2F2; border-radius:8px; padding:14px 16px;">
+                                        <div style="font-size:11px; font-weight:800; color:#DC2626; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Before</div>
+                                        <div style="font-size:13px; color:#7F1D1D; line-height:18px;">Avoided English conversations. Froze in meetings. Watched others get promoted.</div>
+                                    </td>
+                                    <td width="4%"></td>
+                                    <td width="48%" style="vertical-align:top; background:#F0FDF4; border-radius:8px; padding:14px 16px;">
+                                        <div style="font-size:11px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">After</div>
+                                        <div style="font-size:13px; color:#14532D; line-height:18px;">Leads meetings. Speaks with confidence. Got promoted within 6 months.</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-                <!-- MORE PROOF -->
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <div style="font-size:16px; font-weight:800; color:#061538; margin-bottom:12px;">She is not alone.</div>
-                        <div style="font-size:14px; line-height:24px; color:#4E5A73;">
-                            <strong style="color:#061538;">25,000+ students</strong> from 80+ countries have already transformed their English.<br>
-                            <span class="stars" style="font-size:14px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <strong style="color:#061538;">4.9 out of 5</strong> &middot; 3,237 verified reviews
-                        </div>
-                    </td>
-                </tr>
+                    <hr class="section-rule" style="margin:0 24px;">
 
-                <!-- URGENCY -->
-                <tr>
-                    <td class="pad" style="padding-bottom:20px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="urgent-box" style="background:#FEF2F2; border-radius:16px;">
-                            <tr>
-                                <td align="center" style="padding:16px 20px;">
-                                    <div style="font-size:15px; font-weight:900; color:#DC2626;">
-                                        &#9200; Your 50% discount is waiting.
-                                    </div>
-                                    <div style="font-size:14px; color:#7F1D1D; margin-top:4px;">
-                                        But not for long. The price goes back to $70/month soon.
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    {{-- PROOF NUMBERS --}}
+                    <tr>
+                        <td class="pad" style="padding-top:28px; padding-bottom:28px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td class="stat-row" width="33%">
+                                        <div class="stat-num">25,000+</div>
+                                        <div class="stat-label">Students</div>
+                                    </td>
+                                    <td class="stat-row" width="33%">
+                                        <div class="stat-num">4.9/5</div>
+                                        <div class="stat-label">Rating</div>
+                                    </td>
+                                    <td class="stat-row" width="33%">
+                                        <div class="stat-num">80+</div>
+                                        <div class="stat-label">Countries</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-                <!-- OFFER -->
-                <tr>
-                    <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border-radius:20px;">
-                            <tr>
-                                <td align="center" style="padding:24px;">
-                                    <div style="margin-bottom:12px;">
-                                        <img src="{{ $offerBadgeImageUrl }}" width="90" height="90" alt="50% OFF" style="width:90px; height:90px; display:inline-block;">
-                                    </div>
-                                    <div class="price-strike">$70/month</div>
-                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:4px auto;">
-                                        <tr>
-                                            <td valign="baseline" class="price-big">$35</td>
-                                            <td valign="baseline" class="price-month" style="padding-left:8px;">/month</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    {{-- CTA --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:32px;">
+                            <div class="cta-card">
+                                <p style="font-size:15px; line-height:24px; color:#AAB7D6; margin:0 0 16px;">
+                                    Your story could be next. The only difference between you and them is they started.
+                                </p>
+                                <a href="{{ $dashboardUrl }}" class="cta-link" style="background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; display:inline-block;">
+                                    Start Speaking With Confidence &rarr;
+                                </a>
+                                <p style="font-size:12px; color:#6B7280; margin:12px 0 0;">
+                                    50% off for a limited time &middot; $35/month &middot; Cancel anytime
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
 
-                <!-- CTA -->
-                <tr>
-                    <td class="pad" style="padding-bottom:12px; text-align:center;">
-                        <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                            <tr>
-                                <td bgcolor="#7B4DFF" style="border-radius:14px; padding:18px 24px; text-align:center;">
-                                    <a href="{{ $dashboardUrl }}" style="display:inline-block; font-size:18px; font-weight:900; color:#FFFFFF; text-decoration:none;">
-                                        Start Speaking With Confidence &rarr;
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="text-muted" style="font-size:12px; color:#7B849A; margin-top:10px;">
-                            Cancel anytime. No hidden fees. Start speaking this week.
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- FOOTER -->
-                <tr>
-                    <td class="email-footer-end" style="padding:0; background:#FBFBFF;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                            <tr>
-                                <td class="help-panel" style="padding:28px 18px 24px; background:#FBFBFF;">
-                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                        <tr>
-                                            <td valign="top" style="padding:0 18px 12px 0;">
-                                                <div class="text-main help-title" style="font-size:30px; line-height:34px; font-weight:900; color:#071A44; letter-spacing:-0.8px;">Need Help?</div>
-                                                <div class="text-muted help-copy" style="padding-top:8px; font-size:16px; line-height:23px; font-weight:600; color:#405273;">We're here to help you on your English learning journey.</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-top:6px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
-                                                    <tr>
-                                                        <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
-                                                            <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#EFF6FF; color:#3385F2; font-size:18px; line-height:42px; font-weight:900; text-align:center;">TEL</div>
-                                                        </td>
-                                                        <td valign="middle" class="contact-copy-cell" style="padding:14px 10px;">
-                                                            <div class="text-main contact-label" style="font-size:17px; line-height:22px; font-weight:900; color:#071A44;">Call Us</div>
-                                                            <a href="tel:16178482317" class="text-muted contact-value" style="display:block; padding-top:2px; font-size:15px; line-height:21px; font-weight:600; color:#405273; -webkit-text-fill-color:#405273; text-decoration:none;">+1 (617) 848-2317</a>
-                                                        </td>
-                                                        <td width="28" align="center" valign="middle" class="contact-chevron" style="width:28px; padding-right:14px; color:#4024D6; font-size:22px; line-height:22px; font-weight:900;">&#8250;</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-top:12px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
-                                                    <tr>
-                                                        <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
-                                                            <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#F5F3FF; color:#6F2AE8; font-size:14px; line-height:42px; font-weight:900; text-align:center;">@</div>
-                                                        </td>
-                                                        <td valign="middle" class="contact-copy-cell" style="padding:14px 10px;">
-                                                            <div class="text-main contact-label" style="font-size:17px; line-height:22px; font-weight:900; color:#071A44;">Email Us</div>
-                                                            <a href="mailto:{{ $supportEmail }}" class="text-muted contact-value" style="display:block; padding-top:2px; font-size:16px; line-height:22px; font-weight:600; color:#405273; -webkit-text-fill-color:#405273; text-decoration:none; word-break:break-word;">{{ $supportEmail }}</a>
-                                                        </td>
-                                                        <td width="28" align="center" valign="middle" class="contact-chevron" style="width:28px; padding-right:14px; color:#4024D6; font-size:22px; line-height:22px; font-weight:900;">&#8250;</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="brand-footer" style="padding:22px 0 26px; background:#FBFBFF;">
-                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                        <tr>
-                                            <td align="center">
-                                                <div class="text-main footer-title" style="font-size:23px; line-height:24px; font-weight:900; color:#071A44; letter-spacing:-0.6px;">Boston</div>
-                                                <div class="text-accent footer-accent" style="font-size:15px; line-height:18px; font-weight:900; color:#1357E8;">English Center</div>
-                                                <div class="text-muted footer-copy" style="margin:14px 0 0; font-size:13px; line-height:20px; font-weight:600; color:#64748B; text-align:center;">
-                                                    &copy; {{ date('Y') }} Boston English Center<br>All Rights Reserved.
-                                                </div>
-                                                <div style="margin-top:10px; font-size:12px; text-align:center;">
-                                                    <a href="{{ $unsubscribeUrl }}" style="color:#64748B; text-decoration:underline;">Unsubscribe</a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-        </td>
-    </tr>
-</table>
+                    {{-- FOOTER --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:28px;">
+                            <hr class="section-rule" style="margin:0 0 20px;">
+                            <div style="text-align:center;">
+                                <div class="footer-brand">Boston <span>English</span> Center</div>
+                                <p class="footer-copy">&copy; {{ date('Y') }} Boston English Center. All rights reserved.</p>
+                                <p class="footer-links">
+                                    <a href="{{ $dashboardUrl }}">Dashboard</a> &nbsp;|&nbsp;
+                                    <a href="mailto:{{ $supportEmail }}">Support</a> &nbsp;|&nbsp;
+                                    <a href="{{ $unsubscribeUrl }}">Unsubscribe</a>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

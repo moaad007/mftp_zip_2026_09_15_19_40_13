@@ -1,8 +1,9 @@
 @php
     $supportEmail = $supportEmail ?? 'support@bostonenglishcenter.com';
     $unsubscribeUrl = $unsubscribeUrl ?? '#';
-    $dashboardUrl = $dashboardUrl ?? route('landing', ['ref' => 'email_sales_alone']);
-    $emailPreviewText = 'You have been studying English for years. Why can you still not speak? Here is what you are missing.';
+    $dashboardUrl = $dashboardUrl ?? route('landing', ['ref' => 'email_sales_gap']);
+    $heroUrl = 'https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/landing-page/img/struggle.webp?v=1.1';
+    $emailPreviewText = 'There\'s a reason you\'re still stuck. And it\'s not what you think.';
 @endphp
 <!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -12,320 +13,181 @@
     <meta name="x-apple-disable-message-reformatting">
     <meta name="color-scheme" content="light dark">
     <meta name="supported-color-schemes" content="light dark">
-    <meta name="description" content="{{ $emailPreviewText }}">
-    <title>Boston English Center - This is what you are missing</title>
+    <title>Boston English Center</title>
     <!--[if mso]>
     <style>
         * { font-family: Arial, Helvetica, sans-serif !important; }
     </style>
     <![endif]-->
     <style>
-        :root {
-            color-scheme: light dark;
-            supported-color-schemes: light dark;
+        :root { color-scheme: light dark; supported-color-schemes: light dark; }
+        body, .body, .email-bg { margin:0; padding:0; width:100%; background:#F8F8FC; font-family:Arial,Helvetica,sans-serif; -webkit-text-size-adjust:100%; }
+        table { border-collapse:collapse; border-spacing:0; }
+        img { display:block; border:0; outline:none; text-decoration:none; max-width:100%; height:auto; }
+        a { text-decoration:none; }
+        .container { width:100%; max-width:580px; }
+        .pad { padding:0 24px; }
+        .overline { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#7B4DFF; margin:0 0 10px; }
+        .headline { font-size:32px; font-weight:900; line-height:38px; color:#061538; letter-spacing:-0.5px; margin:0 0 16px; }
+        .accent-bar { width:48px; height:3px; background:#7B4DFF; border-radius:2px; margin:0 0 20px; }
+        .body-text { font-size:16px; line-height:26px; color:#4E5A73; margin:0 0 16px; }
+        .section-rule { border:none; border-top:1px solid #E3E6F2; margin:28px 0; }
+        .left-accent { border-left:4px solid #7B4DFF; padding:16px 20px; background:#F6F4FF; border-radius:0 8px 8px 0; margin:0 0 20px; }
+        .pain-card { border-left:4px solid #DC2626; padding:14px 18px; background:#FEF2F2; border-radius:0 8px 8px 0; margin:0 0 12px; }
+        .pain-title { font-size:14px; font-weight:800; color:#DC2626; margin-bottom:4px; }
+        .pain-text { font-size:14px; line-height:20px; color:#7F1D1D; margin:0; }
+        .solution-card { border-left:4px solid #16A34A; padding:18px 20px; background:#F0FDF4; border-radius:0 8px 8px 0; margin:0 0 20px; }
+        .cta-card { background:#061538; border-radius:12px; padding:32px 28px; text-align:center; margin:0 0 20px; }
+        .cta-link { display:inline-block; background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; }
+        .footer-brand { font-size:20px; font-weight:900; color:#061538; margin:0 0 4px; }
+        .footer-brand span { color:#7B4DFF; }
+        .footer-copy { font-size:12px; color:#9CA3AF; margin:0; }
+        .footer-links { font-size:12px; color:#9CA3AF; margin:8px 0 0; }
+        .footer-links a { color:#7B4DFF; text-decoration:underline; }
+        @media only screen and (max-width:600px) {
+            .container { max-width:100% !important; }
+            .pad { padding:0 18px !important; }
+            .headline { font-size:26px !important; line-height:32px !important; }
         }
-        body, .body, .email-bg {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            background: #F8F8FC;
-            font-family: Arial, Helvetica, sans-serif;
-            -webkit-text-size-adjust: 100%;
-        }
-        table { border-collapse: collapse; border-spacing: 0; }
-        img { display: block; border: 0; }
-        a { text-decoration: none; }
-        .container { width: 100%; max-width: 680px; background: #FBFBFF; }
-        .pad { padding-left: 28px; padding-right: 28px; }
-        .purple { color: #7B4DFF !important; -webkit-text-fill-color: #7B4DFF !important; }
-        .price-strike { font-size: 22px; font-weight: 800; color: #9CA3AF; text-decoration: line-through; }
-        .price-big { font-size: 56px; font-weight: 900; color: #7B4DFF; line-height: 1; letter-spacing: -2px; }
-        .price-month { font-size: 22px; font-weight: 900; color: #061538; }
-        @media only screen and (max-width: 600px) {
-            .container { width: 100% !important; }
-            .pad { padding-left: 18px !important; padding-right: 18px !important; }
-            .hero-title { font-size: 28px !important; line-height: 34px !important; }
-            .comparison-stack { display: block !important; width: 100% !important; }
-            .price-big { font-size: 48px !important; }
-        }
-        @media (prefers-color-scheme: dark) {
-            body, .email-bg { background: #020A1E !important; }
-            .container { background: #071636 !important; border-color: #071636 !important; }
-            .pain-card { background: #3f201f !important; border-color: #5c2c28 !important; }
-            .solution-card { background: #123c2e !important; border-color: #2e6d54 !important; }
-            .pricing-card { background: #10224C !important; border-color: #7B4DFF !important; }
-            .urgent-box { background: #3f201f !important; border-color: #5c2c28 !important; }
-            .text-dark { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .text-muted { color: #AAB7D6 !important; -webkit-text-fill-color: #AAB7D6 !important; }
-            .pain-text { color: #FCA5A5 !important; -webkit-text-fill-color: #FCA5A5 !important; }
-            .solution-text { color: #86EFAC !important; -webkit-text-fill-color: #86EFAC !important; }
-            .price-month { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .email-footer-end, .brand-footer, .help-panel, .contact-card { background: #071636 !important; background-color: #071636 !important; }
-            .text-main, .text-main *, .footer-title { color: #F7F9FF !important; -webkit-text-fill-color: #F7F9FF !important; }
-            .text-muted, .text-muted *, .footer-copy, .contact-value, .contact-value:link, .contact-value:visited, .contact-value span, .contact-value * { color: #AAB7D6 !important; -webkit-text-fill-color: #AAB7D6 !important; }
-            .text-accent, .text-accent *, .footer-accent, .contact-chevron { color: #C4B5FD !important; -webkit-text-fill-color: #C4B5FD !important; }
-            .contact-icon { border-color: #29416D !important; }
+        @media (prefers-color-scheme:dark) {
+            body, .body, .email-bg { background:#020A1E !important; }
+            .container { background:#020A1E !important; }
+            .headline, .footer-brand { color:#F7F9FF !important; }
+            .body-text { color:#AAB7D6 !important; }
+            .left-accent { background:#10224C !important; border-left-color:#C4B5FD !important; }
+            .pain-card { background:#3f201f !important; border-left-color:#FCA5A5 !important; }
+            .pain-title { color:#FCA5A5 !important; }
+            .pain-text { color:#FCA5A5 !important; }
+            .solution-card { background:#123c2e !important; border-left-color:#86EFAC !important; }
+            .solution-card .body-text { color:#86EFAC !important; }
+            .section-rule { border-top-color:#1E2A4A !important; }
+            .cta-card { background:#071636 !important; }
+            .footer-brand { color:#F7F9FF !important; }
+            .footer-brand span { color:#C4B5FD !important; }
+            .footer-copy, .footer-links { color:#6B7280 !important; }
+            .footer-links a { color:#C4B5FD !important; }
         }
     </style>
 </head>
-<body class="body" style="margin:0; padding:0; width:100%; background:#020A1E; color:#061538;">
-<div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; overflow:hidden; opacity:0; color:#F8F8FC;">
-    {{ $emailPreviewText }}
-</div>
-<div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; overflow:hidden; opacity:0; color:#F8F8FC;">
-    &nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;
-</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="email-bg" style="width:100%; background:#F8F8FC;">
-    <tr>
-        <td align="center" style="padding: 24px 10px 40px;">
-            <!--[if mso]><table role="presentation" width="680" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="container" style="max-width:680px; background:#FBFBFF; border-radius:20px; overflow:hidden; border:1px solid #E3E6F2;">
+<body class="body" style="margin:0; padding:0; width:100%; background:#F8F8FC; -webkit-text-size-adjust:100%;">
+    <div style="display:none; max-height:0; overflow:hidden;">
+        {{ $emailPreviewText }}
+        @for($i = 0; $i < 40; $i++)&#8204;@endfor
+    </div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#F8F8FC;">
+        <tr>
+            <td align="center" style="padding:32px 12px;">
+                <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0" width="580" style="max-width:580px; background:#FBFBFF; border-radius:16px;">
+                    {{-- TOP BAR --}}
+                    <tr><td height="4" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td></tr>
 
-                <!-- TOP BAR -->
-                <tr>
-                    <td height="5" style="background:#DC2626; font-size:0; line-height:0;">&nbsp;</td>
-                </tr>
+                    {{-- LOGO --}}
+                    <tr>
+                        <td class="pad" style="padding-top:28px;">
+                            <div style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                        </td>
+                    </tr>
 
-                <!-- LOGO -->
-                <tr>
-                    <td class="pad" style="padding-top:28px; padding-bottom:8px;">
-                        <div class="text-dark" style="font-size:22px; font-weight:900; color:#061538; letter-spacing:-0.5px;">BOSTON <span class="purple">ENGLISH</span> CENTER</div>
-                    </td>
-                </tr>
+                    {{-- HEADLINE --}}
+                    <tr>
+                        <td class="pad" style="padding-top:24px;">
+                            <div class="overline">The real problem</div>
+                            <h1 class="headline">There's a reason<br>you're still stuck</h1>
+                            <div class="accent-bar"></div>
+                            <p class="body-text">
+                                It's not laziness. It's not lack of talent. It's that nobody told you the truth about how English fluency actually works.
+                            </p>
+                        </td>
+                    </tr>
 
-                <!-- HEADLINE -->
-                <tr>
-                    <td class="pad" style="padding-top:10px; padding-bottom:24px;">
-                        <h1 class="hero-title text-dark" style="margin:0 0 14px; font-size:34px; line-height:40px; font-weight:900; color:#061538; letter-spacing:-1px;">
-                            You have been studying English for years.<br>Why can you still <span style="color:#DC2626;">not speak?</span>
-                        </h1>
-                        <p class="text-muted" style="margin:0; font-size:17px; line-height:26px; color:#4E5A73;">
-                            Here is what you are missing. And how to fix it before this offer ends.
-                        </p>
-                    </td>
-                </tr>
+                    {{-- HERO IMAGE --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:28px;">
+                            <img src="{{ $heroUrl }}" alt="The struggle is real" width="532" style="width:100%; max-width:532px; height:auto; border-radius:10px;">
+                        </td>
+                    </tr>
 
-                <!-- HERO IMAGE -->
-                <tr>
-                    <td class="pad" style="padding-bottom:6px;">
-                        <div style="border-radius:18px; overflow:hidden;">
-                            <img src="https://s3.us-east-1.amazonaws.com/bostenenglishcenter.com-bucket/landing-page/img/struggle.webp?v=20260601" width="624" alt="Student frustrated studying English alone" style="width:100%; max-width:100%; height:auto; display:block;">
-                        </div>
-                    </td>
-                </tr>
+                    <hr class="section-rule" style="margin:0 24px;">
 
-                <!-- PAIN POINT: ALONE -->
-                <tr>
-                    <td class="pad" style="padding-bottom:16px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border-radius:16px;">
-                            <tr>
-                                <td style="padding:22px 24px;">
-                                    <div class="pain-text" style="font-size:18px; font-weight:900; color:#DC2626; margin-bottom:8px;">&#10060; Studying alone does not work</div>
-                                    <div style="font-size:15px; line-height:23px; color:#7F1D1D;">
-                                        You can read grammar books for 10 years. But if you never practice speaking with real people, you will never be fluent. Knowledge is not the same as skill.
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    {{-- PAIN POINTS --}}
+                    <tr>
+                        <td class="pad" style="padding-top:28px;">
+                            <div class="pain-card">
+                                <div class="pain-title">You study alone</div>
+                                <p class="pain-text">Books and apps teach you words. But words alone don't make you fluent. You need to use them — out loud, with real people, in real time.</p>
+                            </div>
+                            <div class="pain-card">
+                                <div class="pain-title">Apps keep you entertained, not fluent</div>
+                                <p class="pain-text">Duolingo is fun. But fun doesn't prepare you for a job interview. Gamification is not education.</p>
+                            </div>
+                            <div class="pain-card">
+                                <div class="pain-title">Fear keeps you silent</div>
+                                <p class="pain-text">You know the words. You just can't bring yourself to say them. Because every time you tried, someone corrected you — and it felt awful.</p>
+                            </div>
+                        </td>
+                    </tr>
 
-                <!-- PAIN POINT: APPS -->
-                <tr>
-                    <td class="pad" style="padding-bottom:16px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border-radius:16px;">
-                            <tr>
-                                <td style="padding:22px 24px;">
-                                    <div class="pain-text" style="font-size:18px; font-weight:900; color:#DC2626; margin-bottom:8px;">&#10060; Apps keep you entertained, not fluent</div>
-                                    <div style="font-size:15px; line-height:23px; color:#7F1D1D;">
-                                        Duolingo is fun. But it will never prepare you for a real conversation with a colleague, a friend, or a stranger. You need real practice, not games.
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    <hr class="section-rule" style="margin:0 24px;">
 
-                <!-- PAIN POINT: FEAR -->
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pain-card" style="background:#FEF2F2; border-radius:16px;">
-                            <tr>
-                                <td style="padding:22px 24px;">
-                                    <div class="pain-text" style="font-size:18px; font-weight:900; color:#DC2626; margin-bottom:8px;">&#10060; Fear keeps you silent</div>
-                                    <div style="font-size:15px; line-height:23px; color:#7F1D1D;">
-                                        You are afraid of making mistakes. So you stay quiet. But the only way to get better at speaking is to actually speak. Every day. With real people.
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    {{-- SOLUTION --}}
+                    <tr>
+                        <td class="pad" style="padding-top:28px;">
+                            <div class="solution-card">
+                                <div style="font-size:14px; font-weight:800; color:#16A34A; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">The insight</div>
+                                <p class="body-text" style="color:#14532D; margin:0;">
+                                    Fluency doesn't come from memorizing. It comes from <strong>doing</strong>. Real conversations with real people. That's the only method that works. And it's exactly what we built.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
 
-                <!-- SOLUTION -->
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="solution-card" style="background:#F0FDF4; border-radius:16px;">
-                            <tr>
-                                <td style="padding:24px;">
-                                    <div class="solution-text" style="font-size:20px; font-weight:900; color:#16A34A; margin-bottom:10px;">&#10003; This is what you are missing:</div>
-                                    <div style="font-size:15px; line-height:26px; color:#14532D;">
-                                        <strong>Real people to practice with.</strong> Not AI. Not apps. Real conversations, with real students and teachers, 6 days a week. That is how you go from knowing English to <strong>speaking</strong> English.
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    {{-- HOW IT WORKS --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:28px;">
+                            <div class="left-accent">
+                                <div style="font-size:13px; font-weight:800; color:#7B4DFF; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">How it works</div>
+                                <p style="font-size:15px; line-height:24px; color:#061538; margin:0;">
+                                    Join a live conversation room. Practice with real people from 80+ countries. Get feedback from native speakers. Repeat. That's it. No apps. No books. Just speaking.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
 
-                <!-- WHAT YOU GET (concise) -->
-                <tr>
-                    <td class="pad" style="padding-bottom:12px;">
-                        <div class="text-dark" style="font-size:18px; font-weight:900; color:#061538; margin-bottom:10px;">What you get for $35/month:</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <div style="font-size:15px; line-height:28px; color:#061538;">
-                            &#10003; Conversation room 6 days a week<br>
-                            &#10003; 2 live sessions with real teachers<br>
-                            &#10003; All learning materials included<br>
-                            &#10003; Supportive community<br>
-                            &#10003; Cancel anytime, no hidden fees
-                        </div>
-                    </td>
-                </tr>
+                    {{-- CTA --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:32px;">
+                            <div class="cta-card">
+                                <p style="font-size:15px; line-height:24px; color:#AAB7D6; margin:0 0 16px;">
+                                    Stop studying alone. Start speaking.
+                                </p>
+                                <a href="{{ $dashboardUrl }}" class="cta-link" style="background:#7B4DFF; color:#FFFFFF; font-size:16px; font-weight:800; padding:14px 32px; border-radius:8px; text-decoration:none; display:inline-block;">
+                                    Try It Free &rarr;
+                                </a>
+                                <p style="font-size:12px; color:#6B7280; margin:12px 0 0;">
+                                    50% off for a limited time &middot; $35/month &middot; Cancel anytime
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
 
-                <!-- OFFER -->
-                <tr>
-                    <td class="pad" style="padding-bottom:24px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pricing-card" style="background:#F6F4FF; border-radius:20px;">
-                            <tr>
-                                <td align="center" style="padding:24px;">
-                                    <div class="price-strike">$70/month</div>
-                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:4px auto;">
-                                        <tr>
-                                            <td valign="baseline" class="price-big">$35</td>
-                                            <td valign="baseline" class="price-month" style="padding-left:8px;">/month</td>
-                                        </tr>
-                                    </table>
-                                    <div style="font-size:14px; color:#16A34A; font-weight:800; margin-top:6px;">SAVE 50% - Limited Time</div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <!-- CTA -->
-                <tr>
-                    <td class="pad" style="padding-bottom:12px; text-align:center;">
-                        <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                            <tr>
-                                <td bgcolor="#7B4DFF" style="border-radius:14px; padding:18px 24px; text-align:center;">
-                                    <a href="{{ $dashboardUrl }}" style="display:inline-block; font-size:18px; font-weight:900; color:#FFFFFF; text-decoration:none;">
-                                        Stop Studying Alone. Start Speaking. &rarr;
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="text-muted" style="font-size:12px; color:#7B849A; margin-top:10px;">
-                            Start speaking this week. Cancel anytime.
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- URGENCY -->
-                <tr>
-                    <td class="pad" style="padding-bottom:28px;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="urgent-box" style="background:#FEF2F2; border-radius:16px;">
-                            <tr>
-                                <td align="center" style="padding:16px 20px;">
-                                    <div style="font-size:15px; font-weight:900; color:#DC2626;">
-                                        &#9200; 50% OFF ends soon.
-                                    </div>
-                                    <div style="font-size:14px; color:#7F1D1D; margin-top:4px;">
-                                        Every day you wait is another day you stay stuck. The price goes back to $70/month.
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                <!-- FOOTER -->
-                <tr>
-                    <td class="email-footer-end" style="padding:0; background:#FBFBFF;">
-                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                            <tr>
-                                <td class="help-panel" style="padding:28px 18px 24px; background:#FBFBFF;">
-                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                        <tr>
-                                            <td valign="top" style="padding:0 18px 12px 0;">
-                                                <div class="text-main help-title" style="font-size:30px; line-height:34px; font-weight:900; color:#071A44; letter-spacing:-0.8px;">Need Help?</div>
-                                                <div class="text-muted help-copy" style="padding-top:8px; font-size:16px; line-height:23px; font-weight:600; color:#405273;">We're here to help you on your English learning journey.</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-top:6px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
-                                                    <tr>
-                                                        <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
-                                                            <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#EFF6FF; color:#3385F2; font-size:18px; line-height:42px; font-weight:900; text-align:center;">TEL</div>
-                                                        </td>
-                                                        <td valign="middle" class="contact-copy-cell" style="padding:14px 10px;">
-                                                            <div class="text-main contact-label" style="font-size:17px; line-height:22px; font-weight:900; color:#071A44;">Call Us</div>
-                                                            <a href="tel:16178482317" class="text-muted contact-value" style="display:block; padding-top:2px; font-size:15px; line-height:21px; font-weight:600; color:#405273; -webkit-text-fill-color:#405273; text-decoration:none;">+1 (617) 848-2317</a>
-                                                        </td>
-                                                        <td width="28" align="center" valign="middle" class="contact-chevron" style="width:28px; padding-right:14px; color:#4024D6; font-size:22px; line-height:22px; font-weight:900;">&#8250;</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-top:12px;">
-                                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="contact-card" style="width:100%; border-radius:14px; background:#F3F4F8;">
-                                                    <tr>
-                                                        <td width="52" align="center" valign="middle" class="contact-icon-cell" style="width:52px; padding:14px 0 14px 10px;">
-                                                            <div class="contact-icon" style="width:42px; height:42px; border-radius:50%; background:#F5F3FF; color:#6F2AE8; font-size:14px; line-height:42px; font-weight:900; text-align:center;">@</div>
-                                                        </td>
-                                                        <td valign="middle" class="contact-copy-cell" style="padding:14px 10px;">
-                                                            <div class="text-main contact-label" style="font-size:17px; line-height:22px; font-weight:900; color:#071A44;">Email Us</div>
-                                                            <a href="mailto:{{ $supportEmail }}" class="text-muted contact-value" style="display:block; padding-top:2px; font-size:16px; line-height:22px; font-weight:600; color:#405273; -webkit-text-fill-color:#405273; text-decoration:none; word-break:break-word;">{{ $supportEmail }}</a>
-                                                        </td>
-                                                        <td width="28" align="center" valign="middle" class="contact-chevron" style="width:28px; padding-right:14px; color:#4024D6; font-size:22px; line-height:22px; font-weight:900;">&#8250;</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="brand-footer" style="padding:22px 0 26px; background:#FBFBFF;">
-                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                                        <tr>
-                                            <td align="center">
-                                                <div class="text-main footer-title" style="font-size:23px; line-height:24px; font-weight:900; color:#071A44; letter-spacing:-0.6px;">Boston</div>
-                                                <div class="text-accent footer-accent" style="font-size:15px; line-height:18px; font-weight:900; color:#1357E8;">English Center</div>
-                                                <div class="text-muted footer-copy" style="margin:14px 0 0; font-size:13px; line-height:20px; font-weight:600; color:#64748B; text-align:center;">
-                                                    &copy; {{ date('Y') }} Boston English Center<br>All Rights Reserved.
-                                                </div>
-                                                <div style="margin-top:10px; font-size:12px; text-align:center;">
-                                                    <a href="{{ $unsubscribeUrl }}" style="color:#64748B; text-decoration:underline;">Unsubscribe</a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-            </table>
-            <!--[if mso]></td></tr></table><![endif]-->
-        </td>
-    </tr>
-</table>
+                    {{-- FOOTER --}}
+                    <tr>
+                        <td class="pad" style="padding-bottom:28px;">
+                            <hr class="section-rule" style="margin:0 0 20px;">
+                            <div style="text-align:center;">
+                                <div class="footer-brand">Boston <span>English</span> Center</div>
+                                <p class="footer-copy">&copy; {{ date('Y') }} Boston English Center. All rights reserved.</p>
+                                <p class="footer-links">
+                                    <a href="{{ $dashboardUrl }}">Dashboard</a> &nbsp;|&nbsp;
+                                    <a href="mailto:{{ $supportEmail }}">Support</a> &nbsp;|&nbsp;
+                                    <a href="{{ $unsubscribeUrl }}">Unsubscribe</a>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
