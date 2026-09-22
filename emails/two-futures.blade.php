@@ -84,7 +84,16 @@
                     <tr><td height="4" style="background:#7B4DFF; font-size:0; line-height:0;">&nbsp;</td></tr>
                     <tr>
                         <td class="pad" style="padding-top:28px;">
-                            <div class="logo-text" style="font-size:18px; font-weight:900; color:#061538; letter-spacing:0.5px;">BOSTON <span style="color:#7B4DFF;">ENGLISH</span> CENTER</div>
+                            <div class="logo-text" style="display:flex; align-items:center; gap:12px; color:#061538;">
+                                <svg width="44" height="44" viewBox="0 0 48 48" fill="none" style="flex-shrink:0;">
+                                    <circle cx="24" cy="22" r="15" stroke="#7B4DFF" stroke-width="6"/>
+                                    <path d="M16 34 10 40l10-2" stroke="#7B4DFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span style="line-height:1.1;">
+                                    <span style="display:block; font-size:22px; font-weight:800;">Boston</span>
+                                    <span style="display:block; font-size:14px; font-weight:800; color:#7B4DFF; white-space:nowrap;">English Center</span>
+                                </span>
+                            </div>
                         </td>
                     </tr>
                     <tr>
